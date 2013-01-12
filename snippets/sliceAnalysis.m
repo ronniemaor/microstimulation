@@ -24,7 +24,7 @@ C = [30,38];
 figure; surf(range,eqVals*W,means); colorbar;
 view(0,90);
 set(gca,'XTick',[25, 50:50:200]);
-xlabel('Frame'); ylabel('Distance from center'); zlabel('Signal');
+xlabel('Frame'); ylabel('Distance from center'); zlabel('Relative signal');
 
 %% distnace -> signal (at peak point)
 mask = chamberMask(condsn);
@@ -34,8 +34,25 @@ vertical = 0;
 W = 3;
 C = [30,38];
 [means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
-peakSlice = mean(means,2);
+peakSlice = mean(means,2); % average the frames around the peak
+mmPerPixel = 0.1;
+distances = eqVals * W * mmPerPixel; % convert to mm
+
+scale = 10000; % hack for optimization to converge
+
+[a,b,mu,sigma] = bestGaussian(distances,peakSlice'*scale);
+a = a/scale;
+b = b/scale;
+fprintf('a=%g, b=%g, mu=%g, sigma=%g\n', a, b, mu, sigma);
+
+myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2) + b;
+fit = arrayfun(myGauss,distances);
+
 figure;
-plot(eqVals*W,peakSlice); 
-xlabel('Distance from peak center'); ylabel('Signal');
+plot(distances,peakSlice); 
+xlabel('Distance from peak center (mm)'); 
+ylabel('Relative signal');
 grid on
+hold on
+plot(distances,fit,'r');
+legend('Measured values', 'Gaussian fit');
