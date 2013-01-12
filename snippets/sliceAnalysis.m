@@ -21,10 +21,19 @@ vertical = 0;
 W = 3;
 C = [30,38];
 [means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
-figure; surf(range,eqVals*W,means); colorbar;
+mmPerPixel = 0.1;
+distances = eqVals * W * mmPerPixel; % convert to mm
+msecPerFrame = 10;
+times = (range-25)*10; % convert to msec from onset
+figure; 
+surf(times,distances,means); 
+colorbar;
 view(0,90);
-set(gca,'XTick',[25, 50:50:200]);
-xlabel('Frame'); ylabel('Distance from center'); zlabel('Relative signal');
+if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
+title(sprintf('Signal strength for time and %s distance',strAxis));
+xlabel('Time from stimulus onset (msec)'); 
+ylabel('Distance from peak (mm)'); 
+zlabel('Relative signal');
 
 %% distnace -> signal (at peak point)
 mask = chamberMask(condsn);
@@ -49,10 +58,10 @@ myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2) + b;
 fit = arrayfun(myGauss,distances);
 
 figure;
-plot(distances,peakSlice); 
+plot(distances,peakSlice, distances, fit); 
+if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
+title(sprintf('Signal strength for %s distance',strAxis));
 xlabel('Distance from peak center (mm)'); 
 ylabel('Relative signal');
 grid on
-hold on
-plot(distances,fit,'r');
 legend('Measured values', 'Gaussian fit');
