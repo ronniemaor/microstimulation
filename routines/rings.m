@@ -2,7 +2,7 @@ function R = rings(N,C,mask,W)
 % Find positions of rings that are equidistant from a center
 %
 % Usage:
-%   R = rings(N,C,W)
+%   R = rings(N,C,mask,W)
 %
 % Input:
 %   N = [nX, nY]: dimensions of the image
@@ -15,7 +15,7 @@ function R = rings(N,C,mask,W)
 %   R: nX*nY matrix of ring number per pixel.
 %   NOTE: R is one dimensional. X is the "inner loop" index.
 
-if nargin < 3
+if nargin < 4
     W=1; 
 end
 
