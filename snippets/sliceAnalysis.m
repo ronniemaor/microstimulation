@@ -3,7 +3,7 @@ mask = chamberMask(condsn);
 blank = mean(conds(:,:,5),3);
 meanFrame = mean(blank(:,2:100),2);
 blVes = mfilt2(meanFrame,100,100,2,'hm');
-W = 3;
+W = 9;
 vertical = 0;
 C = [30,38];
 Eq = sliceEqGroups([100,100],C,mask,W,vertical);
@@ -18,11 +18,11 @@ mask = chamberMask(condsn);
 range = 2:230;
 signal = relativeSignal(condsn,range);
 vertical = 0;
-W = 3;
+W = 9;
 C = [30,38];
 [means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
 mmPerPixel = 0.1;
-distances = eqVals * W * mmPerPixel; % convert to mm
+distances = eqVals * mmPerPixel; % convert to mm
 msecPerFrame = 10;
 times = (range-25)*10; % convert to msec from onset
 figure; 
@@ -37,15 +37,15 @@ zlabel('Relative signal');
 
 %% distnace -> signal (at peak point)
 mask = chamberMask(condsn);
-peakRange = 32:34;
+peakRange = rangeFromWidth(33,9);
 signal = relativeSignal(condsn,peakRange);
 vertical = 0;
-W = 3;
+W = 9;
 C = [30,38];
 [means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
 peakSlice = mean(means,2); % average the frames around the peak
 mmPerPixel = 0.1;
-distances = eqVals * W * mmPerPixel; % convert to mm
+distances = eqVals * mmPerPixel; % convert to mm
 
 scale = 10000; % hack for optimization to converge
 

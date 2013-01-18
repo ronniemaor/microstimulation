@@ -1,6 +1,7 @@
 function Eq = sliceEqGroups(N,C,mask,W,vertical)
 % Equivalent positions are a fixed displacement (with sign) from the center
-% along a horizontal/vertical direction, and in a resolution of W*W pixels
+% along a horizontal or vertical direction. We average over W pixels
+% along the perpendicular axis to the one we're varying along.
 %
 % Usage:
 %   Eq = sliceEqGroups(N,C,mask,W,vertical)
@@ -44,8 +45,8 @@ for iY = 1:nY
         if ~mask(i)
             continue
         end
-        d = (P-C)/W;
-        if round(d(widthAxis)) ~= 0
+        d = P-C;
+        if round(d(widthAxis)/W) ~= 0
             continue
         end
         Eq(i) = floor(d(lengthAxis));
