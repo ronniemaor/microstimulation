@@ -35,33 +35,38 @@ xlabel('Time from stimulus onset (msec)');
 ylabel('Distance from peak (mm)'); 
 zlabel('Relative signal');
 
-%% distnace -> signal (at peak point)
+%% distance -> signal (at peak point)
 mask = chamberMask(condsn);
 peakRange = rangeFromWidth(33,9);
 signal = relativeSignal(condsn,peakRange);
 vertical = 0;
 W = 9;
 C = [30,38];
-[means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
-peakSlice = mean(means,2); % average the frames around the peak
+
+[eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 
 scale = 10000; % hack for optimization to converge
 
-[a,b,mu,sigma] = bestGaussian(distances,peakSlice'*scale);
+[a,b,mu,sigma] = bestGaussian(distances,eqMeans*scale);
 a = a/scale;
 b = b/scale;
 fprintf('a=%g, b=%g, mu=%g, sigma=%g\n', a, b, mu, sigma);
 
 myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2) + b;
 fit = arrayfun(myGauss,distances);
+nAvgFactor = 1; % number of samples that went into our average (for estimating std)
 
 figure;
-plot(distances,peakSlice, distances, fit); 
+errorbar(distances, eqMeans, eqStd*sqrt(nAvgFactor));
+hold on
+plot(distances, fit, 'r');
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
 title(sprintf('Signal strength for %s distance',strAxis));
 xlabel('Distance from peak center (mm)'); 
 ylabel('Relative signal');
 grid on
 legend('Measured values', 'Gaussian fit');
+
+
