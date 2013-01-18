@@ -47,11 +47,7 @@ C = [30,38];
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 
-scale = 10000; % hack for optimization to converge
-
-[a,b,mu,sigma] = bestGaussian(distances,eqMeans*scale);
-a = a/scale;
-b = b/scale;
+[a,b,mu,sigma] = bestGaussian(distances,eqMeans);
 fprintf('a=%g, b=%g, mu=%g, sigma=%g\n', a, b, mu, sigma);
 
 myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2) + b;

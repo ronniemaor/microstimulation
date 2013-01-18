@@ -10,10 +10,14 @@ if debug
 else
     options = optimset(options, 'Display', 'off');
 end
+
+scale = max(Y)-min(Y); % hack for optimization to converge
+Y = Y / scale;
+
 P0 = [(max(Y)-min(Y)), min(Y), mean(X), (max(X)-min(X)/10)];
 P = fminunc(@f,P0,options,X,Y);
-a = P(1);
-b = P(2);
+a = P(1) * scale;
+b = P(2) * scale;
 mu = P(3);
 sigma = P(4);
 end
