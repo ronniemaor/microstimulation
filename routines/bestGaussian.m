@@ -1,8 +1,16 @@
-function [a,b,mu,sigma] = bestGaussian(X,Y)
+function [a,b,mu,sigma] = bestGaussian(X,Y,debug)
 % X(i) - sample point i (currently one dimensional)
 % Y(i) - "label" for point i
+if nargin < 3
+    debug = 0;
+end
+options = optimset('GradObj','on');
+if debug
+    options = optimset(options, 'DerivativeCheck', 'on');
+else
+    options = optimset(options, 'Display', 'off');
+end
 P0 = [(max(Y)-min(Y)), min(Y), mean(X), (max(X)-min(X)/10)];
-options = optimset('GradObj','off');
 P = fminunc(@f,P0,options,X,Y);
 a = P(1);
 b = P(2);
@@ -26,7 +34,7 @@ val = mean(Di.^2);
 
 % Compute the gradient
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-dE = 2*Fi;
+dE = 2*Di;
 
 % grad_a
 da = expPart;
@@ -37,7 +45,7 @@ db = 1;
 grad_b = mean(dE .* db);
 
 % grad_mu
-d_mu = - a/sigma * Zi .* expPart;
+d_mu = a/sigma * Zi .* expPart;
 grad_mu = mean(dE .* d_mu);
 
 % grad_sigma
