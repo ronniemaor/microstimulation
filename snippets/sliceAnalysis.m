@@ -24,7 +24,7 @@ C = [30,38];
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 msecPerFrame = 10;
-times = (range-25)*10; % convert to msec from onset
+times = (range-25)*msecPerFrame; % convert to msec from onset
 figure; 
 surf(times,distances,means); 
 colorbar;
@@ -65,4 +65,43 @@ ylabel('Relative signal');
 grid on
 legend('Measured values', 'Gaussian fit');
 
+%% how guassian fit parameters change over time
+frameRange = 28:38;
+W = 9;
+C = [30,38];
+vertical = 0;
+[a,b,mu,sigma] = fitsOverTime(condsn, frameRange, W, C, vertical);
 
+figure
+
+subplot(2,2,1);
+plot(frameRange, a)
+title('Parameter a')
+ylabel('a')
+xlabel('Frame')
+
+subplot(2,2,2);
+plot(frameRange, b)
+title('Parameter b')
+ylabel('b')
+xlabel('Frame')
+
+subplot(2,2,3);
+plot(frameRange, mu)
+title('Parameter \mu')
+ylabel('\mu')
+xlabel('Frame')
+
+subplot(2,2,4);
+plot(frameRange, sigma)
+title('Parameter \sigma')
+ylabel('\sigma')
+xlabel('Frame')
+
+if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
+t = sprintf('Fit parameters for %s slice, frames %d-%d', ...
+            strAxis, min(frameRange), max(frameRange));
+ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0 1], ...
+          'Box','off', 'Visible','off', ...
+          'Units','normalized', 'clipping' , 'off');
+text(0.5,1,['\bf ' t],'HorizontalAlignment', 'center', 'VerticalAlignment', 'top')
