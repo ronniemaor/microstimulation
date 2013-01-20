@@ -1,4 +1,4 @@
-function [a,b,mu,sigma] = bestGaussian(X,Y,debug)
+function [a,b,mu,sigma,err] = bestGaussian(X,Y,debug)
 % X(i) - sample point i (currently one dimensional)
 % Y(i) - "label" for point i
 if nargin < 3
@@ -20,6 +20,7 @@ a = P(1) * scale;
 b = P(2) * scale;
 mu = P(3);
 sigma = P(4);
+err = f(P,X,Y);
 end
 
 function [val,grad] = f(P,X,Y)

@@ -70,32 +70,38 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 0;
-[a,b,mu,sigma] = fitsOverTime(condsn, frameRange, W, C, vertical);
+[a,b,mu,sigma,err] = fitsOverTime(condsn, frameRange, W, C, vertical);
 
 figure
 
-subplot(2,2,1);
+subplot(3,2,1);
 plot(frameRange, a)
 title('Parameter a')
 ylabel('a')
 xlabel('Frame')
 
-subplot(2,2,2);
+subplot(3,2,2);
 plot(frameRange, b)
 title('Parameter b')
 ylabel('b')
 xlabel('Frame')
 
-subplot(2,2,3);
+subplot(3,2,3);
 plot(frameRange, mu)
 title('Parameter \mu')
 ylabel('\mu')
 xlabel('Frame')
 
-subplot(2,2,4);
+subplot(3,2,4);
 plot(frameRange, sigma)
 title('Parameter \sigma')
 ylabel('\sigma')
+xlabel('Frame')
+
+subplot(3,2,5);
+plot(frameRange, err)
+title('Fit Error')
+ylabel('Error')
 xlabel('Frame')
 
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
