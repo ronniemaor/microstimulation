@@ -47,8 +47,8 @@ C = [30,38];
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 
-[a,mu,sigma] = bestGaussian(distances,eqMeans);
-fprintf('a=%g, mu=%g, sigma=%g\n', a, mu, sigma);
+[a,mu,sigma,R2] = bestGaussian(distances,eqMeans);
+fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', a, mu, sigma, R2);
 
 myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2);
 fit = arrayfun(myGauss,distances);
@@ -70,7 +70,7 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 1;
-[a,mu,sigma,err] = fitsOverTime(condsn, frameRange, W, C, vertical);
+[a,mu,sigma,R2] = fitsOverTime(condsn, frameRange, W, C, vertical);
 
 figure
 
@@ -93,9 +93,9 @@ ylabel('\sigma')
 xlabel('Frame')
 
 subplot(2,2,4);
-plot(frameRange, err)
-title('Fit Error')
-ylabel('Error')
+plot(frameRange, R2)
+title('Explained Variance')
+ylabel('R2')
 xlabel('Frame')
 
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;

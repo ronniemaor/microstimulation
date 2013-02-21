@@ -1,6 +1,6 @@
-function [a,mu,sigma,err] = bestGaussian(X,Y,debug)
+function [a,mu,sigma,R2] = bestGaussian(X,Y,debug)
 % X(i) - sample point i (currently one dimensional)
-% Y(i) - "label" for point i
+% Y(i) - target value for point i
 if nargin < 3
     debug = 0;
 end
@@ -19,7 +19,20 @@ P = fminunc(@f,P0,options,X,Y);
 a = P(1) * scale;
 mu = P(2);
 sigma = P(3);
-err = f(P,X,Y);
+R2 = explainedVariance(P,X,Y);
+end
+
+function R2 = explainedVariance(P,X,Y)
+a = P(1);
+mu = P(2);
+sigma = P(3);
+
+Zi = (X - mu) / sigma;
+expPart = exp(-0.5*Zi.^2);
+Fi = a*expPart; % gaussian value for all samples Xi
+
+rho = corr(Y',Fi');
+R2 = rho^2;
 end
 
 function [val,grad] = f(P,X,Y)
