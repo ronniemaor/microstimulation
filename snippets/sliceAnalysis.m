@@ -47,10 +47,10 @@ C = [30,38];
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 
-[a,b,mu,sigma] = bestGaussian(distances,eqMeans);
-fprintf('a=%g, b=%g, mu=%g, sigma=%g\n', a, b, mu, sigma);
+[a,mu,sigma] = bestGaussian(distances,eqMeans);
+fprintf('a=%g, mu=%g, sigma=%g\n', a, mu, sigma);
 
-myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2) + b;
+myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2);
 fit = arrayfun(myGauss,distances);
 nAvgFactor = 1; % number of samples that went into our average (for estimating std)
 
@@ -69,36 +69,30 @@ legend('Measured values', 'Gaussian fit');
 frameRange = 28:38;
 W = 9;
 C = [30,38];
-vertical = 0;
-[a,b,mu,sigma,err] = fitsOverTime(condsn, frameRange, W, C, vertical);
+vertical = 1;
+[a,mu,sigma,err] = fitsOverTime(condsn, frameRange, W, C, vertical);
 
 figure
 
-subplot(3,2,1);
+subplot(2,2,1);
 plot(frameRange, a)
 title('Parameter a')
 ylabel('a')
 xlabel('Frame')
 
-subplot(3,2,2);
-plot(frameRange, b)
-title('Parameter b')
-ylabel('b')
-xlabel('Frame')
-
-subplot(3,2,3);
+subplot(2,2,2);
 plot(frameRange, mu)
 title('Parameter \mu')
 ylabel('\mu')
 xlabel('Frame')
 
-subplot(3,2,4);
+subplot(2,2,3);
 plot(frameRange, sigma)
 title('Parameter \sigma')
 ylabel('\sigma')
 xlabel('Frame')
 
-subplot(3,2,5);
+subplot(2,2,4);
 plot(frameRange, err)
 title('Fit Error')
 ylabel('Error')
