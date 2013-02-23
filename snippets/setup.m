@@ -6,5 +6,4 @@ path(path,'C:\Users\ronnie\Google Drive\brain\my stuff\zuta\microstimulation\Ron
 %% load data
 clear all
 close all
-load 'C:\data\zuta\Leg\leg_2009_01_29\c\condsn'
-load 'C:\data\zuta\Leg\leg_2009_01_29\c\conds'
+load 'C:\data\zuta\Leg\leg_2009_01_29\c\preprocessed'
