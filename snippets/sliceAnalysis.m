@@ -1,6 +1,5 @@
 %% draw the slices on blood vessel image
-mask = chamberMask(condsn);
-blank = mean(conds(:,:,5),3);
+mask = chamberMask(blank);
 meanFrame = mean(blank(:,2:100),2);
 blVes = mfilt2(meanFrame,100,100,2,'hm');
 W = 9;
@@ -14,9 +13,9 @@ blVes(region) = min(blVes);
 figure; mimg(blVes,100,100); impixelinfo;
 
 %% time*distance -> signal
-mask = chamberMask(condsn);
+mask = chamberMask(blank);
 range = 2:230;
-signal = relativeSignal(condsn,range);
+signal = relativeSignal(blank,stims,range);
 vertical = 0;
 W = 9;
 C = [30,38];
@@ -36,9 +35,9 @@ ylabel('Distance from peak (mm)');
 zlabel('Relative signal');
 
 %% distance -> signal (at peak point)
-mask = chamberMask(condsn);
+mask = chamberMask(blank);
 peakRange = rangeFromWidth(33,9);
-signal = relativeSignal(condsn,peakRange);
+signal = relativeSignal(blank,stims,peakRange);
 vertical = 0;
 W = 9;
 C = [30,38];
@@ -70,7 +69,7 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 1;
-[a,mu,sigma,R2] = fitsOverTime(condsn, frameRange, W, C, vertical);
+[a,mu,sigma,R2] = fitsOverTime(blank, stims, frameRange, W, C, vertical);
 
 figure
 

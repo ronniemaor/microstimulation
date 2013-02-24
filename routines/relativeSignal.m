@@ -1,14 +1,7 @@
-function signal = relativeSignal(conds,range,stimConds,blankConds)
+function signal = relativeSignal(blank,stims,range)
 % compute signal from stim/blank
-if nargin < 2
+if nargin < 3
     range = 2:230; % HARDCODED
 end    
-if nargin < 3
-    stimConds = 1:3; % HARDCODED
-end
-if nargin < 4
-    blankConds = 4:6; % HARDCODED
-end
-stim = nanmean(conds(:,range,stimConds),3);
-blank = nanmean(conds(:,range,blankConds),3);
-signal = stim ./ blank - 1;
+stim = nanmean(stims(:,range,:),3);
+signal = stim ./ blank(:,range) - 1;

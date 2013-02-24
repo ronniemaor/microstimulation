@@ -1,8 +1,7 @@
 %% draw the circles on blood vessel image
-blank = mean(conds(:,:,5),3);
+mask = chamberMask(blank);
 meanFrame = mean(blank(:,2:100),2);
 blVes = mfilt2(meanFrame,100,100,2,'hm');
-mask = chamberMask(condsn);
 C = [30,38];
 W = 3;
 R = rings([100,100],C,mask,W);
@@ -12,8 +11,8 @@ figure; mimg(blVes,100,100); impixelinfo;
 
 %% surface plot after radius transform
 range = 2:230;
-signal = relativeSignal(condsn,range);
-mask = chamberMask(condsn);
+signal = relativeSignal(blank,stims,range);
+mask = chamberMask(blank);
 W = 3;
 C = [30,38];
 [means,rVals] = ringTransform(signal,mask,C,W);
@@ -31,8 +30,8 @@ ylabel('Radius from peak (mm)');
 zlabel('Signal'); 
 
 %% signal vs. radius for several time points
-signal = relativeSignal(condsn);
-mask = chamberMask(condsn);
+signal = relativeSignal(blank,stims);
+mask = chamberMask(blank);
 W = 3;
 C = [30,38];
 means = ringTransform(signal,mask,C,W);
@@ -44,8 +43,8 @@ xlabel('Radius'); ylabel('Signal');
 legend(arraySprintf('Frame %d',frames))
 
 %% signal vs. time for several radiuses
-signal = relativeSignal(condsn);
-mask = chamberMask(condsn);
+signal = relativeSignal(blank,stims);
+mask = chamberMask(blank);
 W = 3;
 C = [30,38];
 means = ringTransform(signal,mask,C,W);
