@@ -1,4 +1,4 @@
-function [means, rVals] = ringTransform(frames,mask,C,W)
+function [means, rVals] = ringTransform(signal,mask,C,W)
 N = [100 100];
 R = rings(N,C,mask,W);
-[means,rVals] = mfEqMeans(frames,R);
+[means,rVals] = mfEqMeans(signal,R);

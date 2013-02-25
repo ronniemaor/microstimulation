@@ -45,16 +45,16 @@ C = [30,38];
 [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
+eqStd = mean(eqStd,1); % estimate std over all trials
 
-P = GaussianFit.fitParams(distances,eqMeans);
-fit = GaussianFit.fitValues(distances,P);
-R2 = calcR2(eqMeans,fit);
+nBins = 5;
+[yFit,P,R2] = crossValidationRegression(GaussianFit,distances,eqMeans,nBins);
 fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', P, R2);
 
 figure;
-errorbar(distances, eqMeans, eqStd);
+errorbar(distances, mean(eqMeans,1), eqStd);
 hold on
-plot(distances, fit, 'r');
+plot(distances, yFit, 'r');
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
 title(sprintf('Signal strength for %s distance',strAxis));
 xlabel('Distance from peak center (mm)'); 
@@ -67,7 +67,9 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 1;
-[a,mu,sigma,R2] = fitsOverTime(blank, stims, frameRange, W, C, vertical);
+nBins = 5;
+[a,mu,sigma,R2] = fitsOverTime(blank, stims, frameRange, ...
+                               W, C, vertical, nBins);
 
 figure
 

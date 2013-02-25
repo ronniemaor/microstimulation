@@ -15,7 +15,7 @@ function Eq = sliceEqGroups(N,C,mask,W,vertical)
 %   vertical: make the band vertical instead of horizontal (default=0)
 %
 % Output:
-%   Eq: nX*nY matrix of group number (position along slice) per pixel.
+%   Eq: nX*nY row vector of group number (position along slice) per pixel.
 %       Pixels that fall outside the band or the mask will get NaN.
 %   NOTE: Eq is one dimensional. X is the "inner loop" index.
 

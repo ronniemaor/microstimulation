@@ -1,37 +1,33 @@
-function [eqMeans, eqStd, eqVals] = eqStats(frames,Eq)
+function [eqMeans, eqStd, eqVals] = eqStats(signal,Eq)
 % Uses Eq as a map of equivalence groups (e.g. equidistant rings around 
-% a center point) and compute mean,std for all points belonging to the 
-% equivalence group (over all frames).
+% a center point) and compute mean and std for all points belonging to the 
+% equivalence group. 
+% The mean and std are computed over all frames for each trial.
 %
-% frames should be 2 dimensional array Pixels*Frames
-% eqMeans is 1*Groups array of mean(group)
-% eqStd is 1*Groups array of std(group)
-% eqVals are the values used for equivalence groups (taken from Eq)
+% Input:
+%   signal - Pixels*Frames*Trials
+%   Eq - equivalence groups (row vector of size nPixels)
+% Output:
+%   eqMeans - nTrials*nGroups vector of mean(group) per trial
+%   eqStd - nTrials*nGroups vector of std(group) per trial
+%   eqVals - 1*nGroups vector of values used for equiv. groups (from Eq)
 
 maxEq = max(Eq);
 minEq = min(Eq);
 eqVals = minEq:maxEq;
-
-nFrames = size(frames,2);
-eqMeans = NaN*zeros(1,length(eqVals));
-eqStd = NaN*zeros(1,length(eqVals));
-
-for i = 1:length(eqVals)
-    v = eqVals(i);
+nGroups = length(eqVals);
+nFrames = size(signal,2);
+nTrials = size(signal,3);
+eqMeans = NaN*zeros(nTrials,nGroups);
+eqStd = NaN*zeros(nTrials,nGroups);
+for iGroup = 1:nGroups
+    v = eqVals(iGroup);
     groupIdx = Eq==v;
-    nPoints = 0;
-    sumVals = 0;
-    sumSquares = 0;
-    for iFrame = 1:nFrames
-        F = frames(:,iFrame);
-        frameVals = F(groupIdx);
-        nPoints = nPoints + length(frameVals);
-        sumVals = sumVals + sum(frameVals);
-        sumSquares = sumSquares + sum(frameVals .^ 2);
-    end
-    mean = sumVals/nPoints;
-    meanSquares = sumSquares/nPoints;
-    sigma = sqrt(meanSquares - mean^2);
-    eqMeans(i) = mean;
-    eqStd(i) = sigma;
+    groupVals = signal(groupIdx,:,:);
+    groupSize = size(groupVals,1);
+    % flatten pixels and frames to rows and leave trials as columns
+    % then compute mean + std for all trials together (as columns)
+    flatVals = reshape(groupVals, groupSize*nFrames, nTrials);
+    eqMeans(:,iGroup) = mean(flatVals)';
+    eqStd(:,iGroup) = std(flatVals)';
 end
