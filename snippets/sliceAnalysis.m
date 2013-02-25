@@ -46,15 +46,13 @@ C = [30,38];
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 
-[a,mu,sigma,R2] = bestGaussian(distances,eqMeans);
-fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', a, mu, sigma, R2);
-
-myGauss = @(x) a*exp(-0.5*((x-mu)/sigma)^2);
-fit = arrayfun(myGauss,distances);
-nAvgFactor = 1; % number of samples that went into our average (for estimating std)
+P = GaussianFit.fitParams(distances,eqMeans);
+fit = GaussianFit.fitValues(distances,P);
+R2 = calcR2(eqMeans,fit);
+fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', P, R2);
 
 figure;
-errorbar(distances, eqMeans, eqStd*sqrt(nAvgFactor));
+errorbar(distances, eqMeans, eqStd);
 hold on
 plot(distances, fit, 'r');
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
