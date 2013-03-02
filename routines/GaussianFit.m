@@ -25,10 +25,7 @@ classdef GaussianFit
         end
         
         function y = fitValues(x,P)
-            a = P(1);
-            mu = P(2);
-            sigma = P(3);
-
+            [a,mu,sigma] = unpack(P);
             Zi = (x - mu) / sigma;
             expPart = exp(-0.5*Zi.^2);
             y = a*expPart; % gaussian value for all samples Xi
@@ -37,10 +34,7 @@ classdef GaussianFit
 end
 
 function [val,grad] = f(P,X,Y)
-a = P(1);
-mu = P(2);
-sigma = P(3);
-
+[a,mu,sigma] = unpack(P);
 Zi = (X - mu) / sigma;
 expPart = exp(-0.5*Zi.^2);
 Fi = a*expPart; % gaussian value for all samples Xi
