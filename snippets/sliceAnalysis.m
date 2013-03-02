@@ -47,7 +47,7 @@ mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
 eqStd = mean(eqStd,1); % estimate std over all trials
 
-nBins = 5;
+nBins = 1; % disable cross validation
 [yFit,P,R2] = crossValidationRegression(GaussianFit,distances,eqMeans,nBins);
 fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', P, R2);
 
@@ -67,7 +67,7 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 1;
-nBins = 5;
+nBins = 1; % disable cross validation
 [a,mu,sigma,R2] = fitsOverTime(blank, stims, frameRange, ...
                                W, C, vertical, nBins);
 
