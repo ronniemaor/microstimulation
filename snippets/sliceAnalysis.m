@@ -45,7 +45,7 @@ C = [30,38];
 [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
-eqStd = mean(eqStd,1); % estimate std over all trials
+eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
 
 nBins = 1; % disable cross validation
 fit = GaussianFit;
@@ -53,7 +53,7 @@ fit = GaussianFit;
 fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', P, R2);
 
 figure;
-errorbar(distances, mean(eqMeans,1), eqStd);
+errorbar(distances, mean(eqMeans,1), eqSEM);
 hold on
 plot(distances, yFit, 'r');
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
