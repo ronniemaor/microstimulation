@@ -1,5 +1,13 @@
 classdef GaussianFit
     methods (Static)
+        function s = name()
+            s = 'Gaussian fit';
+        end
+        
+        function names = paramNames()
+            names = {'a', 'mu', 'sigma'};
+        end
+        
         function P = fitParams(x,y,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)

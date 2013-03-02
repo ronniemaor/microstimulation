@@ -36,73 +36,85 @@ zlabel('Relative signal');
 
 %% distance -> signal (at peak point)
 mask = chamberMask(blank);
-peakRange = rangeFromWidth(33,9);
+peakRange = 33; % rangeFromWidth(33,3);
 signal = relativeSignal(blank,stims,peakRange);
-vertical = 0;
 W = 9;
 C = [30,38];
-
-[eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
-mmPerPixel = 0.1;
-distances = eqVals * mmPerPixel; % convert to mm
-eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
-
-nBins = 1; % disable cross validation
 fit = GaussianFit;
-[yFit,P,R2] = crossValidationRegression(fit,distances,eqMeans,nBins);
-fprintf('a=%g, mu=%g, sigma=%g, R2=%g\n', P, R2);
+%fit = ExponentialFit;
+nBins = 1; % disable cross validation
 
-figure;
-errorbar(distances, mean(eqMeans,1), eqSEM);
-hold on
-plot(distances, yFit, 'r');
-if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
-title(sprintf('Signal strength for %s distance',strAxis));
-xlabel('Distance from peak center (mm)'); 
-ylabel('Relative signal');
-grid on
-legend('Measured values', 'Gaussian fit');
+figure
+for iSlice = 1:2
+    vertical = iSlice == 2;
+    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+    mmPerPixel = 0.1;
+    distances = eqVals * mmPerPixel; % convert to mm
+    eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
+
+    [yFit,P,R2] = crossValidationRegression(fit,distances,eqMeans,nBins);
+    paramNames = fit.paramNames();
+    strParams = '';
+    for iParam = 1:length(paramNames)
+        strParams = [strParams, sprintf('%s=%.2g, ', paramNames{iParam}, P(iParam))];
+    end
+    strParams = [strParams, sprintf('R2=%.2g', R2)];
+
+    subplot(1,2,iSlice)
+    errorbar(distances, mean(eqMeans,1), eqSEM);
+    hold on
+    plot(distances, yFit, 'r');
+    if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
+    title(sprintf('%s slice\n(%s)',strAxis,strParams));
+    xlabel('Distance from peak center (mm)'); 
+    ylabel('Relative signal');
+    grid on
+    legend('Measured values', fit.name());
+end
+
+if length(peakRange) > 1
+    strFrames = sprintf('frames %d:%d', min(peakRange), max(peakRange));
+else
+    strFrames = sprintf('frame %d', peakRange);
+end
+t = sprintf('%s for %s, W=%d, C=(%d,%d)', fit.name(), strFrames, W, C(1), C(2));
+topLevelTitle(t);
 
 %% how guassian fit parameters change over time
 frameRange = 28:38;
 W = 9;
 C = [30,38];
-vertical = 1;
+vertical = 0;
 nBins = 1; % disable cross validation
-fit = GaussianFit;
-[a,mu,sigma,R2] = fitsOverTime(fit, blank, stims, frameRange, ...
-                               W, C, vertical, nBins);
+%fit = GaussianFit;
+fit = ExponentialFit;
+
+[P,R2] = fitsOverTime(fit, blank, stims, frameRange, W, C, vertical, nBins);
+
+paramNames = fit.paramNames();
+nParams = size(P,1);
+nPlots = nParams + 1;
+nCols = ceil(sqrt(nPlots));
+nRows = ceil(nPlots/nCols);
 
 figure
+for iParam = 1:nParams
+    subplot(nRows,nCols,iParam)
+    plot(frameRange,P(iParam,:))
+    name = paramNames{iParam};
+    title(['Parameter ', name])
+    ylabel(name)
+    xlabel('Frame')
+end
 
-subplot(2,2,1);
-plot(frameRange, a)
-title('Parameter a')
-ylabel('a')
-xlabel('Frame')
-
-subplot(2,2,2);
-plot(frameRange, mu)
-title('Parameter \mu')
-ylabel('\mu')
-xlabel('Frame')
-
-subplot(2,2,3);
-plot(frameRange, sigma)
-title('Parameter \sigma')
-ylabel('\sigma')
-xlabel('Frame')
-
-subplot(2,2,4);
+subplot(nRows,nCols,nParams+1);
 plot(frameRange, R2)
-title('Explained Variance')
+title('R2')
 ylabel('R2')
 xlabel('Frame')
 
 if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
-t = sprintf('Fit parameters for %s slice, frames %d-%d', ...
-            strAxis, min(frameRange), max(frameRange));
-ha = axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0 1], ...
-          'Box','off', 'Visible','off', ...
-          'Units','normalized', 'clipping' , 'off');
-text(0.5,1,['\bf ' t],'HorizontalAlignment', 'center', 'VerticalAlignment', 'top')
+t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
+            fit.name(), strAxis, min(frameRange), max(frameRange), ...
+            W, C(1), C(2));
+topLevelTitle(t);
