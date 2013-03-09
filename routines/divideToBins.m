@@ -4,7 +4,6 @@ function bins = divideToBins(points,nBins)
     binSize = floor(n/nBins);
     remainder = mod(n,nBins);
     nTaken = 0;
-    points = points(randperm(n));
     for i = 1:nBins
         k = binSize;
         if remainder > 0

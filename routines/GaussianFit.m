@@ -8,13 +8,13 @@ classdef GaussianFit
             names = {'a', 'mu', 'sigma'};
         end
         
-        function P = fitParams(x,y,debug)
+        function P = fitParams(x,y,~,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
             %   Y(i) - target value for point i
             % Output:
             %   [a,mu,sigma] = unpack(P)
-            if nargin < 3
+            if nargin < 4
                 debug = 0;
             end
             options = optimset('GradObj','on');

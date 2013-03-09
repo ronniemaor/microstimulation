@@ -40,9 +40,10 @@ peakRange = 33; % rangeFromWidth(33,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
 C = [30,38];
-fit = GaussianFit;
+%fit = GaussianFit;
 %fit = ExponentialFit;
-nBins = 1; % disable cross validation
+fit = ExactFit;
+nBins = 5;
 
 figure
 for iSlice = 1:2
@@ -52,20 +53,23 @@ for iSlice = 1:2
     distances = eqVals * mmPerPixel; % convert to mm
     eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
 
-    [yFit,P,R2] = crossValidationRegression(fit,distances,eqMeans,nBins);
+    [yFit,P,R2,R2sem, overfitR2] = ...
+               crossValidationRegression(fit,distances,eqMeans,nBins);
     paramNames = fit.paramNames();
     strParams = '';
     for iParam = 1:length(paramNames)
-        strParams = [strParams, sprintf('%s=%.2g, ', paramNames{iParam}, P(iParam))];
+        strParams = [strParams, sprintf('%s=%.2g, ', ...
+                     paramNames{iParam}, P(iParam))];
     end
-    strParams = [strParams, sprintf('R2=%.2g', R2)];
+    strR2 = sprintf('R2(overfit)=%.2g\nnBins=%d, R2=%.2g +/- %.2g', ...
+                     overfitR2, nBins, R2, R2sem);
 
     subplot(1,2,iSlice)
     errorbar(distances, mean(eqMeans,1), eqSEM);
     hold on
     plot(distances, yFit, 'r');
     if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
-    title(sprintf('%s slice\n(%s)',strAxis,strParams));
+    title(sprintf('%s slice\n%s\n%s',strAxis,strParams,strR2));
     xlabel('Distance from peak center (mm)'); 
     ylabel('Relative signal');
     grid on
@@ -85,15 +89,17 @@ frameRange = 28:38;
 W = 9;
 C = [30,38];
 vertical = 0;
-nBins = 1; % disable cross validation
 %fit = GaussianFit;
-fit = ExponentialFit;
+%fit = ExponentialFit;
+fit = ExactFit;
+nBins = 5;
 
-[P,R2] = fitsOverTime(fit, blank, stims, frameRange, W, C, vertical, nBins);
+[P, R2, R2sem, overfitR2] = ...
+    fitsOverTime(fit, blank, stims, frameRange, W, C, vertical, nBins);
 
 paramNames = fit.paramNames();
-nParams = size(P,1);
-nPlots = nParams + 1;
+nParams = length(paramNames);
+nPlots = nParams + 2;
 nCols = ceil(sqrt(nPlots));
 nRows = ceil(nPlots/nCols);
 
@@ -108,7 +114,14 @@ for iParam = 1:nParams
 end
 
 subplot(nRows,nCols,nParams+1);
+plot(frameRange, overfitR2)
+title('R2 (overfit)')
+ylabel('R2')
+xlabel('Frame')
+
+subplot(nRows,nCols,nParams+2);
 plot(frameRange, R2)
+errorbar(frameRange, R2, R2sem);
 title('R2')
 ylabel('R2')
 xlabel('Frame')
@@ -117,4 +130,46 @@ if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
 t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
             fit.name(), strAxis, min(frameRange), max(frameRange), ...
             W, C(1), C(2));
+topLevelTitle(t);
+
+%% R2 values as function of nBins (fit at peak)
+mask = chamberMask(blank);
+peakRange = 33; % rangeFromWidth(33,3);
+signal = relativeSignal(blank,stims,peakRange);
+W = 9;
+C = [30,38];
+fit = GaussianFit;
+%fit = ExponentialFit;
+%fit = ExactFit;
+
+binSizes = [2:14,29];
+nBinSizes = length(binSizes);
+
+figure
+for iSlice = 1:2
+    vertical = iSlice == 2;
+    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+    mmPerPixel = 0.1;
+    distances = eqVals * mmPerPixel; % convert to mm
+
+    binR2 = zeros(1,nBinSizes);
+    binR2sem = zeros(1,nBinSizes);
+    for iBinSize = 1:nBinSizes
+        nBins = binSizes(iBinSize);
+        [yFit,P,R2,R2sem, overfitR2] = ...
+                   crossValidationRegression(fit,distances,eqMeans,nBins);
+
+        binR2(iBinSize) = R2;
+        binR2sem(iBinSize) = R2sem;
+    end
+    
+    subplot(1,2,iSlice)
+    errorbar(binSizes, binR2, binR2sem);
+    if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
+    title(sprintf('%s slice',strAxis));
+    xlabel('nBins'); 
+    ylabel('R2');
+end
+
+t = sprintf('R2 as function of bin size (%s)', fit.name());
 topLevelTitle(t);

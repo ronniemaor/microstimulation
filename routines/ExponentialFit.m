@@ -8,13 +8,13 @@ classdef ExponentialFit
             names = {'a', 'x0', 'alpha', 'beta'};
         end
         
-        function P = fitParams(x,y,debug)
+        function P = fitParams(x,y,~,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
             %   Y(i) - target value for point i
             % Output:
             %   [a,x0,alpha,beta] = unpack(P)
-            if nargin < 3
+            if nargin < 4
                 debug = 0;
             end
             options = optimset('GradObj','on');
