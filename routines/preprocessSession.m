@@ -1,4 +1,5 @@
-function [blank,stims] = preprocessSession(dataDir,dayPrefix)
+function [blank,stims] = preprocessSession(dataDir)
+    dayPrefix = getPrefixFromDataDir(dataDir);
     nPixels = 10000; nFrames = 256;
     
     nBlanks = 0; 
@@ -25,6 +26,14 @@ function [blank,stims] = preprocessSession(dataDir,dayPrefix)
         fprintf('\n')
     end
     blank = blank / nBlanks;
+end
+
+function prefix = getPrefixFromDataDir(dataDir)
+    parts = splitstring(dataDir,filesep);
+    parts = splitstring(parts{end-1},'_');
+    day = parts{end};
+    month = parts{end-1};
+    prefix = [day,month];
 end
 
 function normalized = normalizeTrial(trial)
