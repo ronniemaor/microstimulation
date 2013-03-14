@@ -37,40 +37,42 @@ mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-%fit = GaussianFit;
-fit = ExponentialFit;
-%fit = ExactFit;
+fits = {GaussianFit, ExponentialFit};
 nBins = 2;
 
 figure
-for iSlice = 1:2
-    vertical = iSlice == 2;
-    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
-    mmPerPixel = 0.1;
-    distances = eqVals * mmPerPixel; % convert to mm
-    eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
+nFits = length(fits);
+for iFit = 1:nFits
+    fit = fits{iFit};
+    for iSlice = 1:2
+        vertical = iSlice == 2;
+        [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+        mmPerPixel = 0.1;
+        distances = eqVals * mmPerPixel; % convert to mm
+        eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
 
-    [yFit,P,err,errSem, overfitR2] = ...
-               crossValidationRegression(fit,distances,eqMeans,nBins);
-    paramNames = fit.paramNames();
-    strParams = '';
-    for iParam = 1:length(paramNames)
-        strParams = [strParams, sprintf('%s=%.2g, ', ...
-                     paramNames{iParam}, P(iParam))];
+        [yFit,P,err,errSem, overfitR2] = ...
+                   crossValidationRegression(fit,distances,eqMeans,nBins);
+        paramNames = fit.paramNames();
+        strParams = '';
+        for iParam = 1:length(paramNames)
+            strParams = [strParams, sprintf('%s=%.2g, ', ...
+                         paramNames{iParam}, P(iParam))];
+        end
+        strErr = sprintf('R2=%.2g +/- %.2g (w/o CV=%.2g)', ...
+                         err, errSem, overfitR2);
+
+        subplot(nFits,2,nFits*(iFit-1) + iSlice)
+        errorbar(distances, mean(eqMeans,1), eqSEM);
+        hold on
+        plot(distances, yFit, 'r');
+        if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
+        title(sprintf('%s slice\n%s\n%s',strAxis,strParams,strErr));
+        xlabel('Distance from peak center (mm)'); 
+        ylabel('Relative signal');
+        grid on
+        legend('Measured values', fit.name());
     end
-    strErr = sprintf('R2(overfit)=%.2g\nnBins=%d, R2=%.2g +/- %.2g', ...
-                     overfitR2, nBins, err, errSem);
-
-    subplot(1,2,iSlice)
-    errorbar(distances, mean(eqMeans,1), eqSEM);
-    hold on
-    plot(distances, yFit, 'r');
-    if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
-    title(sprintf('%s slice\n%s\n%s',strAxis,strParams,strErr));
-    xlabel('Distance from peak center (mm)'); 
-    ylabel('Relative signal');
-    grid on
-    legend('Measured values', fit.name());
 end
 
 if length(peakRange) > 1
@@ -78,7 +80,7 @@ if length(peakRange) > 1
 else
     strFrames = sprintf('frame %d', peakRange);
 end
-t = sprintf('%s for %s, W=%d, C=(%d,%d)', fit.name(), strFrames, W, C(1), C(2));
+t = sprintf('Fits for %s, W=%d, C=(%d,%d)', strFrames, W, C(1), C(2));
 topLevelTitle(t);
 
 %% how fit parameters change over time
