@@ -30,6 +30,7 @@ classdef GaussianFit
             P0 = [(max(y)-min(y)), mean(x), (max(x)-min(x)/10)];
             P = fminunc(@f,P0,options,x,y);
             P(1) = P(1) * scale; % correct "a" for scaling Y
+            P(3) = abs(P(3)); % sigma is symmetrical wrt sign. Keep it positive.
         end
         
         function y = fitValues(x,P)
