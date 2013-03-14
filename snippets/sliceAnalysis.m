@@ -81,7 +81,7 @@ end
 t = sprintf('%s for %s, W=%d, C=(%d,%d)', fit.name(), strFrames, W, C(1), C(2));
 topLevelTitle(t);
 
-%% how guassian fit parameters change over time
+%% how fit parameters change over time
 frameRange = 28:38;
 W = 9;
 vertical = 0;
