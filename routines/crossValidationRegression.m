@@ -1,4 +1,4 @@
-function [yFit, P, R2, R2sem, overfitR2] = ...
+function [yFit, P, err, errSem, overfitR2] = ...
          crossValidationRegression(h, x, Y, nBins, nBootstrap)
 % Input:
 % x - 1xN row vector with X axis values of regression points
@@ -14,8 +14,8 @@ function [yFit, P, R2, R2sem, overfitR2] = ...
 % Output:
 % yFit - best fit trained on all data
 % P - fit parameters over average of all rows.
-% R2 - average of R2 on test set per cross validation training set
-% R2sem - standard error of mean for R2
+% err - average of RMS errors on test set per cross validation training set
+% errSem - standard error of mean for the RMS error
 % overfitR2 - R2 computed between yFit (on all data) and the AVERAGE
 %             of Y over all trials.
     M = size(Y,1);
@@ -29,7 +29,7 @@ function [yFit, P, R2, R2sem, overfitR2] = ...
         nBootstrap = ceil(30/nBins);
     end
 
-    R2samples = zeros(nBootstrap,nBins);
+    errSamples = zeros(nBootstrap,nBins);
     for iBootstrap = 1:nBootstrap       
         indexes = randperm(M);
         bins = divideToBins(indexes,nBins);
@@ -47,11 +47,11 @@ function [yFit, P, R2, R2sem, overfitR2] = ...
             
             P = h.fitParams(x,yTrain,yTest);
             yFit = h.fitValues(x,P);
-            R2samples(iBootstrap,iBin) = calcR2(yTest,yFit);
+            errSamples(iBootstrap,iBin) = calcR2(yTest,yFit);
         end
     end
-    R2 = mean(R2samples(:));
-    R2sem = std(R2samples(:)) / sqrt(nBins*nBootstrap);
+    err = mean(errSamples(:));
+    errSem = std(errSamples(:)) / sqrt(nBins*nBootstrap);
     
     % final fit with all the data
     yAll = mean(Y,1);
