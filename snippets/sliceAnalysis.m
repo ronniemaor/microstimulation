@@ -37,8 +37,8 @@ mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-fits = {GaussianFit, ExponentialFit};
 nBins = 2;
+fits = {GaussianFit, ExponentialFit};
 
 figure
 nFits = length(fits);
@@ -84,49 +84,55 @@ t = sprintf('Fits for %s, W=%d, C=(%d,%d)', strFrames, W, C(1), C(2));
 topLevelTitle(t);
 
 %% how fit parameters change over time
-frameRange = 28:38;
+frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
-vertical = 0;
-%fit = GaussianFit;
-fit = ExponentialFit;
-%fit = ExactFit;
 nBins = 2;
+fits = {GaussianFit, ExponentialFit};
 
-[P, err, errSem, overfitR2] = ...
-    fitsOverTime(fit, blank, stims, frameRange, W, C, vertical, nBins);
+nFits = length(fits);
+for iFit = 1:nFits
+    fit = fits{iFit};
+    
+    paramNames = fit.paramNames();
+    nParams = length(paramNames);
+    nPlots = nParams + 2;
+    nCols = ceil(sqrt(nPlots));
+    nRows = ceil(nPlots/nCols);
+    
+    for iSlice = 1:2
+        vertical = iSlice == 2;
 
-paramNames = fit.paramNames();
-nParams = length(paramNames);
-nPlots = nParams + 2;
-nCols = ceil(sqrt(nPlots));
-nRows = ceil(nPlots/nCols);
+        [P, err, errSem, overfitR2] = fitsOverTime(fit, blank, stims, ...
+                                                   frameRange, W, C, ...
+                                                   vertical, nBins);
 
-figure
-for iParam = 1:nParams
-    subplot(nRows,nCols,iParam)
-    plot(frameRange,P(iParam,:))
-    name = paramNames{iParam};
-    title(['Parameter ', name])
-    ylabel(name)
-    xlabel('Frame')
+        figure
+        for iParam = 1:nParams
+            subplot(nRows,nCols,iParam)
+            plot(frameRange,P(iParam,:))
+            name = paramNames{iParam};
+            title(['Parameter ', name])
+            ylabel(name)
+            xlabel('Frame')
+        end
+
+        subplot(nRows,nCols,nParams+1);
+        plot(frameRange, overfitR2)
+        title('R2 (overfit)')
+        ylabel('R2')
+        xlabel('Frame')
+
+        subplot(nRows,nCols,nParams+2);
+        plot(frameRange, err)
+        errorbar(frameRange, err, errSem);
+        title('R2')
+        ylabel('R2')
+        xlabel('Frame')
+
+        if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
+        t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
+                    fit.name(), strAxis, min(frameRange), max(frameRange), ...
+                    W, C(1), C(2));
+        topLevelTitle(t);
+    end
 end
-
-subplot(nRows,nCols,nParams+1);
-plot(frameRange, overfitR2)
-title('R2 (overfit)')
-ylabel('R2')
-xlabel('Frame')
-
-subplot(nRows,nCols,nParams+2);
-plot(frameRange, err)
-errorbar(frameRange, err, errSem);
-title('R2')
-ylabel('R2')
-xlabel('Frame')
-
-if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
-t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
-            fit.name(), strAxis, min(frameRange), max(frameRange), ...
-            W, C(1), C(2));
-topLevelTitle(t);
-
