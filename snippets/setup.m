@@ -3,3 +3,4 @@ close all
 clear all
 setDataDir
 loadData
+findPeak

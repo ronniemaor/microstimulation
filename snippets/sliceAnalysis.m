@@ -4,7 +4,6 @@ meanFrame = mean(blank(:,2:100),2);
 blVes = mfilt2(meanFrame,100,100,2,'hm');
 W = 9;
 vertical = 0;
-C = [30,38];
 Eq = sliceEqGroups([100,100],C,mask,W,vertical);
 %blVes(mask) = mean(blVes); % show chamber mask
 %region = ~isnan(Eq); % show whole slice
@@ -18,7 +17,6 @@ range = 2:230;
 signal = relativeSignal(blank,stims,range);
 vertical = 0;
 W = 9;
-C = [30,38];
 [means,eqVals] = sliceTransform(signal,mask,C,W,vertical);
 mmPerPixel = 0.1;
 distances = eqVals * mmPerPixel; % convert to mm
@@ -36,10 +34,9 @@ zlabel('Relative signal');
 
 %% distance -> signal (at peak point)
 mask = chamberMask(blank);
-peakRange = 33; % rangeFromWidth(33,3);
+peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-C = [30,38];
 %fit = GaussianFit;
 %fit = ExponentialFit;
 fit = ExactFit;
@@ -87,7 +84,6 @@ topLevelTitle(t);
 %% how guassian fit parameters change over time
 frameRange = 28:38;
 W = 9;
-C = [30,38];
 vertical = 0;
 %fit = GaussianFit;
 %fit = ExponentialFit;
