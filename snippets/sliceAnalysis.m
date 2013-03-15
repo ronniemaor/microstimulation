@@ -38,7 +38,7 @@ peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
 nBins = 2;
-fits = {GaussianFit, ExponentialFit};
+fits = {DoubleGaussianFit, ExponentialFit};
 
 figure
 nFits = length(fits);
@@ -87,7 +87,7 @@ topLevelTitle(t);
 frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
 nBins = 2;
-fits = {GaussianFit, ExponentialFit};
+fits = {DoubleGaussianFit, ExponentialFit};
 
 nFits = length(fits);
 for iFit = 1:nFits
