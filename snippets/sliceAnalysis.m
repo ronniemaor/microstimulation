@@ -83,6 +83,54 @@ end
 t = sprintf('Fits for %s, W=%d, C=(%d,%d)', strFrames, W, C(1), C(2));
 topLevelTitle(t);
 
+%% compare fit of different families
+mask = chamberMask(blank);
+peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
+signal = relativeSignal(blank,stims,peakRange);
+W = 9;
+nBins = 2;
+fits = {GaussianFit, ExponentialFit, DoubleGaussianFit};
+
+nSlices = 2;
+nFits = length(fits);
+errCases = zeros(nSlices,nFits);
+errSemCases = zeros(nSlices,nFits);
+fitNames = cell(1,nFits);
+sliceNames = cell(1,nSlices);
+
+for iFit = 1:nFits
+    fit = fits{iFit};
+    fitNames{iFit} = fit.name();
+    for iSlice = 1:nSlices
+        vertical = iSlice == 2;
+        if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
+        sliceNames{iSlice} = strAxis;
+        
+        [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+        mmPerPixel = 0.1;
+        distances = eqVals * mmPerPixel; % convert to mm
+        eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
+
+        [yFit,P,err,errSem, overfitR2] = ...
+                   crossValidationRegression(fit,distances,eqMeans,nBins);
+        errCases(iSlice,iFit) = err;
+        errSemCases(iSlice,iFit) = errSem;
+    end
+end
+
+figure
+barwitherr(errSemCases, errCases);
+title('Goodness of fit for the different models');
+set(gca,'XTickLabel',sliceNames)
+ylabel('R2')
+legend(fitNames,'Location','NorthEastOutside')
+
+topVals = errCases + errSemCases;
+bottomVals = errCases - errSemCases;
+ymax = max(topVals(:));
+ymin = min(bottomVals(:));
+ylim([max(0,ymin-0.2), min(1,ymax+0.05)])
+
 %% how fit parameters change over time
 frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
