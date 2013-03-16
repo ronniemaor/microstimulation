@@ -37,7 +37,7 @@ mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-nBins = 2;
+nBins = 5;
 fits = {DoubleGaussianFit, ExponentialFit};
 
 figure
@@ -59,7 +59,7 @@ for iFit = 1:nFits
             strParams = [strParams, sprintf('%s=%.2g, ', ...
                          paramNames{iParam}, P(iParam))];
         end
-        strErr = sprintf('R2=%.2g +/- %.2g (w/o CV=%.2g)', ...
+        strErr = sprintf('MSE=%.2g +/- %.2g (R2 w/o CV=%.2g)', ...
                          err, errSem, overfitR2);
 
         subplot(nFits,2,nFits*(iFit-1) + iSlice)
@@ -86,7 +86,7 @@ topLevelTitle(t);
 %% how fit parameters change over time
 frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
-nBins = 2;
+nBins = 5;
 fits = {DoubleGaussianFit, ExponentialFit};
 
 nFits = length(fits);
@@ -125,8 +125,8 @@ for iFit = 1:nFits
         subplot(nRows,nCols,nParams+2);
         plot(frameRange, err)
         errorbar(frameRange, err, errSem);
-        title('R2')
-        ylabel('R2')
+        title('MSE')
+        ylabel('MSE')
         xlabel('Frame')
 
         if vertical; strAxis='vertical'; else strAxis='horizontal'; end;

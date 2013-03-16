@@ -47,7 +47,7 @@ function [yFit, P, err, errSem, overfitR2] = ...
             
             P = h.fitParams(x,yTrain,yTest);
             yFit = h.fitValues(x,P);
-            errSamples(iBootstrap,iBin) = calcR2(yTest,yFit);
+            errSamples(iBootstrap,iBin) = calcMSE(yTest,yFit);
         end
     end
     err = mean(errSamples(:));
