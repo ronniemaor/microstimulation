@@ -8,10 +8,10 @@ function [blank,stims] = preprocessSession(dataDir)
     for iCond = 1:6
         isBlank = iCond >= 4;
         fprintf('Condition %d. isBlank=%d\n', iCond, isBlank)
-        condFiles = dir(sprintf('%s\\%s_%d*.mat', dataDir, dayPrefix, iCond));
+        condFiles = dir(sprintf('%s/%s_%d*.mat', dataDir, dayPrefix, iCond));
         nFiles = size(condFiles,1);
         for iFile=1:nFiles
-            filename = sprintf('%s\\%s', dataDir, condFiles(iFile).name);
+            filename = sprintf('%s/%s', dataDir, condFiles(iFile).name);
             fprintf('\tReading File %s\n', filename)
             fileData = load(filename);
             normalized = normalizeTrial(fileData.FRMpre);
@@ -29,7 +29,7 @@ function [blank,stims] = preprocessSession(dataDir)
 end
 
 function prefix = getPrefixFromDataDir(dataDir)
-    parts = splitstring(dataDir,filesep);
+    parts = splitstring(dataDir,'/');
     parts = splitstring(parts{end-1},'_');
     day = parts{end};
     month = parts{end-1};
