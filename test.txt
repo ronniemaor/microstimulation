@@ -1,3 +1,0 @@
-hello there.
-checking work with github.
-checking commit from windows
