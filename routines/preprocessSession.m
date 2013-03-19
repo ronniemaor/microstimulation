@@ -1,15 +1,16 @@
-function [blank,stims] = preprocessSession(dataDir)
+function [blank,stims,rawBlank] = preprocessSession(dataDir)
     dayPrefix = getPrefixFromDataDir(dataDir);
     nPixels = 10000; nFrames = 256;
     
     nBlanks = 0; 
     nStims = 0;
     blank = zeros(nPixels,nFrames);
+    rawBlank = zeros(nPixels,nFrames);
     for iCond = 1:6
         isBlank = iCond >= 4;
-        fprintf('Condition %d. isBlank=%d\n', iCond, isBlank)
         condFiles = dir(sprintf('%s/%s_%d*.mat', dataDir, dayPrefix, iCond));
         nFiles = size(condFiles,1);
+        fprintf('Condition %d (%d files). isBlank=%d\n', iCond, nFiles, isBlank)
         for iFile=1:nFiles
             filename = sprintf('%s/%s', dataDir, condFiles(iFile).name);
             fprintf('\tReading File %s\n', filename)
@@ -18,6 +19,7 @@ function [blank,stims] = preprocessSession(dataDir)
             if isBlank
                 nBlanks = nBlanks + 1;
                 blank = blank + normalized;
+                rawBlank = rawBlank + fileData.FRMpre;
             else
                 nStims = nStims + 1;
                 stims(:,:,nStims) = normalized;
@@ -26,6 +28,7 @@ function [blank,stims] = preprocessSession(dataDir)
         fprintf('\n')
     end
     blank = blank / nBlanks;
+    rawBlank = rawBlank / nBlanks;
 end
 
 function prefix = getPrefixFromDataDir(dataDir)
