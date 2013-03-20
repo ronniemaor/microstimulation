@@ -35,10 +35,14 @@ zlabel('Relative signal');
 %% distance -> signal (at peak point)
 mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
+
+%blank = mean(condsn(:,:,4:6),3);
+%stims = condsn(:,:,1);
+
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-nBins = 2;
-fits = {DoubleGaussianFit, ExponentialFit};
+nBins = 1;
+fits = {DoubleGaussianFit};
 
 figure
 nFits = length(fits);

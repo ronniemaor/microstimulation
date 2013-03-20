@@ -27,6 +27,14 @@ function [conds,condsn] = preprocessSessionOrig(dataDir)
     %noiseThreshold = 0.15 * max(conds(:)); % 15% of maximum value
     noiseThreshold = 0.15 * min(max(max(conds))); % 15% of "maximum" value (small bug in original code)
     condsn(conds < noiseThreshold) = 1;
+    
+    tmpConds = mean(conds(:,5:100,1),2);
+    maxValue = max(tmpConds(:));
+    fprintf('maxValue = %f\n',maxValue)
+    threshold = 0.15 * maxValue;    
+    tmpImg = zeros(10000,1);
+    tmpImg(tmpConds < threshold) = 1;
+    figure; mimg(tmpImg,100,100); impixelinfo;
 end
 
 function prefix = getPrefixFromDataDir(dataDir)
