@@ -38,7 +38,7 @@ peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
 nBins = 2;
-fits = {DoubleGaussianFit, ExponentialFit};
+fits = {OneSidedGaussianFit, OneSidedExponentialFit};
 
 figure
 nFits = length(fits);
@@ -89,7 +89,7 @@ peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
 nBins = 2;
-fits = {GaussianFit, ExponentialFit, DoubleGaussianFit};
+fits = {OneSidedGaussianFit, OneSidedExponentialFit};
 
 nSlices = 2;
 nFits = length(fits);
@@ -135,7 +135,7 @@ ylim([max(0,ymin-0.2), min(1,ymax+0.05)])
 frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
 nBins = 2;
-fits = {DoubleGaussianFit, ExponentialFit};
+fits = {OneSidedExponentialFit};
 
 nFits = length(fits);
 for iFit = 1:nFits
