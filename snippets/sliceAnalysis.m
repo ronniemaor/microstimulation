@@ -1,6 +1,6 @@
 %% draw the slices on blood vessel image
 mask = chamberMask(blank);
-meanFrame = mean(blank(:,2:100),2);
+meanFrame = mean(rawBlank(:,2:100),2);
 blVes = mfilt2(meanFrame,100,100,2,'hm');
 W = 9;
 vertical = 0;
