@@ -8,6 +8,11 @@ classdef ExponentialFit
             names = {'a', 'x0', 'alpha', 'beta'};
         end
         
+        function [x,P] = testParamValues()
+            x = -5:0.1:5;
+            P = [1, 1, 1, 3];
+        end
+        
         function P = fitParams(x,y,~,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
@@ -79,7 +84,7 @@ d_alpha = Fi .* (-DX) ;
 d_alpha(betaRange) = 0;
 grad_alpha = mean(dE .* d_alpha);
 
-% grad_alpha
+% grad_beta
 d_beta = Fi .* DX ;
 d_beta(alphaRange) = 0;
 grad_beta = mean(dE .* d_beta);
