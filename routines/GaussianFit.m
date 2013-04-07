@@ -1,20 +1,37 @@
 classdef GaussianFit
-    methods (Static)
-        function s = name()
+    properties
+        bDcShift
+    end
+    
+    methods
+        function obj = GaussianFit(bDcShift)
+            if nargin < 1
+                bDcShift = 0;
+            end
+            obj.bDcShift = bDcShift;
+        end
+        
+        function s = name(obj)
             s = 'Gaussian fit';
+            if obj.bDcShift
+                s = [s, ' (with DC)'];
+            end
         end
         
-        function names = paramNames()
-            names = {'a', 'mu', 'sigma'};
+        function names = paramNames(obj)
+            names = {'a', 'sigma'};
+            if obj.bDcShift
+                names{3} = 'b';
+            end
         end
         
-        function P = fitParams(x,y,~,debug)
+        function P = fitParams(obj,x,y,~,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
             %   Y(i) - target value for point i
             % Output:
-            %   [a,mu,sigma] = unpack(P)
-            if nargin < 4
+            %   P
+            if nargin < 5
                 debug = 0;
             end
             options = optimset('GradObj','on');
@@ -27,46 +44,68 @@ classdef GaussianFit
             scale = max(y)-min(y); % hack for optimization to converge
             y = y / scale;
 
-            P0 = [(max(y)-min(y)), mean(x), (max(x)-min(x)/10)];
+            P0 = [(max(y)-min(y)), (max(x)-min(x)/10)];
+            if obj.bDcShift
+                P0(3) = 0;
+            end            
             P = fminunc(@f,P0,options,x,y);
             P(1) = P(1) * scale; % correct "a" for scaling Y
-            P(3) = abs(P(3)); % sigma is symmetrical wrt sign. Keep it positive.
+            P(2) = abs(P(2)); % sigma is symmetrical wrt sign. Keep it positive.
+            if obj.bDcShift
+                P(3) = P(3) * scale;
+            end
         end
         
-        function y = fitValues(x,P)
-            [a,mu,sigma] = unpack(P);
-            Zi = (x - mu) / sigma;
+        function y = fitValues(obj,x,P)
+            if obj.bDcShift
+                [a,sigma,b] = unpack(P);
+            else
+                [a,sigma] = unpack(P);
+                b = 0;
+            end
+            Zi = x / sigma;
             expPart = exp(-0.5*Zi.^2);
-            y = a*expPart; % gaussian value for all samples Xi
+            y = a*expPart + b; % gaussian value for all samples Xi
         end
     end
 end
 
 function [val,grad] = f(P,X,Y)
-[a,mu,sigma] = unpack(P);
-Zi = (X - mu) / sigma;
-expPart = exp(-0.5*Zi.^2);
-Fi = a*expPart; % gaussian value for all samples Xi
-Di = Fi-Y; % difference from labels
+    bDcShift = length(P) == 3;
+    if bDcShift
+        [a,sigma,b] = unpack(P);
+    else
+        [a,sigma] = unpack(P);
+        b = 0;
+    end
+    Zi = X / sigma;
+    expPart = exp(-0.5*Zi.^2);
+    Fi = a*expPart + b; % gaussian value for all samples Xi
+    DY = Fi-Y; % difference from labels
 
-% compute mean error (error is square difference)
-val = mean(Di.^2);
+    % compute mean error (error is square difference)
+    val = 0.5*mean(DY.^2);
 
-% Compute the gradient
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dE = 2*Di;
+    % Compute the gradient
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    dE = DY;
 
-% grad_a
-da = expPart;
-grad_a = mean(dE .* da);
+    % grad_a
+    d_a = expPart;
+    grad_a = mean(dE .* d_a);
 
-% grad_mu
-d_mu = a/sigma * Zi .* expPart;
-grad_mu = mean(dE .* d_mu);
+    % grad_sigma
+    d_sigma = a/sigma * (Zi.^2) .* expPart;
+    grad_sigma = mean(dE .* d_sigma);
 
-% grad_sigma
-d_sigma = a/sigma * (Zi.^2) .* expPart;
-grad_sigma = mean(dE .* d_sigma);
-
-grad = [grad_a, grad_mu, grad_sigma];
+    % grad_b
+    if bDcShift
+        d_b = 1;
+        grad_b = mean(dE .* d_b);
+    end
+    
+    grad = [grad_a, grad_sigma];
+    if bDcShift
+        grad(3) = grad_b;
+    end    
 end
