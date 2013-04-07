@@ -29,11 +29,14 @@ function testFit(fit,debug)
     % show the results
     plot(x,y,'b',x,yFit,'r');
     strParams = '';
+    strFitParams = '';
     for iParam = 1:nParams
         strParams = [strParams, sprintf('%s=%.2g, ', ...
                      paramNames{iParam}, P(iParam))];
+        strFitParams = [strFitParams, sprintf('%s=%.2g, ', ...
+                     paramNames{iParam}, Pfit(iParam))];
     end    
-    title(sprintf('Testing %s\n%s\nR2 = %.2g', fit.name(),strParams, R2));
+    title(sprintf('Testing %s\nTruth: %s\nR2 = %.2g\nFitted: %s', fit.name(),strParams, R2, strFitParams));
     xlabel('x');
     ylabel('y');
     legend('Measured values', fit.name());
