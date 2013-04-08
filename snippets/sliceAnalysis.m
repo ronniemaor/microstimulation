@@ -39,41 +39,55 @@ signal = relativeSignal(blank,stims,peakRange);
 W = 9;
 nBins = 2;
 fits = {GaussianFit(1), ExponentialFit(1)};
-
+fitNames = cellfun(@(fit) fit.name(),fits, 'UniformOutput',false);
 figure
 nFits = length(fits);
-for iFit = 1:nFits
-    fit = fits{iFit};
-    for iSlice = 1:2
-        vertical = iSlice == 2;
-        [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
-        mmPerPixel = 0.1;
-        distances = eqVals * mmPerPixel; % convert to mm
-        eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
 
+nSlices = 2;
+errCases = zeros(nSlices,nFits);
+errSemCases = zeros(nSlices,nFits);
+sliceNames = cell(1,nSlices);
+
+for iSlice = 1:2
+    vertical = iSlice == 2;
+    if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
+    sliceNames{iSlice} = strAxis;
+    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+    mmPerPixel = 0.1;
+    distances = eqVals * mmPerPixel; % convert to mm
+    eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
+    
+    subplot(2,2,iSlice)
+    errorbar(distances, mean(eqMeans,1), eqSEM);
+    hold on
+    colors = get(gca,'ColorOrder');
+
+    for iFit = 1:nFits
+        fit = fits{iFit};
         [yFit,P,err,errSem, overfitR2] = ...
                    crossValidationRegression(fit,distances,eqMeans,nBins);
-        paramNames = fit.paramNames();
-        strParams = '';
-        for iParam = 1:length(paramNames)
-            strParams = [strParams, sprintf('%s=%.2g, ', ...
-                         paramNames{iParam}, P(iParam))];
-        end
-        strErr = sprintf('R2=%.2g \\pm %.2g (w/o CV=%.2g)', ...
-                         err, errSem, overfitR2);
-
-        subplot(nFits,2,nFits*(iFit-1) + iSlice)
-        errorbar(distances, mean(eqMeans,1), eqSEM);
-        hold on
-        plot(distances, yFit, 'r');
-        if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
-        title(sprintf('%s slice\n%s\n%s',strAxis,strParams,strErr));
+        errCases(iSlice,iFit) = err;
+        errSemCases(iSlice,iFit) = errSem;
+        plot(distances, yFit, 'Color', colors(iFit+1,:));
+        title(sprintf('%s slice',strAxis));
         xlabel('Distance from peak center (mm)'); 
         ylabel('Relative signal');
-        grid on
-        legend('Measured values', fit.name());
     end
+    legend('Measured values', fitNames{:});
 end
+
+subplot(2,2,[3 4])
+barwitherr(errSemCases, errCases);
+title('Goodness of fit for the different models');
+set(gca,'XTickLabel',sliceNames)
+ylabel('R2')
+legend(fitNames,'Location','North')
+
+topVals = errCases + errSemCases;
+bottomVals = errCases - errSemCases;
+ymax = max(topVals(:));
+ymin = min(bottomVals(:));
+ylim([max(0,ymin-0.2), min(1,ymax+0.05)])
 
 if length(peakRange) > 1
     strFrames = sprintf('frames %d:%d', min(peakRange), max(peakRange));
@@ -82,59 +96,6 @@ else
 end
 t = sprintf('Fits for %s, W=%d, C=(%d,%d)', strFrames, W, C(1), C(2));
 topLevelTitle(t);
-
-%% compare fit of different families
-mask = chamberMask(blank);
-peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
-signal = relativeSignal(blank,stims,peakRange);
-W = 9;
-nBins = 2;
-fits = {
-    GaussianFit, ...
-    GaussianFit(1), ... % with DC shift
-    ExponentialFit, ...
-    ExponentialFit(1), ... % with DC shift
-};
-
-nSlices = 2;
-nFits = length(fits);
-errCases = zeros(nSlices,nFits);
-errSemCases = zeros(nSlices,nFits);
-fitNames = cell(1,nFits);
-sliceNames = cell(1,nSlices);
-
-for iFit = 1:nFits
-    fit = fits{iFit};
-    fitNames{iFit} = fit.name();
-    for iSlice = 1:nSlices
-        vertical = iSlice == 2;
-        if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;
-        sliceNames{iSlice} = strAxis;
-        
-        [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
-        mmPerPixel = 0.1;
-        distances = eqVals * mmPerPixel; % convert to mm
-        eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
-
-        [yFit,P,err,errSem, overfitR2] = ...
-                   crossValidationRegression(fit,distances,eqMeans,nBins);
-        errCases(iSlice,iFit) = err;
-        errSemCases(iSlice,iFit) = errSem;
-    end
-end
-
-figure
-barwitherr(errSemCases, errCases);
-title('Goodness of fit for the different models');
-set(gca,'XTickLabel',sliceNames)
-ylabel('R2')
-legend(fitNames,'Location','NorthEastOutside')
-
-topVals = errCases + errSemCases;
-bottomVals = errCases - errSemCases;
-ymax = max(topVals(:));
-ymin = min(bottomVals(:));
-ylim([max(0,ymin-0.2), min(1,ymax+0.05)])
 
 %% how fit parameters change over time
 frameRange = rangeFromWidth(peakFrame,11);
