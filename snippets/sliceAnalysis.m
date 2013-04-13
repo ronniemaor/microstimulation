@@ -37,7 +37,7 @@ mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
 signal = relativeSignal(blank,stims,peakRange);
 W = 9;
-nBins = 2;
+nBins = 5;
 fits = {GaussianFit(1), ExponentialFit(1)};
 fitNames = cellfun(@(fit) fit.name(),fits, 'UniformOutput',false);
 figure
