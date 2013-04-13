@@ -58,7 +58,7 @@ for iSlice = 1:2
     eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
     
     subplot(2,2,iSlice)
-    errorbar(distances, mean(eqMeans,1), eqSEM);
+    errorbar(distances, mean(eqMeans,1), eqSEM, '.g');
     hold on
     colors = get(gca,'ColorOrder');
 
