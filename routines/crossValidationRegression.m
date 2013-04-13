@@ -1,5 +1,5 @@
 function [yFit, P, err, errSem, overfitR2] = ...
-         crossValidationRegression(h, x, Y, nBins)
+         crossValidationRegression(h, x, Y, nBins, sliceName)
 % Input:
 % x - 1xN row vector with X axis values of regression points
 % Y - MxN matrix. M rows of N regression target values each. 
@@ -30,6 +30,12 @@ function [yFit, P, err, errSem, overfitR2] = ...
     indexes = randperm(N);
     bins = divideToBins(indexes,nBins);
     for iBin = 1:nBins
+        bDebug = (iBin == 1);
+        if bDebug
+            figure
+            nFigRows = ceil(sqrt(M));
+            nFigCols = ceil(M/nFigRows);
+        end
         for iTrial = 1:M
             if nBins > 1
                 trainingCells = bins(1:nBins ~= iBin);
@@ -42,13 +48,24 @@ function [yFit, P, err, errSem, overfitR2] = ...
             end
 
             testCols = bins{iBin};
-            yTest = Y(:,testCols);
+            yTest = Y(iTrial,testCols);
             xTest = x(testCols);
 
             P = h.fitParams(xTrain,yTrain,yTest);
             yFit = h.fitValues(xTest,P);
             errSamples(iBin,iTrial) = calcR2(yTest,yFit);
+            
+            if bDebug
+                subplot(nFigRows,nFigCols,iTrial)
+                plot(xTrain, yTrain, 'xb')
+                hold on
+                plot(xTest, yTest, '.b')
+                yFitAll = h.fitValues(x,P);
+                plot(x,yFitAll,'-r')
+            end
         end
+        t = sprintf('Single trial %s, %s', h.name(),sliceName);
+        topLevelTitle(t);
     end
     err = mean(errSamples(:));
     errSem = std(errSamples(:)) / sqrt(nBins);
