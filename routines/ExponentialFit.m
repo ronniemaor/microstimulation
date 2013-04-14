@@ -1,4 +1,4 @@
-classdef ExponentialFit
+classdef ExponentialFit < FitBase
     properties
         bDcShift
     end

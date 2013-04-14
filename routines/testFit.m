@@ -6,13 +6,7 @@ function testFit(fit,debug)
     % generate ground truth
     paramNames = fit.paramNames();
     nParams = length(paramNames);
-    try
-        [x,P] = fit.testParamValues();
-    catch
-        fprintf('No specific test parameters. Using defaults\n');
-        P = 0.5 + 3*rand(1,nParams);
-        x = -5:0.1:5;
-    end
+    [x,P] = fit.testParamValues();
     y = fit.fitValues(x,P);
     
     % add some noise

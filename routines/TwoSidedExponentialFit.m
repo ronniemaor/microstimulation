@@ -1,4 +1,4 @@
-classdef TwoSidedExponentialFit
+classdef TwoSidedExponentialFit < FitBase
     methods (Static)
         function s = name()
             s = 'Exponential fit';

@@ -1,4 +1,4 @@
-classdef TwoSidedGaussianFit
+classdef TwoSidedGaussianFit < FitBase
     methods (Static)
         function s = name()
             s = 'DoubleGaussian fit';

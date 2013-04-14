@@ -1,4 +1,4 @@
-classdef ExactFit
+classdef ExactFit < FitBase
     methods (Static)
         function s = name()
             s = 'Exact fit';

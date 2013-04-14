@@ -1,4 +1,4 @@
-classdef GaussianFitWithMu
+classdef GaussianFitWithMu < FitBase
     methods (Static)
         function s = name()
             s = 'Gaussian fit';

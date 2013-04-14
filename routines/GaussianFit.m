@@ -1,4 +1,4 @@
-classdef GaussianFit
+classdef GaussianFit < FitBase
     properties
         bDcShift
     end
