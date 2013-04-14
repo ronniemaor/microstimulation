@@ -14,7 +14,7 @@ function testFit(fit,debug)
     y = y + rand(1,length(x))*noiseLevel;
 
     % do the fit
-    Pfit = fit.fitParams(x,y,NaN,debug);
+    Pfit = fit.fitParams(x,y,debug);
     yFit = fit.fitValues(x,Pfit);
     
     % calculate R2 of fit

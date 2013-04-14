@@ -30,13 +30,13 @@ classdef ExponentialFit < FitBase
             P = ones(1, length(obj.paramNames()));
         end
         
-        function P = fitParams(obj, x,y,~,debug)
+        function P = fitParams(obj,x,y,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
             %   Y(i) - target value for point i
             % Output:
             %   P
-            if nargin < 5
+            if nargin < 4
                 debug = 0;
             end
             options = optimset('GradObj','on');

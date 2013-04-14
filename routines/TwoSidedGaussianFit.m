@@ -13,13 +13,13 @@ classdef TwoSidedGaussianFit < FitBase
             P = [1, 1, 1, 3];
         end
         
-        function P = fitParams(x,y,~,debug)
+        function P = fitParams(x,y,debug)
             % Input:
             %   X(i) - sample point i (currently one dimensional)
             %   Y(i) - target value for point i
             % Output:
             %   [a,mu,sigmaP,sigmaM] = unpack(P)
-            if nargin < 4
+            if nargin < 3
                 debug = 0;
             end
             options = optimset('GradObj','on');

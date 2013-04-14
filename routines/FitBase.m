@@ -20,5 +20,10 @@ classdef FitBase
             end
             x = -5:0.1:5;
         end
+        
+        % allow cheating for testing purposes.
+        % default implementation does nothing.
+        function fitParamsHint(obj,yTest) 
+        end
     end
 end

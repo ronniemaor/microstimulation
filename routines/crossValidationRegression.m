@@ -4,9 +4,7 @@ function [yFit, P, err, errSem, overfitR2] = ...
 % x - 1xN row vector with X axis values of regression points
 % Y - MxN matrix. M rows of N regression target values each. 
 %     Each row represents a different sample.
-% h - Regression class (e.g. GaussianFit), with methods:
-%     P = h.fitParams(x,y)
-%     y = h.FitValues(x,P)
+% h - Regression class (e.g. GaussianFit), implementing BaseFit
 % nBins - number of cross validation groups. 
 %         nBins <= 0 means nBins = M (AKA "leave one out"). 
 %         nBins = 1 will use the whole group for both training 
@@ -45,7 +43,8 @@ function [yFit, P, err, errSem, overfitR2] = ...
             testRows = bins{iBin};
             yTest = Y(testRows,:);
             
-            P = h.fitParams(x,yTrain,yTest);
+            h.fitParamsHint(yTest); % allow cheating for testing purposes
+            P = h.fitParams(x,yTrain);
             yFit = h.fitValues(x,P);
             errSamples(iBootstrap,iBin) = calcR2(yTest,yFit);
         end
@@ -55,7 +54,8 @@ function [yFit, P, err, errSem, overfitR2] = ...
     
     % final fit with all the data
     yAll = mean(Y,1);
-    P = h.fitParams(x,yAll,yAll);
+    h.fitParamsHint(yAll);
+    P = h.fitParams(x,yAll);
     yFit = h.fitValues(x,P);
     overfitR2 = calcR2(yAll,yFit);
 end
