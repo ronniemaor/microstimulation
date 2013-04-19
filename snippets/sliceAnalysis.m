@@ -150,3 +150,28 @@ for iFit = 1:nFits
         topLevelTitle(t);
     end
 end
+
+%% movie of how signal(distance) curve changes over time
+mask = chamberMask(blank);
+frameRange = 26:40;
+W = 9;
+nFrames = length(frameRange);
+vertical = 0;
+
+writerObj = VideoWriter('response','MPEG-4');
+writerObj.open()
+for iFrame = 1:nFrames
+    frameNumber = frameRange(iFrame);
+    signal = relativeSignal(blank,stims,frameNumber);
+    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical);
+    mmPerPixel = 0.1;
+    distances = eqVals * mmPerPixel; % convert to mm
+    eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials    
+    errorbar(distances, mean(eqMeans,1), eqSEM, '.g');
+    title(sprintf('Frame %d',frameNumber))
+    frame = getframe;
+    for iDup = 1:10
+        writerObj.writeVideo(frame);
+    end
+end
+writerObj.close()
