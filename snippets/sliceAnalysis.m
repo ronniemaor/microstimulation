@@ -35,8 +35,9 @@ zlabel('Relative signal');
 %% signal levels over chamber at peak frame
 signal = relativeSignal(blank,stims,peakFrame);
 signal = mean(signal,3);
-figure; 
-mimg(signal,100,100,-2e-3,2e-3,peakFrame); 
+figure;
+dynamicRange = 1e-3;
+mimg(signal,100,100,-dynamicRange,dynamicRange,peakFrame); 
 colormap(mapgeog);
 impixelinfo;
 
