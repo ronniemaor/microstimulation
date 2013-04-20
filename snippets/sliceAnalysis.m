@@ -32,6 +32,14 @@ xlabel('Time from stimulus onset (msec)');
 ylabel('Distance from peak (mm)'); 
 zlabel('Relative signal');
 
+%% signal levels over chamber at peak frame
+signal = relativeSignal(blank,stims,peakFrame);
+signal = mean(signal,3);
+figure; 
+mimg(signal,100,100,-2e-3,2e-3,peakFrame); 
+colormap(mapgeog);
+impixelinfo;
+
 %% distance -> signal (at peak point)
 mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
