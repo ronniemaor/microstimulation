@@ -110,54 +110,45 @@ topLevelTitle(t);
 frameRange = rangeFromWidth(peakFrame,11);
 W = 9;
 nBins = 2;
-fits = {ExponentialFit};
 
-nFits = length(fits);
-for iFit = 1:nFits
-    fit = fits{iFit};
-    
-    paramNames = fit.paramNames();
-    nParams = length(paramNames);
-    nPlots = nParams + 2;
-    nCols = ceil(sqrt(nPlots));
-    nRows = ceil(nPlots/nCols);
-    
-    for iSlice = 1:2
-        vertical = iSlice == 2;
+fit = ExponentialFit(1);
+% fit = GaussianFit(1);
 
-        [P, err, errSem, overfitR2] = fitsOverTime(fit, blank, stims, ...
-                                                   frameRange, W, C, ...
-                                                   vertical, nBins);
+paramNames = fit.paramNames();
+nParams = length(paramNames);
+nPlots = nParams + 1;
+nCols = max(3,ceil(sqrt(nPlots)));
+nRows = ceil(nPlots/nCols);
 
-        figure
-        for iParam = 1:nParams
-            subplot(nRows,nCols,iParam)
-            plot(frameRange,P(iParam,:))
-            name = paramNames{iParam};
-            title(['Parameter ', name])
-            ylabel(name)
-            xlabel('Frame')
-        end
+for iSlice = 1:2
+    vertical = iSlice == 2;
 
-        subplot(nRows,nCols,nParams+1);
-        plot(frameRange, overfitR2)
-        title('R2 (overfit)')
-        ylabel('R2')
+    [P, err, errSem, overfitR2] = fitsOverTime(fit, blank, stims, ...
+                                               frameRange, W, C, ...
+                                               vertical, nBins);
+
+    figure
+    for iParam = 1:nParams
+        subplot(nRows,nCols,iParam)
+        plot(frameRange,P(iParam,:))
+        name = paramNames{iParam};
+        title(['Parameter ', name])
+        ylabel(name)
         xlabel('Frame')
-
-        subplot(nRows,nCols,nParams+2);
-        plot(frameRange, err)
-        errorbar(frameRange, err, errSem);
-        title('R2')
-        ylabel('R2')
-        xlabel('Frame')
-
-        if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
-        t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
-                    fit.name(), strAxis, min(frameRange), max(frameRange), ...
-                    W, C(1), C(2));
-        topLevelTitle(t);
     end
+
+    subplot(nRows,nCols,nParams+1);
+    plot(frameRange, err)
+    errorbar(frameRange, err, errSem);
+    title('R2')
+    ylabel('R2')
+    xlabel('Frame')
+
+    if vertical; strAxis='vertical'; else strAxis='horizontal'; end;
+    t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
+                fit.name(), strAxis, min(frameRange), max(frameRange), ...
+                W, C(1), C(2));
+    topLevelTitle(t);
 end
 
 %% movie of how signal(distance) curve changes over time

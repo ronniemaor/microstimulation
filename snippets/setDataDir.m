@@ -3,10 +3,10 @@ if ~exist(baseDataDir,'dir')
     error('Could not find baseDataDir')
 end
 
-% sessionDir = 'Leg/leg_2009_01_29/c';
+sessionDir = 'Leg/leg_2009_01_29/c';
 % sessionDir = 'Leg/leg_2009_01_29/g';
 % sessionDir = 'Leg/leg_2009_01_29/i';
-sessionDir = 'Leg/leg_2009_01_29/j';
+% sessionDir = 'Leg/leg_2009_01_29/j';
 
 % sessionDir = 'Leg/leg_2009_03_18/b';
 % sessionDir = 'Leg/leg_2009_03_18/c';
