@@ -32,15 +32,6 @@ xlabel('Time from stimulus onset (msec)');
 ylabel('Distance from peak (mm)'); 
 zlabel('Relative signal');
 
-%% signal levels over chamber at peak frame
-signal = relativeSignal(blank,stims,peakFrame);
-signal = mean(signal,3);
-figure;
-dynamicRange = 1e-3;
-mimg(signal,100,100,-dynamicRange,dynamicRange,peakFrame); 
-colormap(mapgeog);
-impixelinfo;
-
 %% distance -> signal (at peak point)
 mask = chamberMask(blank);
 peakRange = peakFrame; % rangeFromWidth(peakFrame,3);
@@ -109,9 +100,10 @@ topLevelTitle(t);
 %% how fit parameters change over time
 frameRange = rangeFromWidth(peakFrame,11);
 % fit = ExponentialFit(1);
-fit = GaussianFit(1);
-isVertical = 1;
-timeCourse(blank, stims, C, frameRange, isVertical, fit, 30:35)
+fit = GaussianFit(0);
+for isVertical = 0:1
+    timeCourse(blank, stims, C, 25:45, isVertical, fit, 25:35)
+end
 
 %% movie of how signal(distance) curve changes over time
 mask = chamberMask(blank);
