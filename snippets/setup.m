@@ -1,6 +1,4 @@
-setupPath
 close all
 clear all
-setDataDir
-loadData
-findPeak
+format compact
+setupPath()

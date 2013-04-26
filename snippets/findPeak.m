@@ -1,3 +1,7 @@
-signal = relativeSignal(blank,stims,1:100);
-[cX cY peakFrame] = findPeakActivity(signal);
-C = [cX cY];
+function data = findPeak(data)
+    signal = relativeSignal(data.blank, data.stims, 1:80);
+    [cX cY peakFrame] = findPeakActivity(signal);
+    C = [cX cY];
+    data.C = C;
+    data.peakFrame = peakFrame;
+end

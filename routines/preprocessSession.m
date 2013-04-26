@@ -1,4 +1,4 @@
-function [blank,stims,rawBlank] = preprocessSession(dataDir)
+function [blank, stims, rawBlank, mask] = preprocessSession(dataDir)
     dayPrefix = getPrefixFromDataDir(dataDir);
     nPixels = 10000; nFrames = 256;
     
@@ -29,6 +29,7 @@ function [blank,stims,rawBlank] = preprocessSession(dataDir)
     end
     blank = blank / nBlanks;
     rawBlank = rawBlank / nBlanks;
+    mask = findChamberMask(blank);
 end
 
 function prefix = getPrefixFromDataDir(dataDir)
@@ -44,4 +45,12 @@ function normalized = normalizeTrial(trial)
     normalized = trial ./ zeroFrame(:,ones(1,256));
     noiseThreshold = 0.15 * max(trial(:));
     normalized(trial < noiseThreshold) = 1;
+end
+
+function mask = findChamberMask(blank)
+    % find "chamber mask" - logical mask of pixels "in the chamber"
+    baseFrames = 2:100; % HARDCODED
+    blVes = mean(blank(:,baseFrames),2);
+    outOfChamberValue = 1;
+    mask = blVes ~= outOfChamberValue;
 end

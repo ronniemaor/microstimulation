@@ -1,7 +1,6 @@
-function [P, err, errSem, overfitR2] = fitsOverTime(fit, blank, stims, ...
+function [P, err, errSem, overfitR2] = fitsOverTime(... 
+                               fit, blank, stims, mask, ...
                                frameRange, W, C, vertical, nBins)
-mask = chamberMask(blank);
-
 nFrames = length(frameRange);
 err = zeros(1,nFrames);
 errSem = zeros(1,nFrames);

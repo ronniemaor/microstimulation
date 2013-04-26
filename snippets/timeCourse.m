@@ -1,7 +1,10 @@
-function timeCourse(blank, stims, C, frameRange, isVertical, fit, specialFrames)
+function timeCourse(data, isVertical, frameRange, fit, specialFrames)
+    if nargin < 5
+        specialFrames = [];
+    end
+    
     W = 9;
     nBins = 2;
-    mask = chamberMask(blank);
         
     paramNames = fit.paramNames();
     nParams = length(paramNames);
@@ -9,8 +12,10 @@ function timeCourse(blank, stims, C, frameRange, isVertical, fit, specialFrames)
     nCols = max(3,ceil(sqrt(nPlots)));
     nRows = ceil(nPlots/nCols);
 
-    [P, err, errSem, ~] = fitsOverTime(fit, blank, stims, ...
-                                       frameRange, W, C, ...
+    data = findPeak(data);
+    [P, err, errSem, ~] = fitsOverTime(fit, ... 
+                                       data.blank, data.stims, data.mask, ...
+                                       frameRange, W, data.C, ...
                                        isVertical, nBins);
 
     figure
@@ -32,11 +37,11 @@ function timeCourse(blank, stims, C, frameRange, isVertical, fit, specialFrames)
 
     for iSpecial = 1:length(specialFrames)
         iPlot = nParams + 1 + iSpecial;
-        frame = specialFrames(iSpecial)
+        frame = specialFrames(iSpecial);
         subplot(nRows,nCols,iPlot);
-        signal = relativeSignal(blank,stims,frame);
+        signal = relativeSignal(data.blank, data.stims,frame);
         strTitle = sprintf('Frame %d',frame);
-        drawOneFit(mask,signal,C,W,isVertical,fit,strTitle)
+        drawOneFit(data.mask,signal,data.C,W,isVertical,fit,strTitle)
     end
     
     if isVertical; strAxis='vertical'; else strAxis='horizontal'; end;
