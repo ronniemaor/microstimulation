@@ -1,7 +1,7 @@
 function data = loadData(sessionKey)
-    fprintf('Using session %s\n', sessionKey)
     sessionDataDir = getSessionDataDir(sessionKey);
     dataFile = [sessionDataDir, '/preprocessed'];
-    fprintf('Loading data from %s\n', dataFile)
+    fprintf('Loading %s (from %s)\n', sessionKey, dataFile)
     data = load(dataFile);
+    data.sessionKey = sessionKey;
 end

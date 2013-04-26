@@ -44,9 +44,8 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
         drawOneFit(data.mask,signal,data.C,W,isVertical,fit,strTitle)
     end
     
-    if isVertical; strAxis='vertical'; else strAxis='horizontal'; end;
     t = sprintf('%s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
-                fit.name(), strAxis, min(frameRange), max(frameRange), ...
-                W, C(1), C(2));
+                fit.name(), sliceName(isVertical,1), min(frameRange), max(frameRange), ...
+                W, data.C(1), data.C(2));
     topLevelTitle(t);
 end
