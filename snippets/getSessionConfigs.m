@@ -8,5 +8,5 @@ function sessionConfigs = getSessionConfigs()
     sessionConfigs('M18c') = SessionConfig('Leg/leg_2009_03_18/c');
     sessionConfigs('M18d') = SessionConfig('Leg/leg_2009_03_18/d');
     sessionConfigs('M18e') = SessionConfig('Leg/leg_2009_03_18/e');
-    sessionConfigs('A1d') = SessionConfig('Leg/leg_2009_04_01/d');    
+    % sessionConfigs('A1d') = SessionConfig('Leg/leg_2009_04_01/d');    
 end
