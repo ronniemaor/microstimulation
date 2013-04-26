@@ -4,7 +4,7 @@ function timeCourseAllSessions(fit, frameRange)
         
     paramNames = fit.paramNames();
     nParams = length(paramNames);
-    nCols = nParams + 1;
+    nCols = nParams + 2;
     nRows = 2; % vertical/horizontal
     
     allConfigs = getSessionConfigs();
@@ -62,5 +62,6 @@ function timeCourseAllSessions(fit, frameRange)
         end
     end
     
+    legend(sessionNames, 'Position', [0.72, 0.28 0.07 0.5])
     topLevelTitle(sprintf('Time course of %s parameters for all sessions', fit.name()));
 end
