@@ -29,7 +29,6 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
     end
 
     subplot(nRows,nCols,nParams+1);
-    plot(frameRange, err)
     errorbar(frameRange, err, errSem);
     title('R2')
     ylabel('R2')

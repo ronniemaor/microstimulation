@@ -20,5 +20,7 @@ for isVertical = 0:1
     timeCourse(data, isVertical, 28:45, GaussianFit, 28:35)
 end
 
+timeCourseAllSessions(GaussianFit, 28:45)
+
 %% 
 spatialResponseOverTimeMovie(data, 0, 26:40)
