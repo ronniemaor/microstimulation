@@ -1,4 +1,10 @@
-function timeCourseAllSessions(fit, frameRange)
+function timeCourseAllSessions(fit, frameRange, specificSessions)
+    if nargin < 3 
+        allConfigs = getSessionConfigs();
+        allSessions = allConfigs.keys();
+    else
+        allSessions = specificSessions;
+    end
     W = 9;
     nBins = 2;
         
@@ -6,9 +12,7 @@ function timeCourseAllSessions(fit, frameRange)
     nParams = length(paramNames);
     nCols = nParams + 2;
     nRows = 2; % vertical/horizontal
-    
-    allConfigs = getSessionConfigs();
-    allSessions = allConfigs.keys();
+        
     nSessions = length(allSessions);
     sessionNames = cell(1,nSessions);    
     
@@ -43,9 +47,9 @@ function timeCourseAllSessions(fit, frameRange)
                 hold on
                 name = paramNames{iParam};
                 if iParam == 1
-                    t = sprintf('%s - Parameter %s', sliceName(isVertical), name);
+                    t = sprintf('%s - %s', sliceName(isVertical), name);
                 else
-                    t = sprintf('Parameter %s', name);
+                    t = name;
                 end
                 title(t)
                 ylabel(name)
