@@ -7,6 +7,8 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
     end
     W = 9;
     nBins = 2;
+    R2_threshold = 0.6; % don't use points below this threshold
+    sigma_threshold = 10; % don't use points above this sigma (Gaussian fit only)
         
     paramNames = fit.paramNames();
     nParams = length(paramNames);
@@ -40,10 +42,19 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
             
             [P, err, ~, ~] = fitsOverTime(fit, data.blank, data.stims, data.mask, frameRange, W, data.C, isVertical, nBins);
 
+            highR2 = err > R2_threshold;
+            goodPositions = highR2; % can't trust fits with R2 below this threshold
+            for iParam = 1:nParams
+                if strcmpi(paramNames{iParam},'sigma')
+                    smallSigma = P(iParam,:) < sigma_threshold;
+                    goodPositions = goodPositions & smallSigma;
+                end
+            end
+            
             for iParam = 1:nParams
                 iPlot = nCols*(iSlice-1) + iParam;
                 subplot(nRows,nCols,iPlot)
-                plot(frameRange,P(iParam,:), 'Color', colors(iSession,:))
+                plot(frameRange(goodPositions),P(iParam,goodPositions), 'Color', colors(iSession,:))
                 hold on
                 name = paramNames{iParam};
                 if iParam == 1
@@ -64,6 +75,7 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
             ylabel('R2')
             xlabel('Frame')
         end
+        drawnow
     end
     
     legend(sessionNames, 'Position', [0.72, 0.28 0.07 0.5])
