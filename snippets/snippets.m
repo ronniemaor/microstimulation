@@ -5,6 +5,7 @@ data = loadData('J29c');
 %% 
 drawBloodVessels(data)
 showFrame(data)
+showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
 
 %%
 drawMimg(data, 1e-3, 20:50)
