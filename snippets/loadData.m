@@ -8,6 +8,7 @@ function data = loadData(sessionKey)
     % apply manual mask if configured
     config = getSessionConfig(data.sessionKey);
     fMask = config.manualMaskFunction;
+    data.origMask = data.mask;
     if ~isempty(fMask)
         for x = 1:100
             for y = 1:100
