@@ -12,13 +12,14 @@ function drawBloodVessels(data, bShowSlices)
     end
     
     figure; 
-    mimg(blVes,100,100); 
+    mimg(blVes,100,100,'auto',0,' '); 
+    topLevelTitle(sprintf('%s - blood vessels', data.sessionKey));
     impixelinfo;
 end
 
 function markedRegion = markSlice(data)
     data = findPeak(data);
-    W = 9;
+    W = 3;
     markedRegion = zeros(1,10000);
     for vertical = 0:1
         sliceEq = sliceEqGroups([100,100], data.C, data.mask, W, vertical);
