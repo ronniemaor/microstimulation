@@ -2,7 +2,7 @@ function modelComparisonAllSessions(fits)
     fitNames = cellfun(@(fit) fit.name(), fits, 'UniformOutput',false);
     nFits = length(fits);
     
-    allSessions = getSessionConfigs();
+    allSessions = getAllSessionConfigs();
     nSessions = length(allSessions);
     nSlices = 2;
     sliceNames = cell(1,nSlices);

@@ -4,7 +4,6 @@ function dataDir = getSessionDataDir(sessionKey)
         error('Could not find baseDataDir')
     end
     
-    sessionConfigs = getSessionConfigs();
-    configDir = sessionConfigs(sessionKey).dataDir;
-    dataDir = [baseDataDir, '/', configDir];
+    config = getSessionConfig(sessionKey);
+    dataDir = [baseDataDir, '/', config.dataDir];
 end

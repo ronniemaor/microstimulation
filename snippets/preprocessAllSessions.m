@@ -1,5 +1,5 @@
 function preprocessAllSessions()
-    sessionConfigs = getSessionConfigs();
+    sessionConfigs = getAllSessionConfigs();
     for sessionKeyCell = sessionConfigs.keys()
         sessionKey = sessionKeyCell{1};
         preprocessAndSave(sessionKey)

@@ -8,8 +8,7 @@ function data = findPeak(data)
 end
 
 function mask = getMask(data)
-    sessionConfigs = getSessionConfigs();
-    config = sessionConfigs(data.sessionKey);
+    config = getSessionConfig(data.sessionKey);
     if isempty(config.manualPeakPosition)
         mask = data.mask;
     else
