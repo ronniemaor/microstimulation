@@ -28,6 +28,11 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
         0.25, 0.25, 0.25 ...
     ];
 
+    maxVals = NaN*zeros(1,nParams+1);
+    minVals = NaN*zeros(1,nParams+1);
+    maxFrame = NaN;
+    minFrame = NaN;
+
     figure
     iSession = 0;
     for cSession = allSessions
@@ -52,9 +57,16 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
             end
             
             for iParam = 1:nParams
+                goodFrames = frameRange(goodPositions);
+                maxFrame = max(max(goodFrames),maxFrame);
+                minFrame = min(min(goodFrames),minFrame);
+                goodP = P(iParam,goodPositions);
+                maxVals(iParam) = max(max(goodP),maxVals(iParam));
+                minVals(iParam) = min(min(goodP),minVals(iParam));
+
                 iPlot = nCols*(iSlice-1) + iParam;
                 subplot(nRows,nCols,iPlot)
-                plot(frameRange(goodPositions),P(iParam,goodPositions), 'Color', colors(iSession,:))
+                plot(goodFrames,goodP, 'Color', colors(iSession,:))
                 hold on
                 name = paramNames{iParam};
                 if iParam == 1
@@ -67,6 +79,8 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
                 xlabel('Frame')
             end
 
+            maxVals(iParam+1) = max(max(err),maxVals(iParam+1));
+            minVals(iParam+1) = min(min(err),minVals(iParam+1));
             iPlot = nCols*(iSlice-1) + nParams+1;
             subplot(nRows,nCols,iPlot);
             plot(frameRange, err, 'Color', colors(iSession,:))
@@ -74,6 +88,18 @@ function timeCourseAllSessions(fit, frameRange, specificSessions)
             title('R2')
             ylabel('R2')
             xlabel('Frame')
+        end
+        
+        % adjust y axis for params
+        for xPlot = 1:(nParams+1)
+            for iSlice = 1:2
+                iPlot = nCols*(iSlice-1) + xPlot;
+                subplot(nRows,nCols,iPlot);
+                ylim([minVals(xPlot) maxVals(xPlot)]);
+                if xPlot <= nParams % not the R2 plot
+                    xlim([minFrame maxFrame])
+                end
+            end
         end
         drawnow
     end
