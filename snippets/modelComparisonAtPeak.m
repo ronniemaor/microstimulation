@@ -60,6 +60,6 @@ function modelComparisonAtPeak(data, fits)
     else
         strFrames = sprintf('frame %d', peakRange);
     end
-    t = sprintf('Fits for %s, W=%d, C=(%d,%d)', strFrames, W, data.C(1), data.C(2));
+    t = sprintf('%s - fits for %s, W=%d, C=(%d,%d)', data.sessionKey, strFrames, W, data.C(1), data.C(2));
     topLevelTitle(t);
 end
