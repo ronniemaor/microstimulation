@@ -21,8 +21,12 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
     figure
     for iParam = 1:nParams
         subplot(nRows,nCols,iParam)
-        plot(frameRange,P(iParam,:))
         name = paramNames{iParam};
+        paramVals = P(iParam,:);
+        if strcmpi(name,'sigma')
+            paramVals(paramVals > 10) = NaN;
+        end
+        plot(frameRange,paramVals)
         title(['Parameter ', name])
         ylabel(name)
         xlabel('Frame')
