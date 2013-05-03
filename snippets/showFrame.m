@@ -19,6 +19,8 @@ function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask)
     if showCenter
         region = getCenterPixels(data);
         signal(region) = -dynamicRange;
+%         region = markSlice(data);
+%         signal(region) = -dynamicRange;
     end
     
     if showManualMask
@@ -39,4 +41,14 @@ function region = getCenterPixels(data)
     cY = data.C(2);
     f = @(x,y) sub2ind([100 100],x,y);
     region = [f(cX,cY), f(cX-1,cY), f(cX+1,cY), f(cX,cY-1), f(cX,cY+1)];
+end
+
+function region = markSlice(data)
+    W = 9;
+    region = zeros(1,10000);
+    vertical = 0;
+    sliceEq = sliceEqGroups([100,100], data.C, data.mask, W, vertical);
+    for val = 0:5:60
+        region = region | (sliceEq == val);
+    end
 end
