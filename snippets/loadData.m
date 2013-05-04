@@ -1,7 +1,12 @@
-function data = loadData(sessionKey)
+function data = loadData(sessionKey, bSilent)
+    if nargin < 2
+        bSilent = 0;
+    end
     sessionDataDir = getSessionDataDir(sessionKey);
     dataFile = [sessionDataDir, '/preprocessed'];
-    fprintf('Loading %s (from %s)\n', sessionKey, dataFile)
+    if ~bSilent
+        fprintf('Loading %s (from %s)\n', sessionKey, dataFile)
+    end
     data = load(dataFile);
     data.sessionKey = sessionKey;
     
