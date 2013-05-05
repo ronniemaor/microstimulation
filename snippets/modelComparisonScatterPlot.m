@@ -1,11 +1,14 @@
-function modelComparisonScatterPlot(fits, sessions)
+function modelComparisonScatterPlot(fits, sessions, fontSize)
     fitNames = cellfun(@(fit) fit.name(), fits, 'UniformOutput',false);
     nFits = length(fits);
     assert(nFits == 2, 'Model scatter comparison scatter plot should be called with exactly two fits')
     
-    if nargin < 2
+    if nargin < 2 || isempty(sessions)
         allSessions = getAllSessionConfigs();
         sessions = allSessions.keys();
+    end
+    if nargin < 3
+        fontSize = get(0,'defaultTextFontSize');
     end
     nSessions = length(sessions);
     nSlices = 2;
@@ -30,14 +33,18 @@ function modelComparisonScatterPlot(fits, sessions)
     end
 
     figure
+    set(gca,'FontSize',fontSize)
     X = err(:,:,1);
     X = X(:);
     Y = err(:,:,2);
     Y = Y(:);
     scatter(X,Y);
     title('Model comparison across sessions');
-    xlabel(sprintf('R2 for %s', fitNames{1}))
-    ylabel(sprintf('R2 for %s', fitNames{2}))
+    axis equal
+    set(gca, 'XTick', [0 0.5 1])
+    set(gca, 'YTick', [0 0.5 1])
+    xlabel(sprintf('R2 - %s', fitNames{1}))
+    ylabel(sprintf('R2 - %s', fitNames{2}))
     lim = [0 1];
     xlim(lim) 
     ylim(lim)

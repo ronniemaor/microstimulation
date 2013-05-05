@@ -1,4 +1,4 @@
-function timeCourseAllSessions(fit, frameRange, specificSessions)
+function timeCourseSeveralSessions(fit, frameRange, specificSessions)
     if nargin < 3 
         allConfigs = getAllSessionConfigs();
         allSessions = allConfigs.keys();

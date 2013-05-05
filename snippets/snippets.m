@@ -25,6 +25,3 @@ timeCourseAllSessions(GaussianFit, 28:45)
 
 %% 
 spatialResponseOverTimeMovie(data, 0, 26:40)
-
-%% 
-timeCourseIllustration(loadData('J29c'), 0, 28:32, GaussianFit)

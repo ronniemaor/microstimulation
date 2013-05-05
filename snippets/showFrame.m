@@ -1,4 +1,4 @@
-function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask)
+function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask, extraMaskedRegion)
     if nargin < 2
         dynamicRange = 2e-3;
     end
@@ -12,6 +12,9 @@ function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask)
     if nargin < 5
         showManualMask = 1;
     end
+    if nargin < 6
+        extraMaskedRegion = [];
+    end
     
     signal = relativeSignal(data.blank,data.stims,frameToShow);
     signal = mean(signal,3); % mean across trials
@@ -19,14 +22,14 @@ function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask)
     if showCenter
         region = getCenterPixels(data);
         signal(region) = -dynamicRange;
-%         region = markSlice(data);
-%         signal(region) = -dynamicRange;
     end
     
     if showManualMask
         region = data.origMask & ~data.mask;
         signal(region) = -dynamicRange;
     end
+    
+    signal(extraMaskedRegion) = -dynamicRange;
     
     figure;
     mimg(signal,100,100,-dynamicRange,dynamicRange,' '); 
@@ -43,12 +46,4 @@ function region = getCenterPixels(data)
     region = [f(cX,cY), f(cX-1,cY), f(cX+1,cY), f(cX,cY-1), f(cX,cY+1)];
 end
 
-function region = markSlice(data)
-    W = 9;
-    region = zeros(1,10000);
-    vertical = 0;
-    sliceEq = sliceEqGroups([100,100], data.C, data.mask, W, vertical);
-    for val = 0:5:60
-        region = region | (sliceEq == val);
-    end
-end
+

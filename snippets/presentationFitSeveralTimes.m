@@ -1,15 +1,26 @@
-function timeCourseIllustration(data, isVertical, frames, fit)
+function presentationFitSeveralTimes()
+    data = loadData('M18c');
     data = findPeak(data);
+    isVertical = 0;
+    fit = GaussianFit;
+    frames = [26 27 32];
+    for i = 1:length(frames)
+        showFits(data, isVertical, fit, frames(1:i))
+    end
+end
     
+function showFits(data, isVertical, fit, frames)    
     figure
+    set(gca,'FontSize',18)
     for frame = frames        
         [distances, yFit] = doOneFit(data, frame, isVertical, fit);
         plot(distances,yFit)
         hold on
-    end
-    title(sprintf('%s - %s %s for several frames', data.sessionKey, sliceName(isVertical), fit.name()))
+    end    
     xlabel('distance from peak [mm]')
     ylabel('relative signal')
+    xlim([0 5])
+    ylim([0 1.9e-3])
 end
 
 function [distances, yFit] = doOneFit(data, frame, isVertical,fit)
