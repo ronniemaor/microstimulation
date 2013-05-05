@@ -9,12 +9,9 @@ end
 
 function region = markSlices(data)
     W = 9;
-    region = zeros(1,10000);
     vertical = 0;
     sliceEq = sliceEqGroups([100,100], data.C, data.mask, W, vertical);
-    for val = 0:5:60
-        region = region | (sliceEq == val);
-    end
+    region = (sliceEq >= 0) & (sliceEq <= 60);
 end    
 
 function region = markPeak(data)

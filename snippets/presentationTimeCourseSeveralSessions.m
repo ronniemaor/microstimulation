@@ -11,7 +11,7 @@ function presentationTimeCourseSeveralSessions()
         
     paramNames = fit.paramNames();
     nParams = length(paramNames);
-    nCols = nParams + 2;
+    nCols = nParams;
     nRows = 2; % vertical/horizontal
         
     nSessions = length(allSessions);
@@ -76,34 +76,18 @@ function presentationTimeCourseSeveralSessions()
                     name = 'Amplitude';
                 end
                 t = name;
-                %title(t)
+                title(t)
                 ylabel(name)
                 xlabel('Time [msec]')
             end
-
-            maxVals(iParam+1) = max(max(err),maxVals(iParam+1));
-            minVals(iParam+1) = min(min(err),minVals(iParam+1));
-            iPlot = nCols*(iSlice-1) + nParams+1;
-            subplot(nRows,nCols,iPlot);
-            set(gca,'FontSize',fontSize);
-            allTimes = 10*(frameRange-25);
-            plot(allTimes, err, 'Color', colors(iSession,:))
-            hold on
-            %title('Goodness of fit')
-            ylabel('R2')
-            xlabel('Time [msec]')
-            xlim([-50 250])
         end
         
         % adjust y axis for params
-        for xPlot = 1:(nParams+1)
+        for xPlot = 1:nParams
             for iSlice = 1:2
                 iPlot = nCols*(iSlice-1) + xPlot;
                 subplot(nRows,nCols,iPlot);
                 ylim([minVals(xPlot) maxVals(xPlot)]);
-                if xPlot <= nParams % not the R2 plot
-                    xlim([minTime maxTime])
-                end
             end
         end
         drawnow
