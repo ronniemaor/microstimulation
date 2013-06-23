@@ -11,4 +11,5 @@ function setupPath()
     end
     path(path,[hamutalCodeDir, '/Matlab4Hamutal'])
     path(path,[hamutalCodeDir, '/Matlab4Inbal'])
+    path(path,[hamutalCodeDir, '/Elhanan-M-Files'])
 end
