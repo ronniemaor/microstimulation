@@ -22,7 +22,9 @@ function drawBloodVessels(data, bShowSlices, bMarkVessels)
     
     figure; 
     mimg(blVes,100,100,'auto',0,' '); 
+    h = gca;
     topLevelTitle(sprintf('%s - blood vessels', data.sessionKey));
+    axes(h);
     impixelinfo;
 end
 
