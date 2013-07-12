@@ -1,6 +1,5 @@
 function setupPath()
-    snippetsDir = fileparts(mfilename('fullpath'));
-    baseDir = fileparts(snippetsDir);
+    baseDir = fileparts(mfilename('fullpath'));
     path(path,[baseDir '/snippets']);
     path(path,[baseDir '/routines']);
     path(path,[baseDir '/3rd party']);
