@@ -29,9 +29,11 @@ function drawBloodVessels(data, bShowSlices, bMarkVessels)
 end
 
 function markedRegion = markVessels(data)
-    % w = 2; p = 4; % J29
-    % w = 2; p = 15; % M18
-    % w = 1.7; p = 15; % M18-2
+    if isequal(data.sessionKey(1:3),'J29')
+        w = 2; p = 4;
+    elseif isequal(data.sessionKey(1:3),'M18')
+        w = 2; p = 15;
+    end
     blVes = mean(data.rawBlank(:,2:100),2);
     blVes = mfilt2(blVes,100,100,w,'hm');
     chamber = blVes(data.origMask);
