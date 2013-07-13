@@ -24,4 +24,11 @@ function data = loadData(sessionKey, bSilent)
             end
         end        
     end    
+    
+    % apply blood vessel mask if configured
+    maskFile = [sessionDataDir, '/../exclusionMask.mat'];
+    if exist(maskFile,'file')
+        maskData = load(maskFile);
+        data.mask(maskData.points) = 0;
+    end
 end
