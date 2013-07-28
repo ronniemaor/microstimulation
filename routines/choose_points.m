@@ -1,5 +1,6 @@
 function points = choose_points(points, sz)
 % Mark a set of points manually on a image. Returns the marked points.
+% 
 % Marking is done with the left mouse button. Clicking on a point that's 
 % already marked unmarks it.
 % To exit, click the right mouse button.
@@ -8,7 +9,7 @@ function points = choose_points(points, sz)
 %   points - A set of marked points to start with. Defaults to empty set.
 %   sz - size of image. Defaults to [100 100]
 % Output:
-%   points - A vector of pixel indices that were choosen. 
+%   points - A vector of pixel indices that were chosen. 
 %            Indices are flat, i.e. one dimensional (1 .. prod(sz))
     if ~exist('points','var')
         points = [];
