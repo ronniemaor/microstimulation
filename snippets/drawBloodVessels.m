@@ -1,12 +1,12 @@
-function drawBloodVessels(data, bShowSlices, bMarkVessels)
+function drawBloodVessels(data, bShowSlices, showMask)
     if ~exist('bShowSlices','var')
         bShowSlices = 1;
     end
-    
-    if ~exist('bMarkVessels','var')
-        bMarkVessels = 0;
+
+    if ~exist('showMask','var')
+        showMask = 0;
     end
-    
+
     blVes = mean(data.rawBlank(:,2:100),2);
     blVes = mfilt2(blVes,100,100,2,'hm');
     
@@ -15,8 +15,8 @@ function drawBloodVessels(data, bShowSlices, bMarkVessels)
         blVes(markedRegion) = min(blVes); % will show up in black
     end
         
-    if bMarkVessels
-        markedRegion = markVessels(data);
+    if showMask
+        markedRegion = ~data.mask;
         blVes(markedRegion) = min(blVes); % will show up in black
     end
     
@@ -26,19 +26,6 @@ function drawBloodVessels(data, bShowSlices, bMarkVessels)
     topLevelTitle(sprintf('%s - blood vessels', data.sessionKey));
     axes(h);
     impixelinfo;
-end
-
-function markedRegion = markVessels(data)
-    if isequal(data.sessionKey(1:3),'J29')
-        w = 2; p = 4;
-    elseif isequal(data.sessionKey(1:3),'M18')
-        w = 2; p = 15;
-    end
-    blVes = mean(data.rawBlank(:,2:100),2);
-    blVes = mfilt2(blVes,100,100,w,'hm');
-    chamber = blVes(data.origMask);
-    threshold = prctile(chamber,p);
-    markedRegion = blVes < threshold | ~data.origMask;
 end
 
 function markedRegion = markSlice(data)
