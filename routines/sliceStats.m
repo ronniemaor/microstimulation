@@ -1,7 +1,8 @@
 function [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,vertical)
 N = [100 100];
 Eq = sliceEqGroups(N,C,mask,W,vertical);
-minPointsPerEqVal = W;
+minFraction = 0.75;
+minPointsPerEqVal = ceil(minFraction * W);
 [eqMeans, eqStd, eqVals] = eqStats(signal,Eq,minPointsPerEqVal);
 
 % take one side - the one with the most values

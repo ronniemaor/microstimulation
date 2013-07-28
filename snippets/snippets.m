@@ -4,7 +4,8 @@ data = loadData('J29c');
 
 %% 
 drawBloodVessels(data)
-points = choose_points();
+points = loadExclusionMask(data.sessionKey);
+points = choose_points(points);
 saveExclusionMask(data.sessionKey,points);
 
 %%
