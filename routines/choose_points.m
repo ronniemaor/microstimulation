@@ -1,6 +1,21 @@
-function points = choose_points(points)
+function points = choose_points(points, sz)
+% Mark a set of points manually on a image. Returns the marked points.
+% Marking is done with the left mouse button. Clicking on a point that's 
+% already marked unmarks it.
+% To exit, click the right mouse button.
+%
+% Input:
+%   points - A set of marked points to start with. Defaults to empty set.
+%   sz - size of image. Defaults to [100 100]
+% Output:
+%   points - A vector of pixel indices that were choosen. 
+%            Indices are flat, i.e. one dimensional (1 .. prod(sz))
     if ~exist('points','var')
         points = [];
+    end
+    
+    if ~exist('sz','var')
+        sz = [100 100];
     end
     
     % get a new line object
@@ -9,8 +24,6 @@ function points = choose_points(points)
     line = plot(1,1,'b.','linewidth',2);
     set(line,'xdata',[],'ydata',[]);
     
-    sz = [100 100];
-
     while 1
         % draw the current set of points
         [X,Y] = ind2sub(sz,points);
