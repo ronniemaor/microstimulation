@@ -1,4 +1,5 @@
 function setupPath()
+    path(pathdef)
     baseDir = fileparts(mfilename('fullpath'));
     path(path,[baseDir '/snippets']);
     path(path,[baseDir '/routines']);
