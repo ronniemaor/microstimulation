@@ -1,4 +1,4 @@
-function points = choose_points(points, sz)
+function points = choose_points(points, dXY, sz)
 % Mark a set of points manually on a image. Returns the marked points.
 % 
 % Marking is done with the left mouse button. Clicking on a point that's 
@@ -7,6 +7,8 @@ function points = choose_points(points, sz)
 %
 % Input:
 %   points - A set of marked points to start with. Defaults to empty set.
+%   dXY - pair [dx dy] of how much to shift points by when placing on
+%         image. Defaults to [0 0].
 %   sz - size of image. Defaults to [100 100]
 % Output:
 %   points - A vector of pixel indices that were chosen. 
@@ -15,9 +17,15 @@ function points = choose_points(points, sz)
         points = [];
     end
     
+    if ~exist('dXY','var')
+        dXY = [0 0];
+    end
+    
     if ~exist('sz','var')
         sz = [100 100];
     end
+    
+    points = shift_points(points,dXY(1),dXY(2),sz);
     
     % get a new line object
     gca;
@@ -49,4 +57,7 @@ function points = choose_points(points, sz)
     
     % delete the lineseries to leave the figure like we found it
     delete(line);
+
+    % unshift the points before returning them
+    points = shift_points(points,-dXY(1),-dXY(2),sz);    
 end

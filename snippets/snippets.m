@@ -9,6 +9,10 @@ points = loadExclusionMask(data.sessionKey); % or load current mask
 points = choose_points(points); % and do manual adjustments
 saveExclusionMask(data.sessionKey,points);
 
+% matching points to green
+showGreen(data.sessionKey);
+points = choose_points(points,[dx dy]);
+
 %%
 showFrame(data)
 showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
