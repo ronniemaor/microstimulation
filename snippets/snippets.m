@@ -32,6 +32,7 @@ for isVertical = 0:1
     timeCourse(data, isVertical, 28:45, GaussianFit, 28:35)
 end
 
+res = cacheTimeCourseParams(GaussianFit, 28:45);
 timeCourseSeveralSessions(GaussianFit, 28:45, {'M18b', 'M18c', 'M18d', 'M18e'})
 
 %% 

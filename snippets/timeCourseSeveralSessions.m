@@ -5,10 +5,8 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
     else
         allSessions = specificSessions;
     end
-    W = 9;
-    nBins = 2;
-    R2_threshold = 0.6; % don't use points below this threshold
-    sigma_threshold = 10; % don't use points above this sigma (Gaussian fit only)
+    
+    res = cacheTimeCourseParams(fit, frameRange);
         
     paramNames = fit.paramNames();
     nParams = length(paramNames);
@@ -39,36 +37,24 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
         iSession = iSession + 1;
         sessionKey = cSession{1};
         sessionNames{iSession} = sessionKey;
-        data = loadData(sessionKey);
-        data = findPeak(data);
        
         for iSlice = 1:2
             isVertical = iSlice==2;
-            
-            [P, err, ~, ~] = fitsOverTime(fit, data.blank, data.stims, data.mask, frameRange, W, data.C, isVertical, nBins);
-
-            highR2 = err > R2_threshold;
-            goodPositions = highR2; % can't trust fits with R2 below this threshold
-            for iParam = 1:nParams
-                if strcmpi(paramNames{iParam},'sigma')
-                    smallSigma = P(iParam,:) < sigma_threshold;
-                    goodPositions = goodPositions & smallSigma;
-                end
-            end
+            sliceStruct = res.sessions.(sessionKey).(sliceName(isVertical));
             
             for iParam = 1:nParams
-                goodFrames = frameRange(goodPositions);
-                maxFrame = max(max(goodFrames),maxFrame);
-                minFrame = min(min(goodFrames),minFrame);
-                goodP = P(iParam,goodPositions);
-                maxVals(iParam) = max(max(goodP),maxVals(iParam));
-                minVals(iParam) = min(min(goodP),minVals(iParam));
+                name = paramNames{iParam};
+                frames = sliceStruct.(name).frames;
+                vals = sliceStruct.(name).vals;
+                maxFrame = max(max(frames),maxFrame);
+                minFrame = min(min(frames),minFrame);
+                maxVals(iParam) = max(max(vals),maxVals(iParam));
+                minVals(iParam) = min(min(vals),minVals(iParam));
 
                 iPlot = nCols*(iSlice-1) + iParam;
                 subplot(nRows,nCols,iPlot)
-                plot(goodFrames,goodP, 'Color', colors(iSession,:))
+                plot(frames,vals, 'Color', colors(iSession,:))
                 hold on
-                name = paramNames{iParam};
                 if iParam == 1
                     t = sprintf('%s - %s', sliceName(isVertical), name);
                 else
@@ -79,11 +65,14 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
                 xlabel('Frame')
             end
 
-            maxVals(iParam+1) = max(max(err),maxVals(iParam+1));
-            minVals(iParam+1) = min(min(err),minVals(iParam+1));
+            % R2
+            frames = sliceStruct.R2.frames;
+            vals = sliceStruct.R2.vals;
+            maxVals(iParam+1) = max(max(vals),maxVals(iParam+1));
+            minVals(iParam+1) = min(min(vals),minVals(iParam+1));
             iPlot = nCols*(iSlice-1) + nParams+1;
             subplot(nRows,nCols,iPlot);
-            plot(frameRange, err, 'Color', colors(iSession,:))
+            plot(frames, vals, 'Color', colors(iSession,:))
             hold on
             title('R2')
             ylabel('R2')
