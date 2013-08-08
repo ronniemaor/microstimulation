@@ -36,5 +36,11 @@ end
 res = cacheTimeCourseParams(GaussianFit, 28:45);
 timeCourseSeveralSessions(GaussianFit, 28:45, {'M18b', 'M18c', 'M18d', 'M18e'})
 
+%% Propagation speeds
+speedsBySigma()
+
+%% Anisotropy
+sigmaRatiosOverTime()
+
 %% 
 spatialResponseOverTimeMovie(data, 0, 26:40)
