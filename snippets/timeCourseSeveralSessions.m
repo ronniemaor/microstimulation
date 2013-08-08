@@ -1,5 +1,5 @@
 function timeCourseSeveralSessions(fit, frameRange, specificSessions)
-    if nargin < 3 
+    if ~exist('specificSessions','var')
         allConfigs = getAllSessionConfigs();
         allSessions = allConfigs.keys();
     else

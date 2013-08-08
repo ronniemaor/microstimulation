@@ -25,6 +25,7 @@ drawSignalOverSliceAndTime(data,0)
 %%
 modelComparisonAtPeak(data, {GaussianFit, ExponentialFit})
 modelComparisonAllSessions({GaussianFit, ExponentialFit})
+modelComparisonScatterPlot({GaussianFit, ExponentialFit})
 presentationModelSelection % scatter plot
 
 %% 
