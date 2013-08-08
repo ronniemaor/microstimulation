@@ -21,6 +21,7 @@ function sigmaRatiosOverTime(specificSessions)
     
     nSessions = 0;
     sessionNames = {};
+    sessionMeanRatios = [];
     figure;
     for cSession = allSessions
         sessionKey = cSession{1};
@@ -30,6 +31,7 @@ function sigmaRatiosOverTime(specificSessions)
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sessionKey;
         [t,ratios] = calcRatios(P, sessionKey);
+        sessionMeanRatios(nSessions) = mean(ratios);
         plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2);
         hold on;
     end
@@ -38,6 +40,8 @@ function sigmaRatiosOverTime(specificSessions)
     legend(sessionNames{:},'Location','NorthEastOutside')
     xlabel('time [msec]')
     ylabel('\sigma_h/\sigma_v')
+    
+    %fprintf('H/V: %.2g +/- %.2g (across sessions)\n', mean(sessionMeanRatios), std(sessionMeanRatios))
 end
 
 function [t,ratios] = calcRatios(P, sessionKey)
