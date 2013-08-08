@@ -41,7 +41,9 @@ function sigmaRatiosOverTime(specificSessions)
     xlabel('time [msec]')
     ylabel('\sigma_h/\sigma_v')
     
-    %fprintf('H/V: %.2g +/- %.2g (across sessions)\n', mean(sessionMeanRatios), std(sessionMeanRatios))
+    meanRatio = mean(sessionMeanRatios);
+    ratioSEM = std(sessionMeanRatios) / sqrt(length(sessionMeanRatios));
+    fprintf('H/V: mean=%.2g, s.e.m=%.2g\n', meanRatio , ratioSEM)
 end
 
 function [t,ratios] = calcRatios(P, sessionKey)
