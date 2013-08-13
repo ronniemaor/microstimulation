@@ -9,6 +9,10 @@ classdef FitBase
     
     % default implementations (can be overriden)
     methods
+        function x = fitArgs(obj,y,P)
+            assert(false,'Not Implemented for this class')
+        end
+        
         function [x,P] = testParamValues(obj)
             fprintf('No specific test parameters. Using defaults\n');
             paramNames = obj.paramNames();

@@ -67,6 +67,17 @@ classdef GaussianFit < FitBase
             expPart = exp(-0.5*Zi.^2);
             y = a*expPart + b; % gaussian value for all samples Xi
         end
+        
+        function x = fitArgs(obj,y,P)
+            if obj.bDcShift
+                [a,sigma,b] = unpack(P);
+            else
+                [a,sigma] = unpack(P);
+                b = 0;
+            end
+            x = sigma * sqrt(2*log(a./(y-b)));
+            x(y<=b | y>(a+b)) = NaN;
+        end        
     end
 end
 
