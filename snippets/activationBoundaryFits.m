@@ -38,11 +38,13 @@ function activationBoundaryFits(data,frameRange,isVertical,thresholds)
     end    
     
     figure;
+    colors = jet;
     for iThreshold = 1:nThresholds
         x = boundaries(iThreshold,:);
         y = frameRange;
         idx = ~isnan(x);
-        plot(x(idx),y(idx));
+        c = 1+floor(63*iThreshold/nThresholds);
+        plot(x(idx),y(idx),'LineWidth',2,'Color',colors(c,:));
         hold all
     end
     for iThreshold = 1:nThresholds
@@ -57,6 +59,12 @@ function activationBoundaryFits(data,frameRange,isVertical,thresholds)
     fLegend = @(idx) sprintf('\\Deltaf/f=%gE-4, speed=%.2g cm/s',thresholds(idx)*1E4, speeds(idx));
     strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
     legend(strLegend, 'Location','NorthEastOutside');
+    
+    figure
+    plot(thresholds*1E4,speeds);
+    title('Speed as function of activation level used')
+    xlabel('Activation level (\Deltaf/f x 1E-4)')
+    ylabel('Speed (cm/s)')
 end
 
 function P = calcFit(fit, data, frame, isVertical)
