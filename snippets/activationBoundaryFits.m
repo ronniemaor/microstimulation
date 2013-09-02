@@ -5,6 +5,7 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
     parms.fit = take_from_struct(parms,'fit',GaussianFit);
     frameRange = take_from_struct(parms,'frameRange',20:50);
     thresholds = take_from_struct(parms,'thresholds', 1E-3 * [0.25 0.5 0.75 1]);
+    minPointsForFit = take_from_struct(parms,'minPointsForFit', 3);
 
     P = cacheTimeCourseParams(sessionKey, parms);
     fitSlice = P.(sliceName(isVertical));
@@ -33,11 +34,17 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
         frames = frameRange(idx)';
         
         n = length(frames);
-        w = [frames ones(n,1)] \ distances;
         
-        speeds(iThreshold) = 10*w(1); % in cm/s (distances are in mm, frames are 10 msec)     
-        linearFits{1,iThreshold} = w(1)*frames + w(2);
-        linearFits{2,iThreshold} = frames;
+        if n < minPointsForFit
+            speeds(iThreshold) = NaN;
+            linearFits{1,iThreshold} = NaN;
+            linearFits{2,iThreshold} = NaN;
+        else        
+            w = [frames ones(n,1)] \ distances;        
+            speeds(iThreshold) = 10*w(1); % in cm/s (distances are in mm, frames are 10 msec)     
+            linearFits{1,iThreshold} = w(1)*frames + w(2);
+            linearFits{2,iThreshold} = frames;
+        end
     end    
     
     myfigure(parms);
@@ -57,11 +64,14 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
     title(sprintf('%s - %s',sessionKey,sliceName(isVertical)))
     xlabel('distance from peak [mm]')
     ylabel('frame number')
-    xlim([0 max(boundaries(:))]);
-    ylim([min(fitSlice.goodFrames)-0.5 max(fitSlice.goodFrames)+0.5]);
-    fLegend = @(idx) sprintf('\\Deltaf/f=%gE-4, speed=%.2g cm/s',thresholds(idx)*1E4, speeds(idx));
-    strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
-    legend(strLegend, 'Location','NorthEastOutside');
+    maxBoundary = max(boundaries(:));
+    if ~isnan(maxBoundary)
+        xlim([0 max(boundaries(:))]);
+        ylim([min(fitSlice.goodFrames)-0.5 max(fitSlice.goodFrames)+0.5]);
+        fLegend = @(idx) formatLegend(thresholds,speeds,idx);
+        strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
+        legend(strLegend, 'Location','NorthEastOutside');
+    end
     
 %     figure
 %     plot(thresholds*1E4,speeds);
@@ -70,3 +80,13 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
 %     ylabel('Speed (cm/s)')
 end
 
+function s = formatLegend(thresholds, speeds, idx)
+    s1 = sprintf('\\Deltaf/f=%gE-4%s',thresholds(idx)*1E4);
+    speed = speeds(idx);
+    if isnan(speed)
+        s2 = ', speed=N/A';
+    else
+        s2 = sprintf(', speed=%.2g cm/s', speed);
+    end
+    s = [s1 s2];
+end
