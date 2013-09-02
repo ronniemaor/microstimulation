@@ -53,10 +53,10 @@ end
 
 function s = findSpeed(sessionKey,isVertical)
     P = cacheTimeCourseParams(sessionKey);
-    sigma = P.(sliceName(isVertical)).sigma;
+    sliceFit = P.(sliceName(isVertical));
 
-    x = sigma.frames';
-    y = sigma.vals';
+    x = sliceFit.goodFrames';
+    y = sliceFit.sigma';
     if isequal(sessionKey,'M18b') && ~isVertical
         goodFrames = x <= 35;
         x = x(goodFrames);

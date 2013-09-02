@@ -40,13 +40,14 @@ function timeCourseSeveralSessions(parms)
             isVertical = iSlice==2;
             P = cacheTimeCourseParams(sessionKey, parms);        
             sliceStruct = P.(sliceName(isVertical));
+
+            frames = sliceStruct.goodFrames;
+            maxFrame = max(max(frames),maxFrame);
+            minFrame = min(min(frames),minFrame);
             
             for iParam = 1:nParams
                 name = paramNames{iParam};
-                frames = sliceStruct.(name).frames;
-                vals = sliceStruct.(name).vals;
-                maxFrame = max(max(frames),maxFrame);
-                minFrame = min(min(frames),minFrame);
+                vals = sliceStruct.(name);
                 maxVals(iParam) = max(max(vals),maxVals(iParam));
                 minVals(iParam) = min(min(vals),minVals(iParam));
 
@@ -65,8 +66,8 @@ function timeCourseSeveralSessions(parms)
             end
 
             % R2
-            frames = sliceStruct.R2.frames;
-            vals = sliceStruct.R2.vals;
+            frames = P.frameRange;
+            vals = sliceStruct.R2;
             maxVals(iParam+1) = max(max(vals),maxVals(iParam+1));
             minVals(iParam+1) = min(min(vals),minVals(iParam+1));
             iPlot = nCols*(iSlice-1) + nParams+1;

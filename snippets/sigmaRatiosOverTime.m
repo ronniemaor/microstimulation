@@ -52,13 +52,13 @@ function [t,ratios] = calcRatios(sessionKey,frameRange)
     t = [];
     ratios = [];
     for frame = frameRange
-        iH = find(sigmaH.frames == frame, 1);
-        iV = find(sigmaV.frames == frame, 1);
+        iH = find(P.Horizontal.goodFrames == frame, 1);
+        iV = find(P.Vertical.goodFrames == frame, 1);
         if isempty(iH) || isempty(iV)
             continue; % frames with bad fits are not kept
         end
-        valH = sigmaH.vals(iH);
-        valV = sigmaV.vals(iV);
+        valH = sigmaH(iH);
+        valV = sigmaV(iV);
         t = [t frame];
         ratios = [ratios valH/valV];
     end

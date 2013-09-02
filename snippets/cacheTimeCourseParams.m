@@ -41,18 +41,14 @@ function res = cacheTimeCourseParams(sessionKey, parms)
                 goodPositions = goodPositions & smallSigma;
             end
         end
-
+        sliceStruct.goodFrames = frameRange(goodPositions);
+        sliceStruct.P = P(:,goodPositions);
+        
         for iParam = 1:nParams
-            paramStruct = struct;
-            paramStruct.frames = frameRange(goodPositions);
-            paramStruct.vals = P(iParam,goodPositions);                
-            sliceStruct.(paramNames{iParam}) = paramStruct;
+            sliceStruct.(paramNames{iParam}) = P(iParam,goodPositions);
         end
 
-        R2struct = struct;
-        R2struct.frames = frameRange;
-        R2struct.vals = err;
-        sliceStruct.R2 = R2struct;
+        sliceStruct.R2 = err;
 
         res.(sliceName(isVertical)) = sliceStruct;            
     end
