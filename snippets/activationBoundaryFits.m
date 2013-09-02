@@ -40,7 +40,7 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
         linearFits{2,iThreshold} = frames;
     end    
     
-    figure;
+    myfigure(parms);
     colors = jet;
     for iThreshold = 1:nThresholds
         x = boundaries(iThreshold,:);

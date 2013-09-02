@@ -40,6 +40,7 @@ timeCourseSeveralSessions(make_parms('sessions', {'M18b', 'M18c', 'M18d', 'M18e'
 speedsBySigma()
 activationBoundaryRaw(data,25:50,0)
 activationBoundaryFits(data.sessionKey,0)
+sessionActivationsAndSpeeds(make_parms('sessions',{'M18b','M18c','M18d','M18e'}))
 
 %% Anisotropy
 sigmaRatiosOverTime()

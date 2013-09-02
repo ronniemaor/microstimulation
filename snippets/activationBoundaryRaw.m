@@ -1,7 +1,9 @@
-function activationBoundaryRaw(data,frameRange,isVertical,thresholds)
-    if ~exist('thresholds','var')
-        thresholds = 1E-3 * [0.25 0.5 0.75 1];
+function activationBoundaryRaw(data,isVertical,parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
+    frameRange = take_from_struct(parms,'frames', 20:50);
+    thresholds = take_from_struct(parms,'thresholds', 1E-3 * [0.25 0.5 0.75 1]);
 
     data = findPeak(data);
         
@@ -10,7 +12,7 @@ function activationBoundaryRaw(data,frameRange,isVertical,thresholds)
     
     boundaries = zeros(nThresholds,nFrames);
 
-    figure;
+    myfigure(parms);
     colors = jet;
     for iFrame = 1:length(frameRange)
         frame = frameRange(iFrame);
@@ -41,6 +43,22 @@ function activationBoundaryRaw(data,frameRange,isVertical,thresholds)
     xlim([0 max(distances)]);
     ylim([min(frameRange)-0.5 max(frameRange)+0.5]);
     
+    if take_from_struct(parms,'calcSpeeds',0)
+        calcSpeeds(data, isVertical, frameRange, thresholds, boundaries)
+    end
+end
+
+function [distances, responses] = calcSlice(data, frame, isVertical)
+    W = 9;
+    mmPerPixel = 0.1;
+    signal = relativeSignal(data.blank, data.stims,frame);
+    [eqMeans, ~, eqVals] = sliceStats(signal,data.mask,data.C,W,isVertical);
+    distances = eqVals * mmPerPixel; % convert to mm
+    responses = mean(eqMeans,1); % average over trials
+end
+
+function calcSpeeds(data, isVertical, frameRange, thresholds, boundaries)
+    nThresholds = length(thresholds);
     speeds = zeros(1,nThresholds);
     linearFits = cell(2,nThresholds);
     for iThreshold = 1:nThresholds
@@ -60,6 +78,7 @@ function activationBoundaryRaw(data,frameRange,isVertical,thresholds)
     end    
     
     figure;
+    colors = jet;
     for iThreshold = 1:nThresholds
         x = boundaries(iThreshold,:);
         y = frameRange;
@@ -80,13 +99,4 @@ function activationBoundaryRaw(data,frameRange,isVertical,thresholds)
     fLegend = @(idx) sprintf('\\Deltaf/f=%gE-4, speed=%.2g cm/s',thresholds(idx)*1E4, speeds(idx));
     strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
     legend(strLegend, 'Location','NorthEastOutside');
-end
-
-function [distances, responses] = calcSlice(data, frame, isVertical)
-    W = 9;
-    mmPerPixel = 0.1;
-    signal = relativeSignal(data.blank, data.stims,frame);
-    [eqMeans, ~, eqVals] = sliceStats(signal,data.mask,data.C,W,isVertical);
-    distances = eqVals * mmPerPixel; % convert to mm
-    responses = mean(eqMeans,1); % average over trials
 end
