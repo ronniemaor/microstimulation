@@ -38,7 +38,7 @@ timeCourseSeveralSessions(GaussianFit, 28:45, {'M18b', 'M18c', 'M18d', 'M18e'})
 
 %% Propagation speeds
 speedsBySigma()
-activationBoundary(data,25:50,0)
+activationBoundaryRaw(data,25:50,0)
 activationBoundaryFits(data,25:50,0)
 
 %% Anisotropy
