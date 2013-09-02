@@ -1,13 +1,10 @@
 function speedsBySigma(specificSessions)
-    fit = GaussianFit;
-    frameRange = 28:45;
     if ~exist('specificSessions','var')
         allConfigs = getAllSessionConfigs();
         allSessions = allConfigs.keys();
     else
         allSessions = specificSessions;
     end
-    P = cacheTimeCourseParams(fit,frameRange);
     
     nSessions = 0;
     sessionNames = {};
@@ -19,8 +16,8 @@ function speedsBySigma(specificSessions)
         end;
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sessionKey;
-        sH = findSpeed(P,sessionKey,0);
-        sV = findSpeed(P,sessionKey,1);
+        sH = findSpeed(sessionKey,0);
+        sV = findSpeed(sessionKey,1);
         speeds(nSessions,:) = [sH sV];
     end
 
@@ -35,6 +32,7 @@ function speedsBySigma(specificSessions)
     ];
     
     figure
+    maxSpeed = max(speeds(:));
     X = speeds(:,1);
     Y = speeds(:,2);
     for i=1:nSessions
@@ -46,16 +44,16 @@ function speedsBySigma(specificSessions)
     axis equal
     xlabel('Horizontal speed [cm/s]')
     ylabel('Vertical speed [cm/s]')
-    lim = [0 3.2];
+    lim = [0 1.1*maxSpeed];
     xlim(lim);
     ylim(lim);
     hold on
     plot(lim,lim,'g')    
 end
 
-function s = findSpeed(P, sessionKey,isVertical)
-    strSlice = sliceName(isVertical);
-    sigma = P.sessions.(sessionKey).(strSlice).sigma;
+function s = findSpeed(sessionKey,isVertical)
+    P = cacheTimeCourseParams(sessionKey);
+    sigma = P.(sliceName(isVertical)).sigma;
 
     x = sigma.frames';
     y = sigma.vals';

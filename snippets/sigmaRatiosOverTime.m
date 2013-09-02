@@ -1,5 +1,4 @@
 function sigmaRatiosOverTime(specificSessions)
-    fit = GaussianFit;
     frameRange = 28:45;
     if ~exist('specificSessions','var')
         allConfigs = getAllSessionConfigs();
@@ -7,7 +6,6 @@ function sigmaRatiosOverTime(specificSessions)
     else
         allSessions = specificSessions;
     end
-    P = cacheTimeCourseParams(fit,frameRange);
 
     colors = [ ...
         0,    0,    1; ...
@@ -30,7 +28,7 @@ function sigmaRatiosOverTime(specificSessions)
         end;
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sessionKey;
-        [t,ratios] = calcRatios(P, sessionKey);
+        [t,ratios] = calcRatios(sessionKey,frameRange);
         sessionMeanRatios(nSessions) = mean(ratios);
         plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2);
         hold on;
@@ -46,22 +44,22 @@ function sigmaRatiosOverTime(specificSessions)
     fprintf('H/V: mean=%.2g, s.e.m=%.2g\n', meanRatio , ratioSEM)
 end
 
-function [t,ratios] = calcRatios(P, sessionKey)
-    sigmaH = P.sessions.(sessionKey).Horizontal.sigma;
-    sigmaV = P.sessions.(sessionKey).Vertical.sigma;
+function [t,ratios] = calcRatios(sessionKey,frameRange)
+    P = cacheTimeCourseParams(sessionKey);
+    sigmaH = P.Horizontal.sigma;
+    sigmaV = P.Vertical.sigma;
     
     t = [];
     ratios = [];
-    for iH = 1:length(sigmaH.frames)
-        frameH = sigmaH.frames(iH);
-        valH = sigmaH.vals(iH);
-        iV = find(sigmaV.frames == frameH);
-        if iV
-            frameV = sigmaV.frames(iV);
-            valV = sigmaV.vals(iV);
-            assert(frameV == frameH)
-            t = [t frameH];
-            ratios = [ratios valH/valV];
+    for frame = frameRange
+        iH = find(sigmaH.frames == frame, 1);
+        iV = find(sigmaV.frames == frame, 1);
+        if isempty(iH) || isempty(iV)
+            continue; % frames with bad fits are not kept
         end
+        valH = sigmaH.vals(iH);
+        valV = sigmaV.vals(iV);
+        t = [t frame];
+        ratios = [ratios valH/valV];
     end
 end

@@ -1,16 +1,14 @@
-function res = cacheTimeCourseParams(fit, frameRange, specificSessions)
-    filename = sprintf('%s/timecourse-%s-%d-to-%d.mat', getCacheDir(), fit.name(), min(frameRange), max(frameRange));
+function res = cacheTimeCourseParams(sessionKey, parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+    fit = take_from_struct(parms,'fit',GaussianFit);
+    frameRange = take_from_struct(parms,'frameRange',20:50);
+    filename = sprintf('%s/timecourse-%s-%s-%d-to-%d.mat', getCacheDir(), sessionKey, fit.name(), min(frameRange), max(frameRange));
     
     if exist(filename,'file')
         res = load(filename);
         return;
-    end
-    
-    if ~exist('specificSessions', 'var')
-        allConfigs = getAllSessionConfigs();
-        allSessions = allConfigs.keys();
-    else
-        allSessions = specificSessions;
     end
     
     W = 9;
@@ -22,46 +20,41 @@ function res = cacheTimeCourseParams(fit, frameRange, specificSessions)
     nParams = length(paramNames);
 
     res = struct;
-    res.args.fitName = fit.name();
-    res.args.frameRange = frameRange;
+    res.fitName = fit.name();
+    res.frameRange = frameRange;
+    res.sessionKey = sessionKey;
     
-    for cSession = allSessions
-        sessionKey = cSession{1};
-        data = loadData(sessionKey);
-        data = findPeak(data);
-        
-        sessionStruct = struct;
-       
-        for iSlice = 1:2
-            isVertical = iSlice==2;
-            sliceStruct = struct;
-            
-            [P, err, ~, ~] = fitsOverTime(fit, data.blank, data.stims, data.mask, frameRange, W, data.C, isVertical, nBins);
+    data = loadData(sessionKey);
+    data = findPeak(data);
 
-            highR2 = err > R2_threshold;
-            goodPositions = highR2; % can't trust fits with R2 below this threshold
-            for iParam = 1:nParams
-                if strcmpi(paramNames{iParam},'sigma')
-                    smallSigma = P(iParam,:) < sigma_threshold;
-                    goodPositions = goodPositions & smallSigma;
-                end
+    for iSlice = 1:2
+        isVertical = iSlice==2;
+        sliceStruct = struct;
+
+        [P, err, ~, ~] = fitsOverTime(fit, data.blank, data.stims, data.mask, frameRange, W, data.C, isVertical, nBins);
+
+        highR2 = err > R2_threshold;
+        goodPositions = highR2; % can't trust fits with R2 below this threshold
+        for iParam = 1:nParams
+            if strcmpi(paramNames{iParam},'sigma')
+                smallSigma = P(iParam,:) < sigma_threshold;
+                goodPositions = goodPositions & smallSigma;
             end
-            
-            for iParam = 1:nParams
-                paramStruct = struct;
-                paramStruct.frames = frameRange(goodPositions);
-                paramStruct.vals = P(iParam,goodPositions);                
-                sliceStruct.(paramNames{iParam}) = paramStruct;
-            end
-            
-            R2struct = struct;
-            R2struct.frames = frameRange;
-            R2struct.vals = err;
-            sliceStruct.R2 = R2struct;
-            
-            sessionStruct.(sliceName(isVertical)) = sliceStruct;            
         end
-        res.sessions.(sessionKey) = sessionStruct;
+
+        for iParam = 1:nParams
+            paramStruct = struct;
+            paramStruct.frames = frameRange(goodPositions);
+            paramStruct.vals = P(iParam,goodPositions);                
+            sliceStruct.(paramNames{iParam}) = paramStruct;
+        end
+
+        R2struct = struct;
+        R2struct.frames = frameRange;
+        R2struct.vals = err;
+        sliceStruct.R2 = R2struct;
+
+        res.(sliceName(isVertical)) = sliceStruct;            
     end
 
     save(filename, '-struct', 'res');

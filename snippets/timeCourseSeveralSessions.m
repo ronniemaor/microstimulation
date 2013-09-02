@@ -1,14 +1,11 @@
-function timeCourseSeveralSessions(fit, frameRange, specificSessions)
-    if ~exist('specificSessions','var')
-        allConfigs = getAllSessionConfigs();
-        allSessions = allConfigs.keys();
-    else
-        allSessions = specificSessions;
+function timeCourseSeveralSessions(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
+    parms.fit = take_from_struct(parms,'fit',GaussianFit);
+    allSessions = getSessionsFromParms(parms);
     
-    res = cacheTimeCourseParams(fit, frameRange);
-        
-    paramNames = fit.paramNames();
+    paramNames = parms.fit.paramNames();
     nParams = length(paramNames);
     nCols = nParams + 2;
     nRows = 2; % vertical/horizontal
@@ -23,7 +20,8 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
         0,    0.75, 0.75; ...
         0.75, 0,    0.75; ...
         0.75, 0.75, 0; ...
-        0.25, 0.25, 0.25 ...
+        0.25, 0.25, 0.25; ...
+        0.5, 0.5, 0.5 ...
     ];
 
     maxVals = NaN*zeros(1,nParams+1);
@@ -40,7 +38,8 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
        
         for iSlice = 1:2
             isVertical = iSlice==2;
-            sliceStruct = res.sessions.(sessionKey).(sliceName(isVertical));
+            P = cacheTimeCourseParams(sessionKey, parms);        
+            sliceStruct = P.(sliceName(isVertical));
             
             for iParam = 1:nParams
                 name = paramNames{iParam};
@@ -94,5 +93,5 @@ function timeCourseSeveralSessions(fit, frameRange, specificSessions)
     end
     
     legend(sessionNames, 'Position', [0.72, 0.28 0.07 0.5])
-    topLevelTitle(sprintf('Time course of %s parameters for all sessions', fit.name()));
+    topLevelTitle(sprintf('Time course of %s parameters for all sessions', parms.fit.name()));
 end
