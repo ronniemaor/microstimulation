@@ -1,8 +1,8 @@
-function activationBoundaryFits(data,frameRange,isVertical,thresholds)
+function activationBoundaryFits(data,parms)
     fit = GaussianFit;
-    if ~exist('thresholds','var')
-        thresholds = 1E-3 * [0.25 0.5 0.75 1];
-    end
+    frameRange = take_from_struct(parms,'frameRange',20:50);
+    isVertical = parms.isVertical;
+    thresholds = take_from_struct(parms,'thresholds', 1E-3 * [0.25 0.5 0.75 1]);
 
     data = findPeak(data);
     
