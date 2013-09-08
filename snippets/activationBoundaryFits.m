@@ -48,6 +48,11 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
         end
     end    
     
+    config = getSessionConfig(sessionKey);
+    frameZero = 25;
+    msecPerFrame = 10;
+    stimulationEnd = frameZero + config.trainDuration / msecPerFrame;
+    
     if ~bPlot
         return
     end
@@ -65,14 +70,16 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
     for iThreshold = 1:nThresholds
         plot(linearFits{1,iThreshold}, linearFits{2,iThreshold},'--k')
     end
+    maxBoundary = max(boundaries(:));
+    plot([0 maxBoundary],[stimulationEnd stimulationEnd],'--r')
     
-    title(sprintf('%s - %s',sessionKey,sliceName(isVertical)))
+    title(sprintf('%s - %s (%s)',sessionKey,sliceName(isVertical),formatStimulationParams(sessionKey)))
     xlabel('distance from peak [mm]')
     ylabel('frame number')
-    maxBoundary = max(boundaries(:));
     if ~isnan(maxBoundary)
-        xlim([0 max(boundaries(:))]);
-        ylim([min(fitSlice.goodFrames)-0.5 max(fitSlice.goodFrames)+0.5]);
+        xlim([0 maxBoundary]);
+        yvals = [fitSlice.goodFrames stimulationEnd];
+        ylim([min(yvals)-0.5 max(yvals)+0.5]);
         fLegend = @(idx) formatLegend(thresholds,speeds,idx);
         strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
         legend(strLegend, 'Location','NorthEastOutside');

@@ -4,12 +4,19 @@ function sessionActivationsAndSpeeds(parms)
     end
     allSessions = getSessionsFromParms(parms);
     
+    bShowRaw = take_from_struct(parms,'bShowRaw',true);
+    bShowFits = take_from_struct(parms,'bShowFits',true);
+    
     for cSession = allSessions
         sessionKey = cSession{1};
-        data = loadData(sessionKey);
         for isVertical=0:1
-            activationBoundaryRaw(data,isVertical,parms);
-            activationBoundaryFits(data.sessionKey,isVertical,parms);
+            if bShowRaw
+                data = loadData(sessionKey);
+                activationBoundaryRaw(data,isVertical,parms);
+            end
+            if bShowFits
+                activationBoundaryFits(sessionKey,isVertical,parms);
+            end
         end
     end
 end
