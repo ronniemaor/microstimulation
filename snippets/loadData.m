@@ -9,6 +9,7 @@ function data = loadData(sessionKey, bSilent)
     end
     data = load(dataFile);
     data.sessionKey = sessionKey;
+    data.config = getSessionConfig(sessionKey);
     
     % apply manual mask if configured
     config = getSessionConfig(data.sessionKey);

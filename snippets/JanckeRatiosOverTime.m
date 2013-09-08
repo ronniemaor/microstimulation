@@ -26,7 +26,8 @@ function JanckeRatiosOverTime(parms)
             continue % no fits for Horizontal, non linear sigma changes for Vertical (maybe we can use only vertical?)
         end;
         nSessions = nSessions + 1;
-        sessionNames{nSessions} = sessionKey;
+        config = getSessionConfig(sessionKey);
+        sessionNames{nSessions} = sprintf('%s - %d\\muA, %dms, train %dms, %d\\mum down', sessionKey, config.microAmp, config.pulseInterval, config.trainDuration, config.electrodeDepth); 
         [t,ratios] = calcRatios(sessionKey,threshold);
         sessionMeanRatios(nSessions) = mean(ratios);
         plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2);

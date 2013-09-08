@@ -1,13 +1,21 @@
 classdef SessionConfig
     properties
         dataDir
+        microAmp
+        pulseInterval
+        trainDuration
+        electrodeDepth
         manualPeakPosition
         manualMaskFunction
     end
     
     methods
-        function obj = SessionConfig(dataDir)
+        function obj = SessionConfig(dataDir, microAmp, pulseInterval, trainDuration, electrodeDepth)
             obj.dataDir = dataDir;
+            obj.microAmp = microAmp;
+            obj.pulseInterval = pulseInterval;
+            obj.trainDuration = trainDuration;
+            obj.electrodeDepth = electrodeDepth;
             obj.manualPeakPosition = [];
             obj.manualMaskFunction = [];
         end

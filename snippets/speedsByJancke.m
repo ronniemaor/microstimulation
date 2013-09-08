@@ -15,7 +15,8 @@ function speedsByJancke(parms)
             continue % no fits for Horizontal, non linear sigma changes for Vertical (maybe we can use only vertical?)
         end;
         nSessions = nSessions + 1;
-        sessionNames{nSessions} = sessionKey;
+        config = getSessionConfig(sessionKey);
+        sessionNames{nSessions} = sprintf('%s - %d\\muA, %dms, train %dms, %d\\mum down', sessionKey, config.microAmp, config.pulseInterval, config.trainDuration, config.electrodeDepth); 
         sH = findSpeed(sessionKey,0,threshold);
         sV = findSpeed(sessionKey,1,threshold);
         speeds(nSessions,:) = [sH sV];
