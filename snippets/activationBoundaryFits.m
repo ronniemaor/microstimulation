@@ -1,4 +1,4 @@
-function activationBoundaryFits(sessionKey,isVertical,parms)
+function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVertical,parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
@@ -6,6 +6,7 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
     frameRange = take_from_struct(parms,'frameRange',20:50);
     thresholds = take_from_struct(parms,'thresholds', 1E-3 * [0.25 0.5 0.75 1]);
     minPointsForFit = take_from_struct(parms,'minPointsForFit', 3);
+    bPlot = take_from_struct(parms,'bPlot',true);
 
     P = cacheTimeCourseParams(sessionKey, parms);
     fitSlice = P.(sliceName(isVertical));
@@ -46,6 +47,10 @@ function activationBoundaryFits(sessionKey,isVertical,parms)
             linearFits{2,iThreshold} = frames;
         end
     end    
+    
+    if ~bPlot
+        return
+    end
     
     myfigure(parms);
     colors = jet;

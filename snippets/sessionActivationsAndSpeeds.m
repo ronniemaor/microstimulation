@@ -8,8 +8,8 @@ function sessionActivationsAndSpeeds(parms)
         sessionKey = cSession{1};
         data = loadData(sessionKey);
         for isVertical=0:1
-            activationBoundaryRaw(data,isVertical,parms)
-            activationBoundaryFits(data.sessionKey,isVertical,parms)
+            activationBoundaryRaw(data,isVertical,parms);
+            activationBoundaryFits(data.sessionKey,isVertical,parms);
         end
     end
 end
