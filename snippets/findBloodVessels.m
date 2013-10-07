@@ -9,6 +9,8 @@ function points = findPoints(data)
         w = 2; p = 4;
     elseif isequal(data.sessionKey(1:3),'M18')
         w = 2; p = 15;
+    else
+        w = 2; p = 4;
     end
     blVes = mean(data.rawBlank(:,2:100),2);
     blVes = mfilt2(blVes,100,100,w,'hm');

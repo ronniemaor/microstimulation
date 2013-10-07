@@ -1,5 +1,6 @@
 %%
 setup
+preprocessAndSave('J26c') % Only needed once for each new session.
 data = loadData('J29c');
 
 %% 
