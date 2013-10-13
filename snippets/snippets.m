@@ -8,6 +8,7 @@ drawBloodVessels(data)
 points = findBloodVessels(data); % try automatically
 points = loadExclusionMask(data.sessionKey); % or load current mask
 points = choose_points(points); % and do manual adjustments
+points = keepOnlyV1(boundaryPoints); % extend mask upwards given manually marked boundary between V1 and V2
 saveExclusionMask(data.sessionKey,points);
 
 % matching points to green
