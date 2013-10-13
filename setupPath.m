@@ -6,7 +6,7 @@ function setupPath()
     path(path,[baseDir '/routines']);
     path(path,[baseDir '/3rd party']);
 
-    hamutalCodeDir = 'C:/data/zuta/My_M_Files';
+    hamutalCodeDir = 'C:/data/microstimulation/My_M_Files';
     if ~exist(hamutalCodeDir,'dir')
         error('Could not find path to hamutalCodeDir')
     end
