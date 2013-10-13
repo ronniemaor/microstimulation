@@ -4,7 +4,7 @@ function speedsByJancke(parms)
     end
     allSessions = getSessionsFromParms(parms);
     
-    threshold = take_from_struct(parms, 'threshold', 1E-3 * 0.5);
+    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.5);
     
     nSessions = 0;
     sessionNames = {};
@@ -16,8 +16,8 @@ function speedsByJancke(parms)
         end;
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
-        sH = findSpeed(sessionKey,0,threshold);
-        sV = findSpeed(sessionKey,1,threshold);
+        sH = findSpeed(sessionKey,0,parms);
+        sV = findSpeed(sessionKey,1,parms);
         speeds(nSessions,:) = [sH sV];
     end
 
@@ -28,7 +28,10 @@ function speedsByJancke(parms)
         0,    0.75, 0.75; ...
         0.75, 0,    0.75; ...
         0.75, 0.75, 0; ...
-        0.25, 0.25, 0.25 ...
+        0.25, 0.25, 0.25; ...
+        0,    0.25, 0; ...
+        0.25, 0, 0; ...
+        0,    0,    0.5 ...
     ];
     
     figure
@@ -51,6 +54,6 @@ function speedsByJancke(parms)
     plot(lim,lim,'g')    
 end
 
-function s = findSpeed(sessionKey,isVertical,threshold)
-    s = activationBoundaryFits(sessionKey,isVertical, make_parms('thresholds',threshold,'bPlot',false));
+function s = findSpeed(sessionKey,isVertical,parms)
+    s = activationBoundaryFits(sessionKey,isVertical, add_parms(parms, 'bPlot',false));
 end

@@ -6,6 +6,8 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
     frameRange = take_from_struct(parms,'frameRange',20:50);
     thresholds = take_from_struct(parms,'thresholds', 1E-3 * [0.25 0.5 0.75 1]);
     minPointsForFit = take_from_struct(parms,'minPointsForFit', 3);
+    minFrameForFit = take_from_struct(parms,'minFrameForFit', 25);
+    maxFrameForFit = take_from_struct(parms,'maxFrameForFit', 36);
     bPlot = take_from_struct(parms,'bPlot',true);
 
     P = cacheTimeCourseParams(sessionKey, parms);
@@ -27,12 +29,14 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
     speeds = zeros(1,nThresholds);
     linearFits = cell(2,nThresholds);
     for iThreshold = 1:nThresholds
-        distances = boundaries(iThreshold,:)';
+        framesForFitIdx = frameRange >= minFrameForFit & frameRange <= maxFrameForFit;
+        framesForFit = frameRange(framesForFitIdx);
+        distances = boundaries(iThreshold,framesForFitIdx)';
         [~,maxPos] = max(distances);
         distances = distances(1:maxPos);
         idx = ~isnan(distances);
         distances = distances(idx);
-        frames = frameRange(idx)';
+        frames = framesForFit(idx)';
         
         n = length(frames);
         
