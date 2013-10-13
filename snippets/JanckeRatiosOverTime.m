@@ -36,7 +36,7 @@ function JanckeRatiosOverTime(parms)
     title(sprintf('Anisotropy of activation spread over time for \\Deltaf/f=%g*10^{-4}',threshold*1E4));
     legend(sessionNames{:},'Location','NorthEastOutside')
     xlabel('time [msec]')
-    ylabel('\sigma_h/\sigma_v')
+    ylabel('pos_H / pos_V')
     
     meanRatio = mean(sessionMeanRatios);
     ratioSEM = std(sessionMeanRatios) / sqrt(length(sessionMeanRatios));
