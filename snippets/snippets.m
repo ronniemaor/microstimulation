@@ -26,7 +26,7 @@ drawSignalOverSliceAndTime(data,0)
 
 %%
 modelComparisonAtPeak(data, {GaussianFit, ExponentialFit})
-modelComparisonAllSessions({GaussianFit, ExponentialFit})
+modelComparisonAllSessions({GaussianFit, ExponentialFit}) % lots of bars
 modelComparisonScatterPlot({GaussianFit, ExponentialFit})
 presentationModelSelection % scatter plot
 
@@ -40,7 +40,7 @@ timeCourseSeveralSessions(make_parms('sessions', {'M18b', 'M18c', 'M18d', 'M18e'
 
 %% Propagation speeds
 speedsBySigma() % speedsBySigma(make_parms('sessions',{'M18b','J29c'}))
-activationBoundaryRaw(data,25:50,0)
+activationBoundaryRaw(data,0)
 activationBoundaryFits(data.sessionKey,0)
 speedsByJancke(make_parms('threshold',2.5E-4)) % more parms: sessions
 sessionActivationsAndSpeeds(make_parms('sessions',{'M18b','M18c','M18d','M18e'}))
