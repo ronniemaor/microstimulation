@@ -16,8 +16,6 @@ function activationBoundaryRaw(data,isVertical,parms)
     nDistances = 1 + round(max(dummyDistances)/distanceResolution);
     binnedResponses = zeros(nFrames,nDistances);     
 
-    myfigure(parms);
-    colors = jet;
     for iFrame = 1:length(frameRange)
         frame = frameRange(iFrame);
         [distances,responses] = calcSlice(data, frame, isVertical);
@@ -36,23 +34,11 @@ function activationBoundaryRaw(data,isVertical,parms)
             x = x(~isnan(x));
             boundaries(iBin,iFrame) = median(x);
         end
-        
-        for i=0:nThresholds
-            x = distances(bins == i);
-            y = frame*ones(size(x));
-            c = 1+floor(63*i/nThresholds);
-            plot(x,y,'o','MarkerFaceColor',colors(c,:));
-            hold on;
-        end
     end
-    title(sprintf('%s - %s',data.sessionKey,sliceName(isVertical)))
-    xlabel('distance from peak [mm]')
-    ylabel('frame number')
-    xlim([0 max(distances)]);
-    ylim([min(frameRange)-0.5 max(frameRange)+0.5]);
     
     myfigure(parms);
-    imagesc(dummyDistances, frameRange, binnedResponses)
+    imagesc(dummyDistances, frameRange, flipud(binnedResponses))
+    set(gca,'YTickLabel',flipud(get(gca, 'YTickLabel')));
     title(sprintf('%s - %s',data.sessionKey,sliceName(isVertical)))
     xlabel('distance from peak [mm]')
     ylabel('frame number')
