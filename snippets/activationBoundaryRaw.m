@@ -11,6 +11,10 @@ function activationBoundaryRaw(data,isVertical,parms)
     nFrames = length(frameRange);
     
     boundaries = zeros(nThresholds,nFrames);
+    dummyDistances = calcSlice(data, frameRange(1), isVertical);
+    distanceResolution = 0.1; % mm per pixel
+    nDistances = 1 + round(max(dummyDistances)/distanceResolution);
+    binnedResponses = zeros(nFrames,nDistances);     
 
     myfigure(parms);
     colors = jet;
@@ -18,19 +22,23 @@ function activationBoundaryRaw(data,isVertical,parms)
         frame = frameRange(iFrame);
         [distances,responses] = calcSlice(data, frame, isVertical);
         
-        binned = zeros(size(responses));
+        bins = zeros(size(responses));
         for iBin=1:nThresholds
-            binned = binned + (responses > thresholds(iBin));
+            threshold = thresholds(iBin);
+            isAbove = responses > threshold;
+            bins = bins + isAbove;
+            pos = 1 + round(distances(isAbove)/distanceResolution);
+            binnedResponses(iFrame, pos) = threshold;
         end        
 
         for iBin=1:nThresholds
-            x = distances(binned == iBin);
+            x = distances(bins == iBin);
             x = x(~isnan(x));
             boundaries(iBin,iFrame) = median(x);
         end
         
         for i=0:nThresholds
-            x = distances(binned == i);
+            x = distances(bins == i);
             y = frame*ones(size(x));
             c = 1+floor(63*i/nThresholds);
             plot(x,y,'o','MarkerFaceColor',colors(c,:));
@@ -42,6 +50,12 @@ function activationBoundaryRaw(data,isVertical,parms)
     ylabel('frame number')
     xlim([0 max(distances)]);
     ylim([min(frameRange)-0.5 max(frameRange)+0.5]);
+    
+    myfigure(parms);
+    imagesc(dummyDistances, frameRange, binnedResponses)
+    title(sprintf('%s - %s',data.sessionKey,sliceName(isVertical)))
+    xlabel('distance from peak [mm]')
+    ylabel('frame number')
     
     if take_from_struct(parms,'calcSpeeds',0)
         calcSpeeds(data, isVertical, frameRange, thresholds, boundaries)
