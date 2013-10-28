@@ -53,7 +53,7 @@ function timeCourseSeveralSessions(parms)
 
                 iPlot = nCols*(iSlice-1) + iParam;
                 subplot(nRows,nCols,iPlot)
-                plot(frames,vals, 'Color', colors(iSession,:))
+                plot(frames,vals, 'Color', colors(iSession,:),'LineWidth', 2, 'Marker','o', 'MarkerSize', 3)
                 hold on
                 if iParam == 1
                     t = sprintf('%s - %s', sliceName(isVertical), name);
@@ -72,7 +72,7 @@ function timeCourseSeveralSessions(parms)
             minVals(iParam+1) = min(min(vals),minVals(iParam+1));
             iPlot = nCols*(iSlice-1) + nParams+1;
             subplot(nRows,nCols,iPlot);
-            plot(frames, vals, 'Color', colors(iSession,:))
+            plot(frames, vals, 'Color', colors(iSession,:),'LineWidth', 2)
             hold on
             title('R2')
             ylabel('R2')
@@ -94,5 +94,16 @@ function timeCourseSeveralSessions(parms)
     end
     
     legend(sessionNames, 'Position', [0.72, 0.28 0.07 0.5])
+    
+    % Draw R2 threshold
+    % Draw it after legend, so it doesn't mess up the legend. I'm sure there's a better way to do this...
+    P = cacheTimeCourseParams(sessionKey, parms);        
+    for iSlice = 1:2
+        R2_threshold = 0.6; % XXX - duplication of the value in cacheTimeCourseParams
+        iPlot = nCols*(iSlice-1) + nParams+1;
+        subplot(nRows,nCols,iPlot);
+        plot([min(P.frameRange) max(P.frameRange)], [R2_threshold R2_threshold], 'r--')
+    end
+    
     topLevelTitle(sprintf('Time course of %s parameters for all sessions', parms.fit.name()));
 end

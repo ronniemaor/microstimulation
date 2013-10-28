@@ -20,7 +20,7 @@ function sigmaRatiosOverTime(specificSessions)
     nSessions = 0;
     sessionNames = {};
     sessionMeanRatios = [];
-    figure;
+    myfigure;
     for cSession = allSessions
         sessionKey = cSession{1};
         if isequal(sessionKey,'J29j') 
@@ -30,7 +30,7 @@ function sigmaRatiosOverTime(specificSessions)
         sessionNames{nSessions} = sessionKey;
         [t,ratios] = calcRatios(sessionKey,frameRange);
         sessionMeanRatios(nSessions) = mean(ratios);
-        plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2);
+        plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2,'Marker','o', 'MarkerSize', 8);
         hold on;
     end
     
