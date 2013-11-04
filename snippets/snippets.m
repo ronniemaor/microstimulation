@@ -34,6 +34,7 @@ modelComparisonScatterPlot({GaussianFit, ExponentialFit})
 presentationModelSelection % scatter plot
 
 %% fits
+showSingleFrameFit(data)
 res = cacheTimeCourseParams('M18d'); % compute and cache fits (can do this once explicitly or let it be done implicitly)
 timeCourse(data, isVertical, 28:45, GaussianFit, 28:35) % fits for a single sessions
 timeCourseSeveralSessions(make_parms('sessions', {'M18b', 'M18c', 'M18d', 'M18e'})) % fits for several sessions
