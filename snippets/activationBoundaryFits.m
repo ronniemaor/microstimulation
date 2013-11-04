@@ -8,6 +8,9 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
     minPointsForFit = take_from_struct(parms,'minPointsForFit', 3);
     minFrameForFit = take_from_struct(parms,'minFrameForFit', 25);
     maxFrameForFit = take_from_struct(parms,'maxFrameForFit', 36);
+    showLegend = take_from_struct(parms,'showLegend',1);
+    showParamsInTitle = take_from_struct(parms,'showParamsInTitle',1);
+    onlyShowFittedPoints = take_from_struct(parms, 'onlyShowFittedPoints', 0);
     bPlot = take_from_struct(parms,'bPlot',true);
 
     P = cacheTimeCourseParams(sessionKey, parms);
@@ -67,6 +70,9 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
         x = boundaries(iThreshold,:);
         y = frameRange;
         idx = ~isnan(x);
+        if onlyShowFittedPoints
+            idx = idx & frameRange<=maxFrameForFit;
+        end
         c = 1+floor(63*iThreshold/nThresholds);
         plot(x(idx),y(idx),'LineWidth',2,'Color',colors(c,:));
         hold all
@@ -77,23 +83,29 @@ function [speeds,frameRange,boundaries] = activationBoundaryFits(sessionKey,isVe
     maxBoundary = max(boundaries(:));
     plot([0 maxBoundary],[stimulationEnd stimulationEnd],'--r')
     
-    title(sprintf('%s - %s (%s)',sessionKey,sliceName(isVertical),formatStimulationParams(sessionKey)))
+    t = sprintf('%s - %s',sessionKey,sliceName(isVertical));
+    if showParamsInTitle
+        t = sprintf('%s (%s)',t,formatStimulationParams(sessionKey));
+    elseif ~showLegend && nThresholds == 1
+        t = sprintf('%s (%.2g cm/s)',t,speeds(1));
+    end
+    title(t);
     xlabel('distance from peak [mm]')
     ylabel('frame number')
     if ~isnan(maxBoundary)
         xlim([0 maxBoundary]);
-        yvals = [fitSlice.goodFrames stimulationEnd];
-        ylim([min(yvals)-0.5 max(yvals)+0.5]);
-        fLegend = @(idx) formatLegend(thresholds,speeds,idx);
-        strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
-        legend(strLegend, 'Location','NorthEastOutside');
+        if onlyShowFittedPoints
+            ylim([minFrameForFit maxFrameForFit])
+        else
+            yvals = [fitSlice.goodFrames stimulationEnd];
+            ylim([min(yvals)-0.5 max(yvals)+0.5]);
+        end
+        if showLegend
+            fLegend = @(idx) formatLegend(thresholds,speeds,idx);
+            strLegend = arrayfun(fLegend, 1:nThresholds, 'UniformOutput', false);
+            legend(strLegend, 'Location','NorthEastOutside');
+        end
     end
-    
-%     figure
-%     plot(thresholds*1E4,speeds);
-%     title('Speed as function of activation level used')
-%     xlabel('Activation level (\Deltaf/f x 1E-4)')
-%     ylabel('Speed (cm/s)')
 end
 
 function s = formatLegend(thresholds, speeds, idx)

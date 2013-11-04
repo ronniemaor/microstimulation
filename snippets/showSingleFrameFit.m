@@ -22,10 +22,7 @@ function showSingleFrameFit(data,parms)
         meanActivations = mean(eqMeans,1);
 
         % draw it
-        if take_from_struct(parms,'openFigure',1)
-            figure
-        end
-        set(gca,'FontSize',18)
+        myfigure(add_parms(parms,'FontSize',18))
         errorbar(distances, meanActivations, eqSEM, '.g');
         hold on           
         fit = GaussianFit;
