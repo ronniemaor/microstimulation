@@ -1,87 +1,86 @@
-function paperCreateSampleSessionFigures()
-    fontSize = 18;
-    data = loadData('M18c');
-    isVertical = 1;
-    frameRange = 20:60;
+function paperCreateSampleSessionFigures(data, parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
+    fontSize = 16;
     fit = GaussianFit;
-    specialFrames = [26 29 32];
 
     R2_threshold = 0.6;    
-    W = 9;
-    nBins = 2;
-        
-    paramNames = fit.paramNames();
-    nParams = length(paramNames);
 
     data = findPeak(data);
-    [P, err, ~, ~] = fitsOverTime(fit, ... 
-                                       data.blank, data.stims, data.mask, ...
-                                       frameRange, W, data.C, ...
-                                       isVertical, nBins);
+    paramNames = fit.paramNames();
+    nParams = length(paramNames);
+    nRows = 2;
+    nCols = nParams + 1;
 
-    highR2 = err > R2_threshold;
-    goodPositions = highR2; % can't trust fits with R2 below this threshold
-                  
-    times = 10 * (frameRange - 25);
-    for iParam = 1:nParams
-        goodTimes = times(goodPositions);
-        name = paramNames{iParam};
-        paramVals = P(iParam,goodPositions);
-        if strcmpi(name,'sigma')
-            name = 'Width';
-            paramVals(paramVals > 10) = NaN;
+    maxVals = NaN*zeros(1,nParams);
+    minVals = NaN*zeros(1,nParams);
+    maxFrame = NaN;
+    minFrame = NaN;
+    
+    figure
+    for isVertical = 0:1
+        P = cacheTimeCourseParams(data.sessionKey, parms);        
+        sliceStruct = P.(sliceName(isVertical));
+        
+        frames = sliceStruct.goodFrames;
+        maxFrame = max(max(frames),maxFrame);
+        minFrame = min(min(frames),minFrame);
+        
+        for iParam = 1:nParams
+            name = paramNames{iParam};
+            vals = sliceStruct.(name);
+            maxVals(iParam) = max(max(vals),maxVals(iParam));
+            minVals(iParam) = min(min(vals),minVals(iParam));
+            times = 10 * (frames - 25);
+
+            if strcmpi(name,'sigma')
+                name = 'Width';
+            end
+            if strcmpi(name,'a')
+                name = 'Amplitude';
+            end
+
+            subplot(nRows,nCols,nCols*isVertical+iParam)
+            set(gca,'FontSize',fontSize)            
+            plot(times,vals, 'LineWidth', 2, 'Marker','o', 'MarkerSize', 3)
+            if iParam == 1
+                t = sprintf('%s - %s',sliceName(isVertical),name);
+            else
+                t = name;
+            end
+            title(t)
+            ylabel(name)
+            xlabel('Time from stimulus [msec]')
         end
-        if strcmpi(name,'a')
-            name = 'Amplitude';
-        end
-        figure
-        plot(goodTimes,paramVals)
-        set(gca,'FontSize',fontSize)
-        title([name,'(t)'])
-        ylabel(name)
+
+        subplot(nRows,nCols,nCols*(isVertical+1))
+        set(gca,'FontSize',fontSize)        
+        times = frameToTime(P.frameRange);
+        vals = sliceStruct.R2;
+        plot(times, vals, 'LineWidth', 2)
+        hold on
+        plot([min(times) max(times)], [R2_threshold R2_threshold], 'r--');
+        ylim([0 1]);
+        title('Goodness of fit')
+        ylabel('R2')
         xlabel('Time from stimulus [msec]')        
     end
-
-    figure
-    plot(times, err, 'b');
-    hold on
-    plot([min(times) max(times)], [R2_threshold R2_threshold], 'r');
-    set(gca,'FontSize',fontSize)
-    title('Goodness of fit')
-    ylabel('R2')
-    xlabel('Time from stimulus [msec]')
-
-    for iSpecial = 1:length(specialFrames)
-        frame = specialFrames(iSpecial);
-        signal = relativeSignal(data.blank, data.stims,frame);
-        strTitle = sprintf('%d msec',10*(frame-25));
-        bYLegend = (iSpecial == 1);
-        figure
-        drawOne(data.mask,signal,data.C,W,isVertical,fit,strTitle,fontSize,bYLegend)
-    end
+    
+    % adjust x,y limits
+    for xPlot = 1:nParams % don't adjust R2
+        for isVertical = 0:1
+            iPlot = nCols*isVertical + xPlot;
+            subplot(nRows,nCols,iPlot);
+            ylim([minVals(xPlot) maxVals(xPlot)]);
+            xlim(frameToTime([minFrame maxFrame]))
+        end
+    end    
+    
+    topLevelTitle(sprintf('%s - fit behavior over time', data.sessionKey));    
 end
 
-function drawOne(mask,signal,C,W,isVertical,fit,strTitle,fontSize,bYLegend)
-    nBins = 2;
-    [eqMeans, eqStd, eqVals] = sliceStats(signal,mask,C,W,isVertical);
-    mmPerPixel = 0.1;
-    distances = eqVals * mmPerPixel; % convert to mm
-    eqSEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
-    
-    set(gca,'FontSize',fontSize)
-    errorbar(distances, mean(eqMeans,1), eqSEM, '.g');
-    hold on
-           
-    yFit = crossValidationRegression(fit,distances,eqMeans,nBins);
-    plot(distances, yFit);
-    title(strTitle);
-    xlabel('Distance from center (mm)'); 
-    if bYLegend
-        ylabel('Relative signal');
-    else
-        set(gca,'YTick',[])
-        set(gca,'YTickLabel',[])
-    end
-    ylim([0 2.2E-3])
-    xlim([0 5])
+function times = frameToTime(frames)
+    times = 10 * (frames - 25);
 end
