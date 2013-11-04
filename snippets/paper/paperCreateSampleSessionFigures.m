@@ -1,4 +1,4 @@
-function presentationCreateSampleSessionFigures()
+function paperCreateSampleSessionFigures()
     fontSize = 18;
     data = loadData('M18c');
     isVertical = 1;
