@@ -15,7 +15,7 @@ function sessionConfigs = getAllSessionConfigs()
     sessionConfigs('M25c') = SessionConfig('Leg/leg_2009_03_25/c',70,2,80,0);
     sessionConfigs('M25d') = SessionConfig('Leg/leg_2009_03_25/d',70,2,80,200).manualPeak(34,44);
     
-    sessionConfigs('J26a') = SessionConfig('Arg/2008_06_26/a',50,3,240,0).manualPeak(59,74);
+    %sessionConfigs('J26a') = SessionConfig('Arg/2008_06_26/a',50,3,240,0).manualPeak(59,74);
     sessionConfigs('J26b') = SessionConfig('Arg/2008_06_26/b',80,3,240,0).manualPeak(56,75);
     sessionConfigs('J26c') = SessionConfig('Arg/2008_06_26/c',80,3,240,150).manualPeak(56,77);
 end

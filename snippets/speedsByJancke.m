@@ -4,7 +4,8 @@ function speedsByJancke(parms)
     end
     allSessions = getSessionsFromParms(parms);
     
-    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.5);
+    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.25);
+    parms.thresholds = threshold; % use the single threshold
     
     nSessions = 0;
     sessionNames = {};
@@ -17,7 +18,9 @@ function speedsByJancke(parms)
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
         sH = findSpeed(sessionKey,0,parms);
+        assert(length(sH) == 1, 'Using multiple thresholds?');
         sV = findSpeed(sessionKey,1,parms);
+        assert(length(sV) == 1, 'Using multiple thresholds?');
         speeds(nSessions,:) = [sH sV];
     end
 
@@ -31,7 +34,10 @@ function speedsByJancke(parms)
         0.25, 0.25, 0.25; ...
         0,    0.25, 0; ...
         0.25, 0, 0; ...
-        0,    0,    0.5 ...
+        0,    0,    0.5; ...
+        0.25, 0,    1; ...
+        0.5,  0.5,  0.5; ...
+        0.5   0.25, 0.75 ...
     ];
     
     figure
