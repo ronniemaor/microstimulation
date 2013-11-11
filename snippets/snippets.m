@@ -1,8 +1,12 @@
 %% before we start
 setup
 
-%% preprocessing and loading data
-preprocessAndSave('J26c') % Only needed once for each new session.
+%% initial configuration and preprocessing of a new session (only needed once for each new session)
+% 1) add entry in getAllSessionConfigs
+% 2) preprocess:
+preprocessAndSave('J26c')
+
+%% loading the data
 data = loadData('J29c');
 
 %% blood vessels and masks
@@ -52,3 +56,16 @@ JanckeRatiosOverTime(make_parms('threshold',2.5E-4))
 
 %% misc
 spatialResponseOverTimeMovie(data, 0, 26:40)
+
+%% figures for paper
+% 1) Configure and preprocess the session (see above)
+% 2) Find peak. Look at data and verify things make sense.
+data = findPeak(loadData('J26c'));
+showFrame(data)
+drawMimg(data, 1e-3, 20:50)
+% 3) Show fits at peak frame
+paperShowFitsAtPeak(data);
+% 4) Fit parameters over time
+paperCreateSampleSessionFigures(data);
+% 5) Speed analysis
+paperSpeeds(data.sessionKey);
