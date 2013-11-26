@@ -20,7 +20,7 @@ function sessionConfigs = getAllSessionConfigs()
     sessionConfigs('M25d') = SessionConfig('Leg/leg_2009_03_25/d',70,2,80,200).manualPeak(34,44);
 
     %sessionConfigs('A1d') = SessionConfig('Leg/leg_2009_04_01/d',90,2,160,0);
-    sessionConfigs('A1e') = SessionConfig('Leg/leg_2009_04_01/e',100,2,160,200);
+    %sessionConfigs('A1e') = SessionConfig('Leg/leg_2009_04_01/e',100,2,160,200);
     %sessionConfigs('A1f') = SessionConfig('Leg/leg_2009_04_01/f',100,2,160,200);
     
     %%%%%%%%%%%%%%%%%%%%%
