@@ -1,10 +1,12 @@
-function speedsByJancke(parms)
+function speeds = speedsByJancke(parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
     allSessions = getSessionsFromParms(parms);
     
-    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.25);
+    medianErrWidth = take_from_struct(parms,'medianErrWidth',15); % in percentile units
+    
+    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.25);    
     parms.thresholds = threshold; % use the single threshold
     
     nSessions = 0;
@@ -24,6 +26,10 @@ function speedsByJancke(parms)
         speeds(nSessions,:) = [sH sV];
     end
 
+    meanSpeeds = mean(speeds,1);
+    errSpeeds = std(speeds,0,1)/sqrt(nSessions);
+    medianSpeeds = median(speeds,1);
+    
     colors = [ ...
         0,    0,    1; ...
         0,    0.5,  0; ...
@@ -48,8 +54,13 @@ function speedsByJancke(parms)
         plot(X(i),Y(i),'o','Color',colors(i,:), 'MarkerSize', 8, 'LineWidth',2);
         hold on;
     end
+    plot(meanSpeeds(1), meanSpeeds(2), 'x', 'Color','g', 'MarkerSize', 14, 'LineWidth', 3)
+    plot(medianSpeeds(1), medianSpeeds(2), 'x', 'Color','b', 'MarkerSize', 14, 'LineWidth', 3)
     title(sprintf('Speed anisotropy for \\Deltaf/f=%g*10^{-4}',threshold*1E4));
-    legend(sessionNames{:},'Location','NorthWest')
+    legendLabels = sessionNames;
+    legendLabels{nSessions+1} = 'Mean \pm sem';
+    legendLabels{nSessions+2} = sprintf('Median \\pm %d pct',medianErrWidth);
+    legend(legendLabels{:},'Location','NorthWest')
     axis equal
     xlabel('Horizontal speed [cm/s]')
     ylabel('Vertical speed [cm/s]')
@@ -57,7 +68,15 @@ function speedsByJancke(parms)
     xlim(lim);
     ylim(lim);
     hold on
-    plot(lim,lim,'g')    
+    plot(lim,lim,'g')
+    % error bars of mean
+    plot([meanSpeeds(1)-errSpeeds(1) meanSpeeds(1)+errSpeeds(1)], [meanSpeeds(2) meanSpeeds(2)], 'g-', 'LineWidth', 2)
+    plot([meanSpeeds(1) meanSpeeds(1)], [meanSpeeds(2)-errSpeeds(2) meanSpeeds(2)+errSpeeds(2)], 'g-', 'LineWidth', 2)
+    % error bars of median
+    lowPct = 50 - medianErrWidth;
+    highPct = 50 + medianErrWidth;
+    plot([prctile(speeds(:,1),lowPct) prctile(speeds(:,1),highPct)], [medianSpeeds(2) medianSpeeds(2)], 'b-', 'LineWidth', 2)
+    plot([medianSpeeds(1) medianSpeeds(1)], [prctile(speeds(:,2),lowPct) prctile(speeds(:,2),highPct)], 'b-', 'LineWidth', 2)
 end
 
 function s = findSpeed(sessionKey,isVertical,parms)

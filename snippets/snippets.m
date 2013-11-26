@@ -69,3 +69,6 @@ paperShowFitsAtPeak(data);
 paperCreateSampleSessionFigures(data);
 % 5) Speed analysis
 paperSpeeds(data.sessionKey);
+
+% summaries
+paperSpeedSummary();
