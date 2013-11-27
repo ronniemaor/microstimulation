@@ -72,3 +72,4 @@ paperSpeeds(data.sessionKey);
 
 % summaries
 paperSpeedSummary();
+paperFitSummary(); 
