@@ -1,4 +1,4 @@
-function [blank, stims, rawBlank, mask] = preprocessSession(dataDir)
+function [blank, stims, rawBlank, mask, allBlanks] = preprocessSession(dataDir)
     dayPrefix = getPrefixFromDataDir(dataDir);
     nPixels = 10000; nFrames = 256;
     
@@ -6,6 +6,7 @@ function [blank, stims, rawBlank, mask] = preprocessSession(dataDir)
     nStims = 0;
     blank = zeros(nPixels,nFrames);
     rawBlank = zeros(nPixels,nFrames);
+    allBlanks = zeros(nPixels,nFrames,50);
     for iCond = 1:6
         isBlank = iCond >= 4;
         condFiles = dir(sprintf('%s/%s_%d*.mat', dataDir, dayPrefix, iCond));
@@ -19,6 +20,7 @@ function [blank, stims, rawBlank, mask] = preprocessSession(dataDir)
             if isBlank
                 nBlanks = nBlanks + 1;
                 blank = blank + normalized;
+                allBlanks(:,:,nBlanks) = normalized;
                 rawBlank = rawBlank + fileData.FRMpre;
             else
                 nStims = nStims + 1;
@@ -27,6 +29,7 @@ function [blank, stims, rawBlank, mask] = preprocessSession(dataDir)
         end
         fprintf('\n')
     end
+    allBlanks = allBlanks(:,:,1:nBlanks);
     blank = blank / nBlanks;
     rawBlank = rawBlank / nBlanks;
     mask = findChamberMask(blank);
