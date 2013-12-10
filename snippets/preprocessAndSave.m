@@ -13,5 +13,6 @@ function preprocessAndSave(sessionKey)
     % save 
     filename = [dataDir,'/preprocessed'];
     fprintf('***** Saving preprocessed data to %s\n', filename)
-    save(filename, 'blank', 'stims', 'rawBlank', 'mask', 'allBlanks')
+    version = preprocessingVersion();
+    save(filename, 'version', 'blank', 'stims', 'rawBlank', 'mask', 'allBlanks')
 end
