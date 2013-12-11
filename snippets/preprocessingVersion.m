@@ -1,3 +1,3 @@
 function version = preprocessingVersion()
-    version = 0;
+    version = 1;
 end

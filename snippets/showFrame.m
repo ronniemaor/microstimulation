@@ -16,7 +16,7 @@ function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask, 
         extraMaskedRegion = [];
     end
     
-    signal = relativeSignal(data.blank,data.stims,frameToShow);
+    signal = data.signal(:,frameToShow,:);
     signal = mean(signal,3); % mean across trials
     
     if showCenter

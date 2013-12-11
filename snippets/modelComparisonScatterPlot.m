@@ -21,7 +21,7 @@ function modelComparisonScatterPlot(fits, sessions, fontSize)
         sessionKey = cSession{1};
         data = loadData(sessionKey);
         data = findPeak(data);
-        signal = relativeSignal(data.blank,data.stims,data.peakFrame);
+        signal = data.signal(:,data.peakFrame,:);
         for iSlice = 1:2
             isVertical = iSlice == 2;
             for iFit = 1:nFits

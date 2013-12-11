@@ -15,7 +15,7 @@ function presentationCreateSampleSessionFigures()
 
     data = findPeak(data);
     [P, err, ~, ~] = fitsOverTime(fit, ... 
-                                       data.blank, data.stims, data.mask, ...
+                                       data.signal, data.mask, ...
                                        frameRange, W, data.C, ...
                                        isVertical, nBins);
 
@@ -53,7 +53,7 @@ function presentationCreateSampleSessionFigures()
 
     for iSpecial = 1:length(specialFrames)
         frame = specialFrames(iSpecial);
-        signal = relativeSignal(data.blank, data.stims,frame);
+        signal = data.signal(:,frame,:);
         strTitle = sprintf('%d msec',10*(frame-25));
         bYLegend = (iSpecial == 1);
         figure

@@ -16,7 +16,7 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
 
     data = findPeak(data);
     [P, err, errSem, ~] = fitsOverTime(fit, ... 
-                                       data.blank, data.stims, data.mask, ...
+                                       data.signal, data.mask, ...
                                        frameRange, W, data.C, ...
                                        isVertical, nBins);
                                    
@@ -57,7 +57,7 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
         iPlot = nParams + 1 + iSpecial;
         frame = specialFrames(iSpecial);
         subplot(nRows,nCols,iPlot);
-        signal = relativeSignal(data.blank, data.stims,frame);
+        signal = data.signal(:,frame,:);
         strTitle = sprintf('Frame %d',frame);
         drawOneFit(data.mask,signal,data.C,W,isVertical,fit,strTitle)
     end

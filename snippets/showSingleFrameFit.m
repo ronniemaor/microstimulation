@@ -14,7 +14,7 @@ function showSingleFrameFit(data,parms)
         % compute the fit
         nBins = 2;
         W = 9;    
-        signal = relativeSignal(data.blank, data.stims,frame);
+        signal = data.signal(:,frame,:);
         [eqMeans, eqStd, eqVals] = sliceStats(signal,data.mask,data.C,W,isVertical);
         mmPerPixel = 0.1;
         distances = eqVals * mmPerPixel; % convert to mm

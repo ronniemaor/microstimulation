@@ -18,7 +18,7 @@ function modelComparisonAllSessions(fits)
         sessionNames{iSession} = sessionKey;
         data = loadData(sessionKey);
         data = findPeak(data);
-        signal = relativeSignal(data.blank,data.stims,data.peakFrame);
+        signal = data.signal(:,data.peakFrame,:);
         for iSlice = 1:2
             isVertical = iSlice == 2;
             sliceNames{iSlice} = sliceName(isVertical);

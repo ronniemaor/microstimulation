@@ -10,7 +10,7 @@ function drawMimg(data, dynamicRange, frameRange, bNormalizeTime)
         bNormalizeTime = 0;
     end
     
-    signal = relativeSignal(data.blank, data.stims, frameRange);
+    signal = data.signal(:,frameRange,:);
     meanSignal = mean(signal,3);
     if bNormalizeTime
         startFrame = 25;

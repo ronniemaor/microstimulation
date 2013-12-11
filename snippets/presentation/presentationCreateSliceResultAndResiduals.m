@@ -29,7 +29,7 @@ end
 
 function [distances, yAll, ySEM, yFit] = doOneFit(data, frame, isVertical, fit)
     W = 9;
-    signal = relativeSignal(data.blank, data.stims, frame);
+    signal = data.signal(:,frame,:);
     [eqMeans, eqStd, eqVals] = sliceStats(signal, data.mask, data.C, W, isVertical);
     ySEM = sqrt(mean(eqStd.^2,1)/size(eqStd,1)); % estimate SEM over all trials
     mmPerPixel = 0.1;

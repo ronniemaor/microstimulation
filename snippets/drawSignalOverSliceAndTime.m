@@ -4,7 +4,7 @@ function drawSignalOverSliceAndTime(data, isVertical, frameRange)
         frameRange = 2:80;
     end
     data = findPeak(data);
-    signal = relativeSignal(data.blank,data.stims,frameRange);
+    signal = data.signal(:,frameRange,:);
     W = 9;
     [means,eqVals] = sliceTransform(signal,data.mask,data.C,W,isVertical);
     mmPerPixel = 0.1;

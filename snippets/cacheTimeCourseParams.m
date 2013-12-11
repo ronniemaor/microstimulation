@@ -31,7 +31,7 @@ function res = cacheTimeCourseParams(sessionKey, parms)
         isVertical = iSlice==2;
         sliceStruct = struct;
 
-        [P, err, ~, ~] = fitsOverTime(fit, data.blank, data.stims, data.mask, frameRange, W, data.C, isVertical, nBins);
+        [P, err, ~, ~] = fitsOverTime(fit, data.signal, data.mask, frameRange, W, data.C, isVertical, nBins);
 
         highR2 = err > R2_threshold;
         goodPositions = highR2; % can't trust fits with R2 below this threshold

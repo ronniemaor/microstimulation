@@ -1,7 +1,7 @@
 function modelComparisonAtPeak(data, fits)
     data = findPeak(data);
     peakRange = data.peakFrame; % rangeFromWidth(data.peakFrame,3);
-    signal = relativeSignal(data.blank,data.stims,peakRange);
+    signal = data.signal(:,peakRange,:);
     W = 9;
     nBins = 2;    
     fitNames = cellfun(@(fit) fit.name(), fits, 'UniformOutput',false);

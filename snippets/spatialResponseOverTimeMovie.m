@@ -8,7 +8,7 @@ function spatialResponseOverTimeMovie(data, isVertical, frameRange)
     writerObj.open()
     for iFrame = 1:nFrames
         frameNumber = frameRange(iFrame);
-        signal = relativeSignal(data.blank,data.stims,frameNumber);
+        signal = data.signal(:,frameNumber,:);
         [eqMeans, eqStd, eqVals] = ...
             sliceStats(signal, data.mask, data.C, W, isVertical);
         mmPerPixel = 0.1;

@@ -72,7 +72,7 @@ paperSpeeds(data.sessionKey);
 
 % summaries
 paperSpeedSummary();
-paperFitSummary(); 
+paperFitsSummary(); 
 
 % clean blood vessels using PCA
 cleanBloodVesselsUsingPCA('J29c', make_parms('showOrig', false, 'nPCs', 2, 'method', 'frame blanks'));

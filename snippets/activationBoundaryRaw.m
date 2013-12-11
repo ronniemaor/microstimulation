@@ -51,7 +51,7 @@ end
 function [distances, responses] = calcSlice(data, frame, isVertical)
     W = 9;
     mmPerPixel = 0.1;
-    signal = relativeSignal(data.blank, data.stims,frame);
+    signal = data.signal(:,frame,:);
     [eqMeans, ~, eqVals] = sliceStats(signal,data.mask,data.C,W,isVertical);
     distances = eqVals * mmPerPixel; % convert to mm
     responses = mean(eqMeans,1); % average over trials

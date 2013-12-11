@@ -1,7 +1,6 @@
 function data = findPeak(data)
-    signal = relativeSignal(data.blank, data.stims, 1:80);
     mask = getMask(data);
-    [cX cY peakFrame] = findPeakActivity(signal,mask);
+    [cX cY peakFrame] = findPeakActivity(data.signal,mask);
     C = [cX cY];
     data.C = C;
     data.peakFrame = peakFrame;
