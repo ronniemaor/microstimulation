@@ -6,6 +6,7 @@ function data = cleanBloodVesselsUsingPCA(data, parms)
     method = take_from_struct(parms, 'method', 'frame blanks');    
     nPCs = take_from_struct(parms, 'nPCs', 2); % number of principal components to use
 
+    fprintf('Cleaning blood vessels using PCA. method=%s\n', method);
     if isequal(method, 'NOP')
         data.signal = data.orig_signal;
         return;

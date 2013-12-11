@@ -1,15 +1,17 @@
-function data = loadData(sessionKey, bSilent, bAfterReload)
-    if ~exist('bSilent', 'var')
-        bSilent = 0;
+function data = loadData(sessionKey, parms, bAfterReload)
+    if ~exist('parms', 'var')
+        parms = make_parms();
     end
     if ~exist('bAfterReload', 'var')
         bAfterReload = false;
     end
+    
+    bSilent = take_from_struct(parms, 'bSilent', 0);
     sessionDataDir = getSessionDataDir(sessionKey);
     dataFile = [sessionDataDir, '/preprocessed.mat'];
     if ~exist(dataFile,'file')
         fprintf('No preprocessed file found. Doing the preprocessing...\n')
-        data = preprocessData(sessionKey, bSilent, bAfterReload);
+        data = preprocessData(sessionKey, parms, bAfterReload);
         return;
     end
     if ~bSilent
@@ -20,7 +22,7 @@ function data = loadData(sessionKey, bSilent, bAfterReload)
     version = take_from_struct(data,'version',0);
     if version ~= expected_version
         fprintf('Data is from an old version. Redoing the preprocessing...\n')
-        data = preprocessData(sessionKey, bSilent, bAfterReload);
+        data = preprocessData(sessionKey, parms, bAfterReload);
         return;        
     end
     data.sessionKey = sessionKey;
@@ -36,10 +38,10 @@ function data = loadData(sessionKey, bSilent, bAfterReload)
                 if ~fMask(x,y)
                     ind = sub2ind([100 100],x,y);
                     data.mask(ind)= 0;
-                end                
+                end
             end
-        end        
-    end    
+        end
+    end
     
     % apply blood vessel mask if configured
     maskFile = [sessionDataDir, '/../exclusionMask.mat'];
@@ -50,11 +52,11 @@ function data = loadData(sessionKey, bSilent, bAfterReload)
     
     % remove blood vessels using PCA
     data.orig_signal = data.signal;
-    data = cleanBloodVesselsUsingPCA(data);
+    data = cleanBloodVesselsUsingPCA(data,parms);
 end
 
-function data = preprocessData(sessionKey, bSilent, bAfterReload)
+function data = preprocessData(sessionKey, parms, bAfterReload)
     assert(~bAfterReload, 'Already tried preprocessing. Failing.\n')
     preprocessAndSave(sessionKey);
-    data = loadData(sessionKey, bSilent, true);
+    data = loadData(sessionKey, parms, true);
 end

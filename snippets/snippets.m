@@ -76,3 +76,4 @@ paperFitsSummary();
 
 % clean blood vessels using PCA
 data = cleanBloodVesselsUsingPCA(data);
+data = loadData('J29c', make_parms('method','NOP'))
