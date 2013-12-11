@@ -47,6 +47,10 @@ function data = loadData(sessionKey, bSilent, bAfterReload)
         maskData = load(maskFile);
         data.mask(maskData.points) = 0;
     end
+    
+    % remove blood vessels using PCA
+    data.orig_signal = data.signal;
+    data = cleanBloodVesselsUsingPCA(data);
 end
 
 function data = preprocessData(sessionKey, bSilent, bAfterReload)

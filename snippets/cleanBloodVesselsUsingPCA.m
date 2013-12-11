@@ -6,7 +6,10 @@ function data = cleanBloodVesselsUsingPCA(data, parms)
     method = take_from_struct(parms, 'method', 'frame blanks');    
     nPCs = take_from_struct(parms, 'nPCs', 2); % number of principal components to use
 
-    if isequal(method, 'blanks')        
+    if isequal(method, 'NOP')
+        data.signal = data.orig_signal;
+        return;
+    elseif isequal(method, 'blanks')        
         X = data.allBlanks(:,3:30,:);
     elseif isequal(method, 'frame blanks')
         frameRange = 20:50;
@@ -30,7 +33,7 @@ function data = cleanBloodVesselsUsingPCA(data, parms)
     for frame = 1:nFrames
         nTrials = size(data.signal,3);
         for iTrial = 1:nTrials
-            orig_signal = data.signal(:,frame,iTrial);
+            orig_signal = data.orig_signal(:,frame,iTrial);
             corrected_signal = remove_contribution(orig_signal,V);
             data.signal(:,frame,iTrial) = corrected_signal;
         end
