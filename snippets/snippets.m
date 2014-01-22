@@ -81,4 +81,5 @@ data = loadData('J29c') % default PCA cleaning
 data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
 
 V = getFirstPCs(data, make_parms('nPCS', 2));
-applyFirstPCs(data.allBlanks - 1,V); % apply on centered blanks
+proj = applyFirstPCs(data.allBlanks - 1, V, make_parms('bDraw',true));
+drawMimg(proj, 1e-3, 20:50)
