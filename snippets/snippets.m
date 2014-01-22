@@ -81,4 +81,4 @@ data = loadData('J29c') % default PCA cleaning
 data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
 
 V = getFirstPCs(data, make_parms('nPCS', 2));
-firstPCWeightsOnBlanks(data,V);
+applyFirstPCs(data.allBlanks - 1,V); % apply on centered blanks

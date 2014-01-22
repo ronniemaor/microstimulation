@@ -1,18 +1,22 @@
-function [w,frames_to_show] = firstPCWeightsOnBlanks(data, V, parms)
+function [w,frameRange] = applyFirstPCs(signal, V, parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
     
     nPCs = size(V,2);
-    frames_to_show = take_from_struct(parms, 'frames_to_show', 10:80);
+    frameRange = take_from_struct(parms, 'frameRange', 10:80);
 
-    blanks = data.allBlanks(:,frames_to_show,:);
-    mean_blank = mean(blanks,3);
-    nFrames = length(frames_to_show);
+    mean_signal = mean(signal(:,frameRange,:),3);
+    nFrames = length(frameRange);
     w = zeros(nFrames, nPCs);
     for frame = 1:nFrames
-        x = mean_blank(:,frame) - 1;
+        x = mean_signal(:,frame);
         w(frame,:) = V' * x;
+    end
+    
+    bDraw = take_from_struct(parms, 'bDraw', true);
+    if ~bDraw
+        return
     end
     
     figure;
@@ -23,7 +27,7 @@ function [w,frames_to_show] = firstPCWeightsOnBlanks(data, V, parms)
         if max(y) < -min(y)
             y = -y; % sign is arbitrary, so make the peak positive
         end
-        plot(frames_to_show, y, 'LineWidth', 2);
+        plot(frameRange, y, 'LineWidth', 2);
         legend_txt{i} = sprintf('PC %d', i);
         hold all
     end
