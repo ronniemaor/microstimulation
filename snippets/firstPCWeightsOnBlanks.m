@@ -1,21 +1,11 @@
-function [w,frames_to_show] = firstPCWeightsOnBlanks(data, parms)
+function [w,frames_to_show] = firstPCWeightsOnBlanks(data, V, parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
     
-    nPCs = take_from_struct(parms, 'nPCs', 2); % number of principal components to use
+    nPCs = size(V,2);
+    frames_to_show = take_from_struct(parms, 'frames_to_show', 10:80);
 
-    frameRange = 20:50;
-    nBlanks = size(data.allBlanks,3);
-    mean_blank = mean(data.allBlanks,3);
-    X = data.allBlanks(:,frameRange,:) ./ mean_blank(:,frameRange,ones(1,nBlanks));
-
-    [s1,s2,s3] = size(X);
-    X = reshape(X,s1,s2*s3);
-    
-    V = doPCA(X',nPCs);
-    
-    frames_to_show = 10:80;
     blanks = data.allBlanks(:,frames_to_show,:);
     mean_blank = mean(blanks,3);
     nFrames = length(frames_to_show);
