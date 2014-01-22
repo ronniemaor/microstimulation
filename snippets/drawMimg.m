@@ -10,7 +10,12 @@ function drawMimg(data, dynamicRange, frameRange, bNormalizeTime)
         bNormalizeTime = 0;
     end
     
-    signal = data.signal(:,frameRange,:);
+    if isfield(data,'signal')
+        signal = data.signal;
+    else
+        signal = data; % we got a matrix already: pixels x frames x trials
+    end
+    signal = signal(:,frameRange,:);
     meanSignal = mean(signal,3);
     if bNormalizeTime
         startFrame = 25;
