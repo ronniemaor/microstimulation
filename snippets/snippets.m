@@ -28,6 +28,7 @@ showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
 
 %% Ways to get an impression of the data
 drawMimg(data, 1e-3, 20:50)
+drawMimg(data.allBlanks - 1, 1e-3, 20:50) % draw the blanks instead of the signal
 drawSpconds(data, 10, 20:50)
 drawSignalOverSliceAndTime(data,0)
 
@@ -78,3 +79,4 @@ paperFitsSummary();
 data = cleanBloodVesselsUsingPCA(data);
 data = loadData('J29c') % default PCA cleaning
 data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
+firstPCWeightsOnBlanks(data, make_parms('nPCs',2));
