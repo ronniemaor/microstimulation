@@ -82,7 +82,12 @@ data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
 
 %% more PCA stuff
 V = getFirstPCs(data, make_parms('nPCs', 2));
+drawMimg(V,5e-2,1:2)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
 drawFirstPCsWeights(weights,10:80)
 drawMimg(proj, 1e-3, 10:80)
 data = removeBlanksPCsProjection(data, make_parms('center_blanks',true));
+data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('windowDelta',19));
+data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('use_blanks', false, 'windowDelta',5));
+drawSpconds(data,10,10:80,true)
+ 
