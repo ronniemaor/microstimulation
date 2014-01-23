@@ -83,6 +83,7 @@ data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
 %% more PCA stuff
 V = getFirstPCs(data, make_parms('nPCs', 2));
 drawMimg(V,5e-2,1:2)
+fractions = showFirstPCsVariance(data)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
 drawFirstPCsWeights(weights,10:80)
 drawMimg(proj, 1e-3, 10:80)
