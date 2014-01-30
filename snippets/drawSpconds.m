@@ -7,7 +7,7 @@ function drawSpconds(data, nBins, frameRange, showOrig)
         frameRange = 10:80;
     end
     if nargin < 4
-        showOrig = false;
+        showOrig = true;
     end
     plotdata = mean(data.signal(:,frameRange,:),3);
     if showOrig

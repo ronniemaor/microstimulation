@@ -91,4 +91,14 @@ data = removeBlanksPCsProjection(data, make_parms('center_blanks',true));
 data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('windowDelta',19));
 data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('use_blanks', false, 'windowDelta',5));
 drawSpconds(data,10,10:80,true)
- 
+
+% visualizing weight shapes
+[data,V,shapedV] = cleanBloodVesselsUsingPCA(data, make_parms('shape_method', 'hard', 'maxD', 35));
+drawMimg(data)
+drawSpconds(data)
+drawMimg(shapedV,5e-2,1:2)
+[nPixels,nFrames,nTrials] = size(data.signal);
+shape = createPCAWeightingShape(data, make_parms('shape_method','hard', 'maxD', 35));
+sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
+drawMimg(sig)
+
