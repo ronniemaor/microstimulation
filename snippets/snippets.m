@@ -102,3 +102,6 @@ shape = createPCAWeightingShape(data, make_parms('shape_method','hard', 'maxD', 
 sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
 drawMimg(sig)
 
+% work on signal = stims - blank (subtract = true)
+data = loadData('J29c', make_parms('subtract', true, 'method', 'blanks'));
+

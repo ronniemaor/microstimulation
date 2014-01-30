@@ -51,6 +51,14 @@ function data = loadData(sessionKey, parms, bAfterReload)
         data.mask(maskData.points) = 0;
     end
     
+    % change data.signal to delta_f instead of delta_f/f
+    % YYY - if we end up deciding this is better, then replace it in the preprocessing instead of doing it here.
+    if take_from_struct(parms,'subtract',false)
+        fprintf('Using subtraction instead of division\n')
+        [~,nFrames,nTrials] = size(data.stims);
+        data.signal = data.stims - data.blank(:, 1:nFrames, ones(1,nTrials));
+    end
+    
     % remove blood vessels using PCA
     data.orig_signal = data.signal;
     data = cleanBloodVesselsUsingPCA(data,parms);
