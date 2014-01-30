@@ -103,5 +103,5 @@ sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
 drawMimg(sig)
 
 % work on signal = stims - blank (subtract = true)
-data = loadData('J29c', make_parms('subtract', true, 'method', 'blanks'));
+data = loadData('J29c', make_parms('subtract', true, 'method', 'blanks', 'r', 'auto'));
 
