@@ -4,9 +4,10 @@ function res = cacheTimeCourseParams(sessionKey, parms)
     end
     fit = take_from_struct(parms,'fit',GaussianFit);
     frameRange = take_from_struct(parms,'frameRange',20:50);
-    filename = sprintf('%s/timecourse-%s-%s-%d-to-%d.mat', getCacheDir(), sessionKey, fit.name(), min(frameRange), max(frameRange));
+    filename = sprintf('%s/timecourse-%s-%s-%d-to-%d.mat', getCacheDir(parms), sessionKey, fit.name(), min(frameRange), max(frameRange));
     
     if exist(filename,'file')
+        fprintf('Loading fits from %s\n', filename)
         res = load(filename);
         return;
     end
