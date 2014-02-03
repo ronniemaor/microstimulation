@@ -52,6 +52,8 @@ function data = loadData(sessionKey, parms, bAfterReload)
             maskData = load(maskFile);
             data.mask(maskData.points) = 0;
         end
+    else
+        fprintf('NOT loading blood vessel mask from file\n')
     end
     
     % remove blood vessels using PCA

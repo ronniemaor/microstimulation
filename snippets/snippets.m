@@ -104,3 +104,12 @@ shape = createPCAWeightingShape(data, make_parms('shape_method','hard', 'maxD', 
 sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
 drawMimg(sig)
 
+%% standard examination of a session (for evaluating PCA cleanup)
+parms = make_parms('use_blood_vessel_mask',false, 'active_cache', 'PCA');
+data = findPeak(loadData(session_key, parms))
+showFrame(data)
+drawMimg(data)
+drawSpconds(data)
+paperShowFitsAtPeak(data,parms);
+paperCreateSampleSessionFigures(data,parms);
+paperSpeeds(data.sessionKey, parms);
