@@ -67,15 +67,15 @@ showFrame(data)
 drawMimg(data, 1e-3, 20:50)
 drawSpconds(data)
 % 3) Show fits at peak frame
-paperShowFitsAtPeak(data);
+paperShowFitsAtPeak(data,parms);
 % 4) Fit parameters over time
-paperCreateSampleSessionFigures(data);
+paperCreateSampleSessionFigures(data,parms);
 % 5) Speed analysis
-paperSpeeds(data.sessionKey);
+paperSpeeds(data.sessionKey, parms);
 
 % summaries
-paperSpeedSummary();
-paperFitsSummary(); 
+paperSpeedSummary(parms);
+paperFitsSummary(parms); 
 
 % clean blood vessels using PCA
 data = cleanBloodVesselsUsingPCA(data);
