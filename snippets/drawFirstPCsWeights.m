@@ -1,7 +1,7 @@
 function drawFirstPCsWeights(weights, frameRange)
     nPCs = size(weights,2);
     
-    figure;
+    myfigure;
     set(gca,'FontSize',16);
     legend_txt = cell(1,nPCs);
     for i=1:nPCs

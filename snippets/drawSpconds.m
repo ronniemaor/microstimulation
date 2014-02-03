@@ -13,6 +13,6 @@ function drawSpconds(data, nBins, frameRange, showOrig)
     if showOrig
         plotdata(:,:,2) = mean(data.orig_signal(:,frameRange,:),3);
     end
-    figure;
+    myfigure;
     plotspconds(plotdata,100,100,nBins);
 end

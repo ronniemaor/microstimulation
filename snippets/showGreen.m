@@ -5,7 +5,7 @@ function showGreen(sessionKey)
 %     greenFig = [baseDir, '/green.fig'];
 %     uiopen(greenFig,1)
     
-    figure;
+    myfigure;
     greenFile = [baseDir, '/green.mat'];
     green = load(greenFile);
     green = mean(green.FRMpre,2);

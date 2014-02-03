@@ -9,11 +9,11 @@ function presentationCreateSliceResultAndResiduals(parms)
     fit = GaussianFit;
     
     [distances, yAll, ySEM, yFit] = doOneFit(data, data.peakFrame, isVertical, fit);
-    figure
+    myfigure(parms);
     errorbar(distances, yAll, ySEM, '.g');
     setPlotAxes()
 
-    figure
+    myfigure(parms);
     plot(distances,yAll,'ro')    
     hold on
     for i=1:length(distances)

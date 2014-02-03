@@ -3,7 +3,7 @@ function paperSpeeds(sessionKey,parms)
         parms = make_parms();
     end
 
-    figure;
+    myfigure(parms);
     for isVertical = 0:1
         subplot(1,2,isVertical+1);
         parms = add_parms(parms, ...

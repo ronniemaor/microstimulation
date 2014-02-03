@@ -31,7 +31,7 @@ function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask, 
     
     signal(extraMaskedRegion) = -dynamicRange;
     
-    figure;
+    myfigure;
     mimg(signal,100,100,-dynamicRange,dynamicRange,' '); 
     colormap(mapgeog);
     topLevelTitle(sprintf('%s - frame %d', data.sessionKey, frameToShow));

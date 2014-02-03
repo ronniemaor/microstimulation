@@ -32,7 +32,7 @@ function timeCourseSeveralSessions(parms)
     maxFrame = NaN;
     minFrame = NaN;
 
-    figure
+    myfigure(parms);
     for iSlice = 1:2       
         isVertical = iSlice==2;
         

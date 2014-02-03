@@ -19,7 +19,7 @@ function paperCreateSampleSessionFigures(data, parms)
     maxFrame = NaN;
     minFrame = NaN;
     
-    figure
+    myfigure(parms);
     for isVertical = 0:1
         P = cacheTimeCourseParams(data.sessionKey, parms);        
         sliceStruct = P.(sliceName(isVertical));

@@ -32,7 +32,7 @@ function speeds = speedsByJancke(parms)
     
     colors = getColors();
     
-    figure
+    myfigure(parms);
     maxSpeed = max(speeds(:));
     X = speeds(:,1);
     Y = speeds(:,2);

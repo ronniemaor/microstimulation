@@ -36,7 +36,7 @@ function modelComparisonScatterPlot(fits, parms)
         end            
     end
 
-    figure
+    myfigure;
     set(gca,'FontSize',fontSize)
     X = err(:,:,1);
     X = X(:);

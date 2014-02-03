@@ -12,7 +12,7 @@ function modelComparisonAtPeak(data, fits)
     errSemCases = zeros(nSlices,nFits);
     sliceNames = cell(1,nSlices);
 
-    figure
+    myfigure;
     for iSlice = 1:2
         vertical = iSlice == 2;
         if vertical; strAxis='Vertical'; else strAxis='Horizontal'; end;

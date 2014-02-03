@@ -25,7 +25,7 @@ function drawMimg(data, dynamicRange, frameRange, bNormalizeTime)
         times = frameRange;
     end
     
-    figure;
+    myfigure;
     mimg(meanSignal,100,100,-dynamicRange,dynamicRange,times,0,16); 
     colormap(mapgeog);
 end

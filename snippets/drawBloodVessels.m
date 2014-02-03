@@ -20,7 +20,7 @@ function drawBloodVessels(data, bShowSlices, showMask)
         blVes(markedRegion) = min(blVes); % will show up in black
     end
     
-    figure; 
+    myfigure; 
     mimg(blVes,100,100,'auto',0,' '); 
     h = gca;
     topLevelTitle(sprintf('%s - blood vessels', data.sessionKey));

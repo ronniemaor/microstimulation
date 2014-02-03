@@ -11,7 +11,7 @@ function JanckeRatiosOverTime(parms)
     nSessions = 0;
     sessionNames = {};
     sessionMeanRatios = [];
-    figure;
+    myfigure(parms);
     for cSession = allSessions
         sessionKey = cSession{1};
         if isequal(sessionKey,'J29j') 

@@ -14,7 +14,7 @@ function presentationFitSeveralTimes(parms)
 end
     
 function showFits(data, isVertical, fit, frames)    
-    figure
+    myfigure;
     set(gca,'FontSize',18)
     for frame = frames        
         [distances, yFit] = doOneFit(data, frame, isVertical, fit);

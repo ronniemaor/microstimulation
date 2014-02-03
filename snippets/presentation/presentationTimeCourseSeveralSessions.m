@@ -28,7 +28,7 @@ function presentationTimeCourseSeveralSessions(parms)
     maxTime = NaN;
     minTime = NaN;
 
-    figure
+    myfigure(parms);
     iSession = 0;
     for cSession = allSessions
         iSession = iSession + 1;

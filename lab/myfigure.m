@@ -6,4 +6,7 @@ function myfigure(parms)
         figure;
     end
     set(gca,'FontSize', take_from_struct(parms,'FontSize', 16));
+    if take_from_struct(parms, 'maxfigure',1)
+        set(gcf,'units','normalized','outerposition',[0 0 1 1])
+    end
 end

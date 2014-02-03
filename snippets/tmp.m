@@ -1,5 +1,5 @@
 function tmp()
-    figure
+    myfigure;
     plot(1:10)
     showSliceDirection(1)
 end

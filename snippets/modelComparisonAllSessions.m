@@ -40,7 +40,7 @@ function modelComparisonAllSessions(fits, parms)
     ymax = max(topVals(:));
     ymin = min(bottomVals(:));
     
-    figure
+    myfigure(parms);
     for iSlice = 1:2
         subplot(2,1,iSlice)
         sliceErr = squeeze(err(:,iSlice,:));

@@ -29,7 +29,7 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
         end
     end                                   
 
-    figure
+    myfigure;
     
     % plot a figure for each parameter
     for iParam = 1:nParams

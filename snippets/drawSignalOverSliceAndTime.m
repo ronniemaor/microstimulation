@@ -12,7 +12,7 @@ function drawSignalOverSliceAndTime(data, isVertical, frameRange)
     msecPerFrame = 10;
     times = (frameRange-25)*msecPerFrame; % convert to msec from onset
     
-    figure; 
+    myfigure; 
     surf(times,distances,means); 
     colorbar;
     view(0,90);

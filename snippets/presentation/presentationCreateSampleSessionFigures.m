@@ -38,7 +38,7 @@ function presentationCreateSampleSessionFigures(parms)
         if strcmpi(name,'a')
             name = 'Amplitude';
         end
-        figure
+        myfigure(parms);
         plot(goodTimes,paramVals)
         set(gca,'FontSize',fontSize)
         title([name,'(t)'])
@@ -46,7 +46,7 @@ function presentationCreateSampleSessionFigures(parms)
         xlabel('Time from stimulus [msec]')        
     end
 
-    figure
+    myfigure(parms);
     plot(times, err, 'b');
     hold on
     plot([min(times) max(times)], [R2_threshold R2_threshold], 'r');
@@ -60,7 +60,7 @@ function presentationCreateSampleSessionFigures(parms)
         signal = data.signal(:,frame,:);
         strTitle = sprintf('%d msec',10*(frame-25));
         bYLegend = (iSpecial == 1);
-        figure
+        myfigure(parms);
         drawOne(data.mask,signal,data.C,W,isVertical,fit,strTitle,fontSize,bYLegend)
     end
 end

@@ -3,7 +3,7 @@ function paperShowFitsAtPeak(data,parms)
         parms = make_parms();
     end
 
-    figure;
+    myfigure(parms);
     for isVertical = 0:1
         subplot(1,2,isVertical+1);
         showSingleFrameFit(data,add_parms(parms, 'newFigure',0,'isVertical',isVertical))
