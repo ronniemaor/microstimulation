@@ -3,7 +3,7 @@ function [V,d,C] = getFirstPCs(data, parms)
         parms = make_parms();
     end
     
-    method = take_from_struct(parms, 'method', 'frame blanks');    
+    method = take_from_struct(parms, 'PCAmethod', 'frame blanks');    
     nPCs = take_from_struct(parms, 'nPCs', 2); % number of principal components to use
 
     fprintf('Computing blood vessel contribution using PCA. method=%s\n', method);

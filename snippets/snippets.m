@@ -61,9 +61,11 @@ spatialResponseOverTimeMovie(data, 0, 26:40)
 %% figures for paper
 % 1) Configure and preprocess the session (see above)
 % 2) Find peak. Look at data and verify things make sense.
+data = findPeak(loadData('J29c', make_parms('use_blood_vessel_mask',false)))
 data = findPeak(loadData('J26c'));
 showFrame(data)
 drawMimg(data, 1e-3, 20:50)
+drawSpconds(data)
 % 3) Show fits at peak frame
 paperShowFitsAtPeak(data);
 % 4) Fit parameters over time
