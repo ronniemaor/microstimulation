@@ -3,7 +3,7 @@ function shape = createPCAWeightingShape(data, parms)
         parms = make_parms();
     end
     
-    method = take_from_struct(parms, 'shape_method', 'NOP');
+    method = take_from_struct(parms, 'shape_method', 'hard');
 
     fprintf('Shaping PCs using shape method = %s\n', method);
     if isequal(method, 'NOP')
@@ -12,7 +12,7 @@ function shape = createPCAWeightingShape(data, parms)
     elseif isequal(method, 'hard')        
         shape = zeros(10000,1);
         data = findPeak(data);
-        maxD = take_from_struct(parms,'maxD',25);
+        maxD = take_from_struct(parms,'maxD',35);
         C = data.C;
         for x = 1:100
             for y = 1:100

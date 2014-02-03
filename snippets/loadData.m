@@ -44,11 +44,14 @@ function data = loadData(sessionKey, parms, bAfterReload)
     end
     
     % apply blood vessel mask if configured
-    maskFile = [sessionDataDir, '/../exclusionMask.mat'];
-    if exist(maskFile,'file')
-        fprintf('Loading mask from file %s\n',maskFile)
-        maskData = load(maskFile);
-        data.mask(maskData.points) = 0;
+    b_use_blood_vessel_mask = take_from_struct(parms, 'use_blood_vessel_mask', true);
+    if b_use_blood_vessel_mask
+        maskFile = [sessionDataDir, '/../exclusionMask.mat'];
+        if exist(maskFile,'file')
+            fprintf('Loading mask from file %s\n',maskFile)
+            maskData = load(maskFile);
+            data.mask(maskData.points) = 0;
+        end
     end
     
     % remove blood vessels using PCA
