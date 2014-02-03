@@ -1,3 +1,3 @@
 function presentationModelSelection()
-    modelComparisonScatterPlot({GaussianFit, ExponentialFit}, {}, 20)
+    modelComparisonScatterPlot({GaussianFit, ExponentialFit})
 end

@@ -1,5 +1,9 @@
-function presentationInitialProcessing()
-    data = loadData('J29c');
+function presentationInitialProcessing(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
+    data = loadData('J29c',parms);
     data = findPeak(data);
     dynamicRange = 1e-3;
     showFrame(data,dynamicRange,data.peakFrame,0,0)

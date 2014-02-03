@@ -11,7 +11,7 @@ function sessionActivationsAndSpeeds(parms)
         sessionKey = cSession{1};
         for isVertical=0:1
             if bShowRaw
-                data = loadData(sessionKey);
+                data = loadData(sessionKey, parms);
                 activationBoundaryRaw(data,isVertical,parms);
             end
             if bShowFits

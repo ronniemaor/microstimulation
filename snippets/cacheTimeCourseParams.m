@@ -24,7 +24,7 @@ function res = cacheTimeCourseParams(sessionKey, parms)
     res.frameRange = frameRange;
     res.sessionKey = sessionKey;
     
-    data = loadData(sessionKey);
+    data = loadData(sessionKey, parms);
     data = findPeak(data);
 
     for iSlice = 1:2

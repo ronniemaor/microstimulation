@@ -1,4 +1,8 @@
-function modelComparisonAllSessions(fits)
+function modelComparisonAllSessions(fits, parms)
+    if ~exist('parms', 'var')
+        parms = make_parms();
+    end
+
     fitNames = cellfun(@(fit) fit.name(), fits, 'UniformOutput',false);
     nFits = length(fits);
     
@@ -16,7 +20,7 @@ function modelComparisonAllSessions(fits)
         iSession = iSession + 1;
         sessionKey = cSession{1};
         sessionNames{iSession} = sessionKey;
-        data = loadData(sessionKey);
+        data = loadData(sessionKey,parms);
         data = findPeak(data);
         signal = data.signal(:,data.peakFrame,:);
         for iSlice = 1:2

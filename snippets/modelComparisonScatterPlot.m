@@ -1,14 +1,18 @@
-function modelComparisonScatterPlot(fits, sessions, fontSize)
+function modelComparisonScatterPlot(fits, parms)
+    if ~exist('parms', 'var')
+        parms = make_parms();
+    end
+
     fitNames = cellfun(@(fit) fit.name(), fits, 'UniformOutput',false);
     nFits = length(fits);
     assert(nFits == 2, 'Model scatter comparison scatter plot should be called with exactly two fits')
     
-    if nargin < 2 || isempty(sessions)
+    sessions = take_from_struct(parms, 'sessions', {});
+    fontSize = take_from_struct(parms, 'fontSize', 20);
+    
+    if isempty(sessions)
         allSessions = getAllSessionConfigs();
         sessions = allSessions.keys();
-    end
-    if nargin < 3
-        fontSize = get(0,'defaultTextFontSize');
     end
     nSessions = length(sessions);
     nSlices = 2;
@@ -19,7 +23,7 @@ function modelComparisonScatterPlot(fits, sessions, fontSize)
     for cSession = sessions
         iSession = iSession + 1;
         sessionKey = cSession{1};
-        data = loadData(sessionKey);
+        data = loadData(sessionKey,parms);
         data = findPeak(data);
         signal = data.signal(:,data.peakFrame,:);
         for iSlice = 1:2

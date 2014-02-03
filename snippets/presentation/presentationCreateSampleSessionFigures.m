@@ -1,6 +1,10 @@
-function presentationCreateSampleSessionFigures()
+function presentationCreateSampleSessionFigures(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
     fontSize = 18;
-    data = loadData('M18c');
+    data = loadData('M18c', parms);
     isVertical = 1;
     frameRange = 20:60;
     fit = GaussianFit;

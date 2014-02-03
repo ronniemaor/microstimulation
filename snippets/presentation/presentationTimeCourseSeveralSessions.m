@@ -1,4 +1,8 @@
-function presentationTimeCourseSeveralSessions()
+function presentationTimeCourseSeveralSessions(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
     fit = GaussianFit;
     frameRange = 20:50;
     allSessions = {'M18b', 'M18c', 'M18d', 'M18e'};
@@ -30,7 +34,7 @@ function presentationTimeCourseSeveralSessions()
         iSession = iSession + 1;
         sessionKey = cSession{1};
         sessionNames{iSession} = sprintf('%d \\mum', iSession*200);
-        data = loadData(sessionKey);
+        data = loadData(sessionKey, parms);
         data = findPeak(data);
        
         for iSlice = 1:2

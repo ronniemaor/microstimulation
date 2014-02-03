@@ -1,5 +1,9 @@
-function presentationFitSeveralTimes()
-    data = loadData('M18c');
+function presentationFitSeveralTimes(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
+    data = loadData('M18c',parms);
     data = findPeak(data);
     isVertical = 0;
     fit = GaussianFit;

@@ -1,5 +1,9 @@
-function presentationCreateSliceResultAndResiduals()
-    data = loadData('M18c');
+function presentationCreateSliceResultAndResiduals(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
+    end
+
+    data = loadData('M18c',parms);
     data = findPeak(data);
     isVertical = 1;
     fit = GaussianFit;
