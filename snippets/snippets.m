@@ -105,7 +105,8 @@ sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
 drawMimg(sig)
 
 %% standard examination of a session (for evaluating PCA cleanup)
-parms = make_parms('use_blood_vessel_mask',false, 'active_cache', 'PCA');
+parms = make_parms('use_blood_vessel_mask',false, 'PCAmethod', 'frame blanks', 'active_cache', 'PCA');
+%parms = make_parms('use_blood_vessel_mask',true, 'PCAmethod', 'NOP', 'active_cache', 'no-PCA');
 data = findPeak(loadData(session_key, parms))
 showFrame(data)
 drawMimg(data)

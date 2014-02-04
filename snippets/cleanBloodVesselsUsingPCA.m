@@ -2,6 +2,15 @@ function [data,V,shapedV,ratios] = cleanBloodVesselsUsingPCA(data, parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
+    
+    method = take_from_struct(parms, 'PCAmethod', 'sheker');    
+    if isequal(method, 'NOP')
+        data.signal = data.orig_signal;
+        V = nan;
+        shapedV = nan;
+        ratios = nan;
+        return;
+    end  
 
     r = take_from_struct(parms, 'r', 1.0);
     

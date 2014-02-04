@@ -7,10 +7,7 @@ function [V,d,C] = getFirstPCs(data, parms)
     nPCs = take_from_struct(parms, 'nPCs', 2); % number of principal components to use
 
     fprintf('Computing blood vessel contribution using PCA. method=%s\n', method);
-    if isequal(method, 'NOP')
-        data.signal = data.orig_signal;
-        return;
-    elseif isequal(method, 'blanks')        
+    if isequal(method, 'blanks')        
         X = data.allBlanks(:,3:30,:);
     elseif isequal(method, 'frame blanks')
         frameRange = 20:50;
