@@ -46,7 +46,8 @@ function speeds = speedsByJancke(parms)
     legendLabels = sessionNames;
     legendLabels{nSessions+1} = 'Mean \pm sem';
     legendLabels{nSessions+2} = sprintf('Median \\pm %d pct',medianErrWidth);
-    legend(legendLabels{:},'Location','NorthWest')
+    hLegend = legend(legendLabels{:},'Location','NorthWest');
+    set(hLegend,'FontSize',10);
     axis equal
     xlabel('Horizontal speed [cm/s]')
     ylabel('Vertical speed [cm/s]')
