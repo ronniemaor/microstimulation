@@ -45,7 +45,7 @@ function data = loadData(sessionKey, parms, bAfterReload)
     
     % apply blood vessel mask if configured
     b_use_blood_vessel_mask = take_from_struct(parms, 'use_blood_vessel_mask', true);
-    if b_use_blood_vessel_mask
+    if b_use_blood_vessel_mask || config.hasV2
         maskFile = [sessionDataDir, '/../exclusionMask.mat'];
         if exist(maskFile,'file')
             fprintf('Loading mask from file %s\n',maskFile)
