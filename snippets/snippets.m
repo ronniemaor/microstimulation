@@ -114,3 +114,5 @@ drawSpconds(data)
 paperShowFitsAtPeak(data,parms);
 paperCreateSampleSessionFigures(data,parms);
 paperSpeeds(data.sessionKey, parms);
+
+createAllFiguresForPCAComparison('C:\temp'); % parms: sessions

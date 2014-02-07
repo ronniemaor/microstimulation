@@ -31,6 +31,9 @@ function paperCreateSampleSessionFigures(data, parms)
         for iParam = 1:nParams
             name = paramNames{iParam};
             vals = sliceStruct.(name);
+            if isempty(vals)
+                continue
+            end
             maxVals(iParam) = max(max(vals),maxVals(iParam));
             minVals(iParam) = min(min(vals),minVals(iParam));
             times = 10 * (frames - 25);
@@ -73,8 +76,12 @@ function paperCreateSampleSessionFigures(data, parms)
         for isVertical = 0:1
             iPlot = nCols*isVertical + xPlot;
             subplot(nRows,nCols,iPlot);
-            ylim([minVals(xPlot) maxVals(xPlot)]);
-            xlim(frameToTime([minFrame maxFrame]))
+            if ~isnan(minVals(xPlot)) && ~isnan(maxVals(xPlot))
+                ylim([minVals(xPlot) maxVals(xPlot)]);
+            end
+            if ~isempty(minFrame) && ~isempty(maxFrame)
+                xlim(frameToTime([minFrame maxFrame]))
+            end
         end
     end    
     

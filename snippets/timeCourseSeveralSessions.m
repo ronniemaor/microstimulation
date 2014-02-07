@@ -52,6 +52,9 @@ function timeCourseSeveralSessions(parms)
             for iParam = 1:nParams
                 name = paramNames{iParam};
                 vals = sliceStruct.(name);
+                if isempty(vals)
+                    continue
+                end
                 maxVals(iParam) = max(max(vals),maxVals(iParam));
                 minVals(iParam) = min(min(vals),minVals(iParam));
 
@@ -141,8 +144,10 @@ function timeCourseSeveralSessions(parms)
         for xPlot = 1:(nParams+1)
             iPlot = nCols*(iSlice-1) + xPlot;
             subplot(nRows,nCols,iPlot);
-            ylim([minVals(xPlot) maxVals(xPlot)]);
-            if xPlot <= nParams % not the R2 plot
+            if ~isnan(minVals(xPlot)) && ~isnan(maxVals(xPlot))
+                ylim([minVals(xPlot) maxVals(xPlot)]);
+            end
+            if (xPlot <= nParams) && ~isempty(minFrame) && ~isempty(maxFrame) % not the R2 plot
                 xlim([minFrame maxFrame])
             end
         end

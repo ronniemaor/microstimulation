@@ -6,7 +6,7 @@ function speeds = speedsByJancke(parms)
     
     medianErrWidth = take_from_struct(parms,'medianErrWidth',15); % in percentile units
     
-    [threshold,parms] = take_from_struct(parms, 'threshold', 1E-3 * 0.25);    
+    [threshold,parms] = take_from_struct(parms, 'threshold', 2.5E-4);    
     parms.thresholds = threshold; % use the single threshold
     
     nSessions = 0;
@@ -14,15 +14,15 @@ function speeds = speedsByJancke(parms)
     speeds = [];
     for cSession = allSessions
         sessionKey = cSession{1};
-        if isequal(sessionKey,'J29j') 
-            continue % no fits for Horizontal, non linear sigma changes for Vertical (maybe we can use only vertical?)
-        end;
-        nSessions = nSessions + 1;
-        sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
         sH = findSpeed(sessionKey,0,parms);
         assert(length(sH) == 1, 'Using multiple thresholds?');
         sV = findSpeed(sessionKey,1,parms);
         assert(length(sV) == 1, 'Using multiple thresholds?');
+        if isnan(sH) || isnan(sV)
+            continue
+        end
+        nSessions = nSessions + 1;
+        sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
         speeds(nSessions,:) = [sH sV];
     end
 

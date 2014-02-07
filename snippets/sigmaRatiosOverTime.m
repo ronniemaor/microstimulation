@@ -1,11 +1,10 @@
-function sigmaRatiosOverTime(specificSessions)
-    frameRange = 28:45;
-    if ~exist('specificSessions','var')
-        allConfigs = getAllSessionConfigs();
-        allSessions = allConfigs.keys();
-    else
-        allSessions = specificSessions;
+function sigmaRatiosOverTime(parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
+
+    frameRange = take_from_struct(parms, 'frameRange', 28:45);
+    allSessions = getSessionsFromParms(parms);
 
     colors = getColors();
     
