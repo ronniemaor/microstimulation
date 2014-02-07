@@ -14,6 +14,13 @@ function createAllFiguresForPCAComparison(basedir, parms)
     for bPCA = 0:1
         saveAllSummaryFigures(basedir, parms, bPCA);        
     end
+
+    f = fopen(sprintf('%s/sessions.txt',basedir),'w');    
+    for cSession = allSessions
+        sessionKey = cSession{1};
+        fprintf(f,'%s\n',sessionKey);
+    end
+    fclose(f);
 end
 
 function [parms, variationName] = getParmsAndVariationName(parms, bPCA)
