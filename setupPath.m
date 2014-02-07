@@ -7,6 +7,7 @@ function setupPath()
     path(path,[baseDir '/snippets/paper']);
     path(path,[baseDir '/routines']);
     path(path,[baseDir '/3rd party']);
+    path(path,[baseDir '/3rd party/export_fig']);
 
     hamutalCodeDir = 'C:/data/microstimulation/My_M_Files';
     if ~exist(hamutalCodeDir,'dir')
