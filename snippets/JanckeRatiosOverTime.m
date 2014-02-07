@@ -4,7 +4,7 @@ function JanckeRatiosOverTime(parms)
     end
     allSessions = getSessionsFromParms(parms);
     
-    threshold = take_from_struct(parms, 'threshold', 1E-3 * 0.5);
+    threshold = take_from_struct(parms, 'threshold', 2.5E-4);
 
     colors = getColors();
     
@@ -21,7 +21,7 @@ function JanckeRatiosOverTime(parms)
         sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
         [t,ratios] = calcRatios(sessionKey,threshold);
         sessionMeanRatios(nSessions) = mean(ratios);
-        plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2);
+        plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2,'Marker','o', 'MarkerSize', 8);
         hold on;
     end
     
