@@ -3,6 +3,8 @@ function shape = createPCAWeightingShape(data, parms)
         parms = make_parms();
     end
     
+    config = getSessionConfig(data.sessionKey);
+    
     method = take_from_struct(parms, 'shape_method', 'hard');
 
     fprintf('Shaping PCs using shape method = %s\n', method);
@@ -12,7 +14,12 @@ function shape = createPCAWeightingShape(data, parms)
     elseif isequal(method, 'hard')        
         shape = zeros(10000,1);
         data = findPeak(data);
-        maxD = take_from_struct(parms,'maxD',35);
+        if config.hasV2
+            defaultMaxD = 20;
+        else
+            defaultMaxD = 35;
+        end
+        maxD = take_from_struct(parms,'maxD',defaultMaxD);
         C = data.C;
         for x = 1:100
             for y = 1:100

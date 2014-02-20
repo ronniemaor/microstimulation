@@ -56,6 +56,14 @@ function data = loadData(sessionKey, parms, bAfterReload)
         fprintf('NOT loading blood vessel mask from file\n')
     end
     
+    if config.hasV2
+        excludedPoints = ~data.mask;
+        data.blank(excludedPoints,:) = 1;
+        data.stims(excludedPoints,:,:) = 1;
+        data.allBlanks(excludedPoints,:,:) = 1;
+        data.signal(excludedPoints,:,:) = 0;
+    end
+    
     % remove blood vessels using PCA
     data.orig_signal = data.signal;
     data = cleanBloodVesselsUsingPCA(data,parms);
