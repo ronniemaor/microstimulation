@@ -10,10 +10,10 @@ function [iX,iY,iFrame] = findPeakActivity(signal,mask)
     signal = reshape(signal,100,100,nFrames);
     smoothed = convn(signal, ones(kSmooth), 'same');
     
-    % ignore times outside 11:59 and pixels outside mask
+    % ignore times outside 11:39 and pixels outside mask
     minValue = min(smoothed(:));
     smoothed(:,:,1:10) = minValue;
-    smoothed(:,:,60:end) = minValue;
+    smoothed(:,:,40:end) = minValue;
     toRemove = find(~mask);
     [x,y] = ind2sub([100,100],toRemove);
     for i=1:length(toRemove)
