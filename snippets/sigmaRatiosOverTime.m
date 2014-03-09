@@ -19,7 +19,7 @@ function sigmaRatiosOverTime(parms)
         end;
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sessionKey;
-        [t,ratios] = calcRatios(sessionKey,frameRange);
+        [t,ratios] = calcRatios(sessionKey,frameRange,parms);
         sessionMeanRatios(nSessions) = mean(ratios);
         plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2,'Marker','o', 'MarkerSize', 8);
         hold on;
@@ -35,8 +35,8 @@ function sigmaRatiosOverTime(parms)
     fprintf('H/V: mean=%.2g, s.e.m=%.2g\n', meanRatio , ratioSEM)
 end
 
-function [t,ratios] = calcRatios(sessionKey,frameRange)
-    P = cacheTimeCourseParams(sessionKey);
+function [t,ratios] = calcRatios(sessionKey,frameRange,parms)
+    P = cacheTimeCourseParams(sessionKey,parms);
     sigmaH = P.Horizontal.sigma;
     sigmaV = P.Vertical.sigma;
     

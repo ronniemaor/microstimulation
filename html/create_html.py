@@ -136,7 +136,7 @@ def create_html(basedir):
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print 'Usage: {} <basedir>'
+        print 'Usage: {} <basedir>'.format(sys.argv[0])
         sys.exit()
     basedir = sys.argv[1]
     create_html(basedir)

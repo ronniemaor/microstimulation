@@ -19,7 +19,7 @@ function JanckeRatiosOverTime(parms)
         end;
         nSessions = nSessions + 1;
         sessionNames{nSessions} = sprintf('%s - %s', sessionKey, formatStimulationParams(sessionKey)); 
-        [t,ratios] = calcRatios(sessionKey,threshold);
+        [t,ratios] = calcRatios(sessionKey,threshold,parms);
         sessionMeanRatios(nSessions) = mean(ratios);
         plot(t,ratios,'Color',colors(nSessions,:),'LineWidth',2,'Marker','o', 'MarkerSize', 8);
         hold on;
@@ -35,8 +35,8 @@ function JanckeRatiosOverTime(parms)
     fprintf('Threshold=%gE-4. H/V: mean=%.2g, s.e.m=%.2g\n', threshold*1E4, meanRatio , ratioSEM)
 end
 
-function [t,ratios] = calcRatios(sessionKey,threshold)
-    boundaryParms = make_parms('bPlot',false,'thresholds',threshold);
+function [t,ratios] = calcRatios(sessionKey,threshold,parms)
+    boundaryParms = add_parms(parms,'bPlot',false,'thresholds',threshold);
     [~,framesH,boundariesH] = activationBoundaryFits(sessionKey,0,boundaryParms);
     [~,framesV,boundariesV] = activationBoundaryFits(sessionKey,1,boundaryParms);
     assert(isequal(framesH,framesV))
