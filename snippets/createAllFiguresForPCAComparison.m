@@ -2,6 +2,8 @@ function createAllFiguresForPCAComparison(basedir, parms)
     if ~exist('parms', 'var')
         parms = make_parms();
     end
+    parms.nPCs = take_from_struct(parms,'nPCs',2);
+    bDoSummary = take_from_struct(parms,'summary',true);
     
     allSessions = getSessionsFromParms(parms);
     for cSession = allSessions
@@ -11,8 +13,10 @@ function createAllFiguresForPCAComparison(basedir, parms)
         end
     end
     
-    for bPCA = 0:1
-        saveAllSummaryFigures(basedir, parms, bPCA);        
+    if bDoSummary
+        for bPCA = 0:1
+            saveAllSummaryFigures(basedir, parms, bPCA);        
+        end
     end
 
     f = fopen(sprintf('%s/sessions.txt',basedir),'w');    
@@ -88,8 +92,9 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         drawSpconds(data)
         saveas(gcf, sprintf('%s/spconds-%s.png',dirname,variationName))
 
-        V = getFirstPCs(data, make_parms('nPCs', 2));
-        drawMimg(V,5e-2,1:2)
+        nPCs = take_from_struct(parms,'nPCs');
+        [V,d,C] = getFirstPCs(data, parms);
+        drawMimg(V,5e-2,1:nPCs)
         saveas(gcf, sprintf('%s/PCs.png',dirname))
         
         [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);

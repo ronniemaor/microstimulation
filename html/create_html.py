@@ -48,7 +48,9 @@ def create_summary_html(basedir, main_sessions, other_sessions):
 </br>
 
 </br>
+{% if other_sessions %}
 Additional Sessions (not used for summaries):</br>
+{% endif %}
 {% for session in other_sessions %}
     <a href="{{session}}/session_figures.html">{{session}}</a> &nbsp &nbsp &nbsp &nbsp
 {% endfor %}

@@ -6,9 +6,9 @@ function drawFirstPCsWeights(weights, frameRange)
     legend_txt = cell(1,nPCs);
     for i=1:nPCs
         y = weights(frameRange,i);
-        if max(y) < -min(y)
-            y = -y; % sign is arbitrary, so make the peak positive
-        end
+%         if max(y) < -min(y)
+%             y = -y; % sign is arbitrary, so make the peak positive
+%         end
         plot(frameRange, y, 'LineWidth', 2);
         legend_txt{i} = sprintf('PC %d', i);
         hold all
