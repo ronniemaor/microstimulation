@@ -1,14 +1,13 @@
 %% time series of stim/blank for whole chamber 
-function drawMimg(data, dynamicRange, frameRange, bNormalizeTime)
-    if nargin < 2
-        dynamicRange = 2e-3;
+function drawMimg(data, parms)
+    if ~exist('parms', 'var')
+        parms = make_parms();
     end
-    if nargin < 3
-        frameRange = 20:50;
-    end
-    if nargin < 4
-        bNormalizeTime = 0;
-    end
+
+    dynamicRange = take_from_struct(parms,'dynamicRange',2e-3);
+    frameRange = take_from_struct(parms,'frameRange',20:50);
+    bNormalizeTime = take_from_struct(parms,'bNormalizeTime',0);
+    bShowGrid = take_from_struct(parms,'bShowGrid',0);
     
     if isfield(data,'signal')
         signal = data.signal;
@@ -23,6 +22,16 @@ function drawMimg(data, dynamicRange, frameRange, bNormalizeTime)
         times = msecPerFrame * (frameRange - startFrame);
     else
         times = frameRange;
+    end
+    
+    if bShowGrid
+        for i = 10:10:90
+            for j = 1:100
+                ind1 = sub2ind([100,100],i,j);
+                ind2 = sub2ind([100,100],j,i);
+                meanSignal([ind1 ind2],:) = -dynamicRange;
+            end
+        end
     end
     
     myfigure;

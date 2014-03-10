@@ -27,8 +27,8 @@ showFrame(data)
 showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
 
 %% Ways to get an impression of the data
-drawMimg(data, 1e-3, 20:50)
-drawMimg(data.allBlanks - 1, 1e-3, 20:50) % draw the blanks instead of the signal
+drawMimg(data)
+drawMimg(data.allBlanks - 1) % draw the blanks instead of the signal
 drawSpconds(data, 10, 20:50)
 drawSignalOverSliceAndTime(data,0)
 
@@ -64,7 +64,7 @@ spatialResponseOverTimeMovie(data, 0, 26:40)
 data = findPeak(loadData('J29c', make_parms('use_blood_vessel_mask',false)))
 data = findPeak(loadData('J26c'));
 showFrame(data)
-drawMimg(data, 1e-3, 20:50)
+drawMimg(data, make_parms('dynamicRange',1e-3))
 drawSpconds(data)
 % 3) Show fits at peak frame
 paperShowFitsAtPeak(data,parms);
@@ -84,11 +84,11 @@ data = loadData('J29c', make_parms('method','NOP')) % no PCA cleaning
 
 %% more PCA stuff
 V = getFirstPCs(data, make_parms('nPCs', 2));
-drawMimg(V,5e-2,1:2)
+drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:2))
 fractions = showFirstPCsVariance(data)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
 drawFirstPCsWeights(weights,10:80)
-drawMimg(proj, 1e-3, 10:80)
+drawMimg(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
 data = removeBlanksPCsProjection(data, make_parms('center_blanks',true));
 data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('windowDelta',19));
 data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('use_blanks', false, 'windowDelta',5));
@@ -98,7 +98,7 @@ drawSpconds(data,10,10:80,true)
 [data,V,shapedV] = cleanBloodVesselsUsingPCA(data, make_parms('shape_method', 'hard', 'maxD', 35));
 drawMimg(data)
 drawSpconds(data)
-drawMimg(shapedV,5e-2,1:2)
+drawMimg(shapedV,make_parms('dynamicRange',5e-2,'frameRange',1:2))
 [nPixels,nFrames,nTrials] = size(data.signal);
 shape = createPCAWeightingShape(data, make_parms('shape_method','hard', 'maxD', 35));
 sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);

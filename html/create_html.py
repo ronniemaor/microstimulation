@@ -119,6 +119,7 @@ def create_session_html(basedir, session):
 <P>
 	<a href="PCs.png"><img src="PCs.png" width=40%></img></a>
 	<a href="PC-weights.png"><img src="PC-weights.png" width=40%></img></a>
+	<a href="PCs-with-grid.png"><img src="PCs-with-grid.png" width=40%></img></a>
 </P>
 </body>
 </html>    

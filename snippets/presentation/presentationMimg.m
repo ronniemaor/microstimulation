@@ -4,5 +4,5 @@ function presentationMimg(parms)
     end
 
     data = loadData('M18c',parms);
-    drawMimg(data, 2e-3, 25:42, 1)
+    drawMimg(data, make_parms('frameRange',25:42))
 end

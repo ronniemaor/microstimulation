@@ -94,17 +94,19 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
 
         nPCs = take_from_struct(parms,'nPCs');
         [V,d,C] = getFirstPCs(data, parms);
-        drawMimg(V,5e-2,1:nPCs)
+        drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs))
         saveas(gcf, sprintf('%s/PCs.png',dirname))
+        drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
+        saveas(gcf, sprintf('%s/PCs-with-grid.png',dirname))
         
         [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
         drawFirstPCsWeights(weights,10:80)
         saveas(gcf, sprintf('%s/PC-weights.png',dirname))
         
-        drawMimg(proj, 1e-3, 10:80)
+        drawMimg(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
         saveas(gcf, sprintf('%s/mimg-blanks-PCs-proj.png',dirname))
         
-        drawMimg(data.allBlanks-1, 1e-3, 10:80)
+        drawMimg(data.allBlanks-1, make_parms('dynamicRange',1e-3,'frameRange',10:80))
         saveas(gcf, sprintf('%s/mimg-blanks.png',dirname))
     end
 
