@@ -1,14 +1,16 @@
 function tmp()
-    myfigure;
-    plot(1:10)
-    showSliceDirection(1)
-end
-
-function showSliceDirection(isVertical)
-    t = sliceName(isVertical);
-    axes('Position',[0 0 1 1],'Xlim',[0 1],'Ylim',[0 1], ...
-         'Box','off', 'Visible','off', ...
-         'Units','normalized', 'clipping' , 'off');
-    text(0.05,0.7,['\bf ' t],'HorizontalAlignment', ...
-         'center', 'VerticalAlignment', 'top', 'Rotation', 90)
+    for nPCs = 1:4
+        parms = getPCAParms(true,make_parms('nPCs',nPCs));
+        parentdir = 'c:\temp\ms';
+        variant = sprintf('%dPCs',nPCs);
+        basedir = [parentdir, '\', variant];
+        if ~exist(basedir,'dir')
+            mkdir(parentdir, variant)
+        end
+        createAllFiguresForPCAComparison(basedir,parms);
+        python_prog = 'C:\data\winpython\python-2.7.5.amd64\python.exe';
+        script = 'C:\data\microstimulation\code\html\create_html.py';
+        cmd = sprintf('%s %s %s', python_prog, script, basedir);
+        system(cmd);
+    end
 end

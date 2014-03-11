@@ -27,16 +27,6 @@ function createAllFiguresForPCAComparison(basedir, parms)
     fclose(f);
 end
 
-function [parms, variationName] = getParmsAndVariationName(parms, bPCA)
-    if bPCA
-        parms = add_parms(parms, 'use_blood_vessel_mask',false, 'PCAmethod', 'frame blanks', 'active_cache', 'PCA');
-        variationName = 'PCA';
-    else
-        parms = add_parms(parms, 'use_blood_vessel_mask',true, 'PCAmethod', 'NOP', 'active_cache', 'no-PCA');
-        variationName = 'no-PCA';
-    end    
-end
-
 function saveAndCloseFig(fig,name)
     set(fig,'Color','w')
     export_fig(fig,name)
@@ -48,7 +38,8 @@ function saveAllSummaryFigures(basedir, parms, bPCA)
         mkdir(basedir)
     end
 
-    [parms, variationName] = getParmsAndVariationName(parms, bPCA);
+    parms = getPCAParms(bPCA,parms);
+    variationName = parms.variationName;
     nSessions = length(getSessionsFromParms(parms));
     
     timeCourseSeveralSessions(add_parms(parms, 'summary', 'mean'));
@@ -78,7 +69,8 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         mkdir(dirname)
     end
 
-    [parms, variationName] = getParmsAndVariationName(parms, bPCA);
+    parms = getPCAParms(bPCA,parms);
+    variationName = parms.variationName;
     
     data = findPeak(loadData(sessionKey, parms));
 

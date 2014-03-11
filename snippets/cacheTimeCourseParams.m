@@ -7,9 +7,14 @@ function res = cacheTimeCourseParams(sessionKey, parms)
     filename = sprintf('%s/timecourse-%s-%s-%d-to-%d.mat', getCacheDir(parms), sessionKey, fit.name(), min(frameRange), max(frameRange));
     
     if exist(filename,'file')
-        fprintf('Loading fits from %s\n', filename)
-        res = load(filename);
-        return;
+        bForce = take_from_struct(parms,'forceRecompute',false);
+        if bForce
+            fprintf('Forced recoputation. NOT using fits from %s (updating them instead)\n', filename)
+        else            
+            fprintf('Loading fits from %s\n', filename)
+            res = load(filename);
+            return;
+        end
     end
     
     W = 9;
