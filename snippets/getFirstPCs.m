@@ -24,6 +24,17 @@ function [V,d,C] = getFirstPCs(data, parms)
     end
     [s1,s2,s3] = size(X);
     X = reshape(X,s1,s2*s3);
-    
     [V,d,C] = doPCA(X',nPCs);
+    
+    % decide sign of eigenvectors by some arbitrary deterministic rule
+    % just so the same vectors are always returned with the same sign under
+    % small perturbations. 
+    % This is done to help with comparing results between similar conditions.
+    nPixels = size(V,1);
+    mid = floor(nPixels/2);
+    for i = 1:nPCs
+        if sum(V(1:mid,i)) < sum(V(mid+1:end,i)) % an arbitrary rule
+            V(:,i) = -V(:,i);
+        end
+    end
 end
