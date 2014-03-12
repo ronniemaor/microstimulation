@@ -97,9 +97,13 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
     saveas(gcf, sprintf('%s/mimg-%s.png',dirname,variationName))
     
     if bPCA
-        drawSpconds(data)
-        saveas(gcf, sprintf('%s/spconds-%s.png',dirname,variationName))
-
+        drawSpconds(data, add_parms(parms, 'ttl', 'Signal before/after cleaning'))
+    else
+        drawSpconds(data.orig_signal, add_parms(parms, 'otherSignal',data.allBlanks-1, 'ttl', 'unclean signal vs. Blank (green)'))
+    end
+    saveas(gcf, sprintf('%s/spconds-%s.png',dirname,variationName))
+    
+    if bPCA
         nPCs = take_from_struct(parms,'nPCs');
         [V,d,C] = getFirstPCs(data, parms);
         shapedV = getShapedV(V, data, parms);
@@ -119,7 +123,7 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         drawFirstPCsWeights(data, V, add_parms(parms,'ttl','Weights using whole chamber', 'ymin', ymin, 'ymax', ymax))
         saveas(gcf, sprintf('%s/PC-weights-not-shaped.png',dirname))
         drawFirstPCsWeights(data, shapedV, add_parms(parms,'ttl','Weights with shaped PCs', 'ymin', ymin, 'ymax', ymax))
-        saveas(gcf, sprintf('%s/PC-weights-shaped.png',dirname))        
+        saveas(gcf, sprintf('%s/PC-weights-shaped.png',dirname)) 
     end
 
     paperShowFitsAtPeak(data,parms);

@@ -29,7 +29,7 @@ showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
 %% Ways to get an impression of the data
 drawMimg(data)
 drawMimg(data.allBlanks - 1) % draw the blanks instead of the signal
-drawSpconds(data, 10, 20:50)
+drawSpconds(data, make_parms('frameRange',20:50))
 drawSignalOverSliceAndTime(data,0)
 
 %% model comparison (gaussian vs. exponential)
@@ -90,7 +90,7 @@ fractions = showFirstPCsVariance(data)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
 drawFirstPCsWeights(data,V)
 drawMimg(mean(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
-drawSpconds(data,10,10:80,true)
+drawSpconds(data)
 
 % visualizing weight shapes
 [data,V,shapedV] = cleanBloodVesselsUsingPCA(data, make_parms('shape_method', 'hard', 'maxD', 35));

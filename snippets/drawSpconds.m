@@ -1,18 +1,36 @@
 %% time course per region: stim vs. blank
-function drawSpconds(data, nBins, frameRange, showOrig)
-    if nargin < 2
-        nBins = 10;
+function drawSpconds(data, parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
-    if nargin < 3
-        frameRange = 10:80;
+    
+    nBins = take_from_struct(parms,'nBins',10);
+    frameRange = take_from_struct(parms,'frameRange',10:80);
+    showOrig = take_from_struct(parms,'showOrig',true);
+    ttl = take_from_struct(parms,'ttl','');
+    
+    isFullData = isfield(data,'signal');
+    if isFullData
+        signal = data.signal;
+    else
+        signal = data; % we got a matrix already: pixels x frames [x trials]
     end
-    if nargin < 4
-        showOrig = true;
+    signal = mean(signal,3); % average out trials if we have them
+
+    otherSignal = [];
+    if showOrig && isFullData
+        otherSignal = data.orig_signal;
     end
-    plotdata = mean(data.signal(:,frameRange,:),3);
-    if showOrig
-        plotdata(:,:,2) = mean(data.orig_signal(:,frameRange,:),3);
+    otherSignal = take_from_struct(parms,'otherSignal',otherSignal);
+    
+    plotdata = signal(:,frameRange);
+    if ~isempty(otherSignal)
+        plotdata(:,:,2) = mean(otherSignal(:,frameRange,:),3);
     end
+    
     myfigure;
     plotspconds(plotdata,100,100,nBins);
+    if ~isempty(ttl)
+        title(ttl)
+    end
 end

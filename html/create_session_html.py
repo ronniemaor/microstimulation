@@ -35,11 +35,7 @@ def create_session_html(basedir, session):
     </tr>
 {% for figure in figures %}
     <tr>
-        {% if figure == 'spconds' %}
-        <td></td>
-        {% else %}
         <td><a href="{{figure}}-no-PCA.png"><img src="{{figure}}-no-PCA.png" width=100%></img></a></td>
-        {% endif %}
         <td><a href="{{figure}}-PCA.png"><img src="{{figure}}-PCA.png" width=100%></img></a></td>
     </tr>
 {% endfor %}
