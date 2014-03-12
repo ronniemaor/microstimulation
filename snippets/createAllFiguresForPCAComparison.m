@@ -14,17 +14,18 @@ function createAllFiguresForPCAComparison(basedir, parms)
     end
     
     if bDoSummary
+        f = fopen(sprintf('%s/sessions.txt',basedir),'w');    
+        for cSession = allSessions
+            sessionKey = cSession{1};
+            fprintf(f,'%s\n',sessionKey);
+        end
+        fclose(f);
+        
         for bPCA = 0:1
             saveAllSummaryFigures(basedir, parms, bPCA);        
         end
     end
 
-    f = fopen(sprintf('%s/sessions.txt',basedir),'w');    
-    for cSession = allSessions
-        sessionKey = cSession{1};
-        fprintf(f,'%s\n',sessionKey);
-    end
-    fclose(f);
 end
 
 function runHtmlScript(script,args)
