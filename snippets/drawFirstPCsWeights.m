@@ -1,4 +1,5 @@
 function drawFirstPCsWeights(weights, frameRange)
+    weights = mean(weights,3); % average over trials if we have them
     nPCs = size(weights,2);
     
     myfigure;

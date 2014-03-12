@@ -26,7 +26,12 @@ def find_sessions(basedir):
     
     return main_sessions, other_sessions
 
-def create_summary_html(basedir, main_sessions, other_sessions):
+def create_summary_html(basedir):
+    print 'Creating html files in {}'.format(basedir)
+    ensure_dir(basedir)
+    main_sessions, other_sessions = find_sessions(basedir)    
+    shutil.copy(join(this_dir(),'figures.css'), basedir)
+    
     figures = [
         'speeds',
         'time-courses',
@@ -77,69 +82,10 @@ Additional Sessions (not used for summaries):</br>
 """).render(**locals())
     with open(join(basedir,'summary.html'), 'w') as f:
         f.write(html)
-
-def create_session_html(basedir, session):
-    print 'Creating html for {}'.format(session)
-    figures = [
-        'peak-frame',
-        'mimg',
-        'spconds',
-        'fits-at-peak',
-        'parameter-time-courses',
-        'speeds',
-    ]
     
-    html = Template("""
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="../figures.css">
-</head>
-<body>
-<H1 align="center">{{session}}</H1>
-<P>
-<table width=100%>
-    <tr>
-        <td class="tableHeading"><b>No PCA</b></td>
-        <td class="tableHeading"><b>PCA</b></td>
-    </tr>
-{% for figure in figures %}
-    <tr>
-        {% if figure == 'spconds' %}
-        <td></td>
-        {% else %}
-        <td><a href="{{figure}}-no-PCA.png"><img src="{{figure}}-no-PCA.png" width=100%></img></a></td>
-        {% endif %}
-        <td><a href="{{figure}}-PCA.png"><img src="{{figure}}-PCA.png" width=100%></img></a></td>
-    </tr>
-{% endfor %}
-</table>
-</P>
-
-<H1>PCA info</H1>
-<P>
-	<a href="PCs.png"><img src="PCs.png" width=40%></img></a>
-	<a href="PC-weights.png"><img src="PC-weights.png" width=40%></img></a>
-	<a href="PCs-with-grid.png"><img src="PCs-with-grid.png" width=40%></img></a>
-</P>
-</body>
-</html>    
-""").render(**locals())
-    with open(join(basedir,session,'session_figures.html'), 'w') as f:
-        f.write(html)
-    
-def create_html(basedir):
-    print 'Creating html files in {}'.format(basedir)
-    ensure_dir(basedir)
-    main_sessions, other_sessions = find_sessions(basedir)    
-    all_sessions = main_sessions + other_sessions    
-    create_summary_html(basedir, main_sessions, other_sessions)
-    for session in all_sessions:
-        create_session_html(basedir, session)
-    shutil.copy(join(this_dir(),'figures.css'), basedir)
-
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print 'Usage: {} <basedir>'.format(sys.argv[0])
         sys.exit()
     basedir = sys.argv[1]
-    create_html(basedir)
+    create_summary_html(basedir)

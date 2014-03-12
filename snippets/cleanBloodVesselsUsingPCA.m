@@ -1,4 +1,4 @@
-function [data,V,shapedV,ratios] = cleanBloodVesselsUsingPCA(data, parms)
+function [data,V,shapedV,weights] = cleanBloodVesselsUsingPCA(data, parms)
     if ~exist('parms','var')
         parms = make_parms();
     end
@@ -8,36 +8,11 @@ function [data,V,shapedV,ratios] = cleanBloodVesselsUsingPCA(data, parms)
         data.signal = data.orig_signal;
         V = nan;
         shapedV = nan;
-        ratios = nan;
         return;
     end  
 
-    r = take_from_struct(parms, 'r', 1.0);
-    
     V = getFirstPCs(data, parms);    
-    
-    % apply shape (default is NOP shape of all ones)
-    shape = createPCAWeightingShape(data, parms);
-    shapedV = zeros(size(V));
-    for i=1:size(V,2)
-        v = V(:,i) .* shape;
-        v = v/norm(v); % renormalize PC
-        shapedV(:,i) = v;
-    end
-    
-    nPCs = size(V,2);
-    nFrames = size(data.signal,2);
-    ratios = zeros(nFrames,nPCs);
-    for frame = 1:nFrames
-        nTrials = size(data.signal,3);
-        for iTrial = 1:nTrials
-            orig_signal = data.orig_signal(:,frame,iTrial);
-            w = shapedV' * orig_signal; % get the weights from the shaped PC
-            proj = V * w; % apply the original PC with the "shaped weights"
-            data.signal(:,frame,iTrial) = orig_signal - r*proj;
-
-            w2 = V' * orig_signal;
-            ratios(frame,:) = w ./ w2;
-        end
-    end
+    shapedV = getShapedV(V, data, parms);
+    [proj,weights] = applyFirstPCs(data.orig_signal, V, shapedV);
+    data.signal = data.orig_signal - proj;
 end

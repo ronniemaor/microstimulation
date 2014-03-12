@@ -42,9 +42,5 @@ function create_several_nPCs_variants()
             mkdir(parentdir, variant)
         end
         createAllFiguresForPCAComparison(basedir,parms);
-        python_prog = 'C:\data\winpython\python-2.7.5.amd64\python.exe';
-        script = 'C:\data\microstimulation\code\html\create_html.py';
-        cmd = sprintf('%s %s %s', python_prog, script, basedir);
-        system(cmd);
     end
 end

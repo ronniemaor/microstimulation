@@ -89,10 +89,7 @@ drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:2))
 fractions = showFirstPCsVariance(data)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
 drawFirstPCsWeights(weights,10:80)
-drawMimg(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
-data = removeBlanksPCsProjection(data, make_parms('center_blanks',true));
-data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('windowDelta',19));
-data = removeBlanksPCsProjectionWithSlidingWindow(data, make_parms('use_blanks', false, 'windowDelta',5));
+drawMimg(mean(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
 drawSpconds(data,10,10:80,true)
 
 % visualizing weight shapes

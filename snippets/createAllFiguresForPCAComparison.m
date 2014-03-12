@@ -27,6 +27,20 @@ function createAllFiguresForPCAComparison(basedir, parms)
     fclose(f);
 end
 
+function runHtmlScript(script,args)
+    python_prog = 'C:\data\winpython\python-2.7.5.amd64\python.exe';
+    if ~exist(python_prog,'file')
+        python_prog = 'python';
+    end
+
+    snipptesDir = fileparts(mfilename('fullpath'));
+    htmlCodeDir = fullfile(snipptesDir,'..', 'html');
+    
+    cmd = sprintf('%s %s/%s %s', python_prog, htmlCodeDir, script, args);
+    status = system(cmd);
+    assert(status == 0, 'failed to run python script')
+end
+
 function saveAndCloseFig(fig,name)
     set(fig,'Color','w')
     export_fig(fig,name)
@@ -61,6 +75,8 @@ function saveAllSummaryFigures(basedir, parms, bPCA)
     saveAndCloseFig(gcf, sprintf('%s/jancke-ratios-over-time-%s.png',basedir,variationName))
     
     close all
+    
+    runHtmlScript('create_summary_html.py', basedir);
 end
 
 function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
@@ -112,4 +128,5 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
     saveas(gcf, sprintf('%s/speeds-%s.png',dirname,variationName))
     
     close all
+    runHtmlScript('create_session_html.py', sprintf('%s %s',basedir,sessionKey));
 end
