@@ -88,7 +88,7 @@ V = getFirstPCs(data, make_parms('nPCs', 2));
 drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:2))
 fractions = showFirstPCsVariance(data)
 [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
-drawFirstPCsWeights(weights,10:80)
+drawFirstPCsWeights(data,V)
 drawMimg(mean(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
 drawSpconds(data,10,10:80,true)
 

@@ -22,8 +22,7 @@ function create_PCs_only()
             drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
             saveas(gcf, sprintf('%s/PCs-with-grid.png',dirname))
 
-            [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
-            drawFirstPCsWeights(weights,10:80)
+            drawFirstPCsWeights(data,V)
             saveas(gcf, sprintf('%s/PC-weights.png',dirname))
             
             close all

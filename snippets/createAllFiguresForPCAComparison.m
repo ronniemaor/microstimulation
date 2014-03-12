@@ -102,20 +102,24 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
 
         nPCs = take_from_struct(parms,'nPCs');
         [V,d,C] = getFirstPCs(data, parms);
+        shapedV = getShapedV(V, data, parms);
         drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs))
         saveas(gcf, sprintf('%s/PCs.png',dirname))
         drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
         saveas(gcf, sprintf('%s/PCs-with-grid.png',dirname))
+        drawMimg(shapedV,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs))
+        saveas(gcf, sprintf('%s/shaped-PCs.png',dirname))
+        drawMimg(shapedV,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
+        saveas(gcf, sprintf('%s/shaped-PCs-with-grid.png',dirname))
         
-        [proj,weights] = applyFirstPCs(data.allBlanks - 1, V);
-        drawFirstPCsWeights(weights,10:80)
-        saveas(gcf, sprintf('%s/PC-weights.png',dirname))
-        
-        drawMimg(proj, make_parms('dynamicRange',1e-3,'frameRange',10:80))
-        saveas(gcf, sprintf('%s/mimg-blanks-PCs-proj.png',dirname))
-        
-        drawMimg(data.allBlanks-1, make_parms('dynamicRange',1e-3,'frameRange',10:80))
-        saveas(gcf, sprintf('%s/mimg-blanks.png',dirname))
+        [ymin,ymax] = drawFirstPCsWeights(data, V, add_parms(parms, 'justMinMax', true));
+        [ymin2,ymax2] = drawFirstPCsWeights(data, shapedV, add_parms(parms, 'justMinMax', true));
+        ymin = min(ymin,ymin2);
+        ymax = max(ymax,ymax2);
+        drawFirstPCsWeights(data, V, add_parms(parms,'ttl','Weights using whole chamber', 'ymin', ymin, 'ymax', ymax))
+        saveas(gcf, sprintf('%s/PC-weights-not-shaped.png',dirname))
+        drawFirstPCsWeights(data, shapedV, add_parms(parms,'ttl','Weights with shaped PCs', 'ymin', ymin, 'ymax', ymax))
+        saveas(gcf, sprintf('%s/PC-weights-shaped.png',dirname))        
     end
 
     paperShowFitsAtPeak(data,parms);

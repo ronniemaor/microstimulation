@@ -46,12 +46,18 @@ def create_session_html(basedir, session):
 </table>
 </P>
 
-<H1>PCA info</H1>
-<P>
-	<a href="PCs.png"><img src="PCs.png" width=40%></img></a>
-	<a href="PC-weights.png"><img src="PC-weights.png" width=40%></img></a>
-	<a href="PCs-with-grid.png"><img src="PCs-with-grid.png" width=40%></img></a>
-</P>
+<H1>PCs</H1>
+<a href="PCs.png"><img src="PCs.png" width=45%></img></a>
+<a href="PCs-with-grid.png"><img src="PCs-with-grid.png" width=45%></img></a>
+
+<H1>Shaped PCs</H1>
+<a href="shaped-PCs.png"><img src="shaped-PCs.png" width=45%></img></a>
+<a href="shaped-PCs-with-grid.png"><img src="shaped-PCs-with-grid.png" width=45%></img></a>
+
+<H1>PC weights</H1>
+<a href="PC-weights-not-shaped.png"><img src="PC-weights-not-shaped.png" width=45%></img></a>
+<a href="PC-weights-shaped.png"><img src="PC-weights-shaped.png" width=45%></img></a>
+
 </body>
 </html>    
 """).render(**locals())
