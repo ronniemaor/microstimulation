@@ -27,6 +27,22 @@ function shape = createPCAWeightingShape(data, parms)
                 shape(ind) = pixel_value(x,y, C, maxD);
             end
         end
+    elseif isequal(method, 'bottomhalf')
+        shape = zeros(10000,1);
+        for x = 1:100
+            for y = 1:100
+                ind = sub2ind([100 100],x,y);
+                shape(ind) = (y>50);
+            end
+        end
+    elseif isequal(method, 'tophalf')
+        shape = zeros(10000,1);
+        for x = 1:100
+            for y = 1:100
+                ind = sub2ind([100 100],x,y);
+                shape(ind) = (y<=50);
+            end
+        end
     else
         assert(false, 'unknown shape method: %s', method);
     end
