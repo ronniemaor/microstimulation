@@ -13,10 +13,10 @@ data = loadData('J29c');
 
 drawBloodVessels(data)
 points = findBloodVessels(data); % try automatically
-points = loadExclusionMask(data.sessionKey); % or load current mask
+points = loadExclusionMask(data.sessionKey,'noise'); % or load current mask
 points = choose_points(points); % and do manual adjustments
 points = keepOnlyV1(boundaryPoints); % extend mask upwards given manually marked boundary between V1 and V2
-saveExclusionMask(data.sessionKey,points);
+saveExclusionMask(data.sessionKey,'noise',points);
 
 % matching points to green
 showGreen(data.sessionKey);
@@ -62,7 +62,7 @@ spatialResponseOverTimeMovie(data, 0, 26:40)
 %% figures for paper
 % 1) Configure and preprocess the session (see above)
 % 2) Find peak. Look at data and verify things make sense.
-data = findPeak(loadData('J29c', make_parms('use_blood_vessel_mask',false)))
+data = findPeak(loadData('J29c', make_parms('exclude_noisy_regions',false)))
 data = findPeak(loadData('J26c'));
 showFrame(data)
 drawMimg(data, make_parms('dynamicRange',1e-3))
@@ -103,8 +103,8 @@ sig = data.orig_signal .* repmat(shape,[1,nFrames,nTrials]);
 drawMimg(sig)
 
 %% standard examination of a session (for evaluating PCA cleanup)
-parms = make_parms('use_blood_vessel_mask',false, 'PCAmethod', 'frame blanks', 'active_cache', 'PCA');
-%parms = make_parms('use_blood_vessel_mask',true, 'PCAmethod', 'NOP', 'active_cache', 'no-PCA');
+parms = make_parms('exclude_noisy_regions',false, 'PCAmethod', 'frame blanks', 'active_cache', 'PCA');
+%parms = make_parms('exclude_noisy_regions',true, 'PCAmethod', 'NOP', 'active_cache', 'no-PCA');
 data = findPeak(loadData(session_key, parms))
 showFrame(data)
 drawMimg(data)

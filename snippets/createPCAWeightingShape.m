@@ -14,12 +14,7 @@ function shape = createPCAWeightingShape(data, parms)
     elseif isequal(method, 'hard')        
         shape = zeros(10000,1);
         data = findPeak(data);
-        if config.hasV2
-            defaultMaxD = 20;
-        else
-            defaultMaxD = 35;
-        end
-        maxD = take_from_struct(parms,'maxD',defaultMaxD);
+        maxD = take_from_struct(parms,'maxD',35);
         C = data.C;
         for x = 1:100
             for y = 1:100

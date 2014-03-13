@@ -28,41 +28,16 @@ function data = loadData(sessionKey, parms, bAfterReload)
     data.sessionKey = sessionKey;
     data.config = getSessionConfig(sessionKey);
     
-    % apply manual mask if configured
-    config = getSessionConfig(data.sessionKey);
-    fMask = config.manualMaskFunction;
-    data.origMask = data.mask;
-    if ~isempty(fMask)
-        for x = 1:100
-            for y = 1:100
-                if ~fMask(x,y)
-                    ind = sub2ind([100 100],x,y);
-                    data.mask(ind)= 0;
-                end
-            end
-        end
-    end
-    
-    % apply blood vessel mask if configured
-    b_use_blood_vessel_mask = take_from_struct(parms, 'use_blood_vessel_mask', true);
-    if b_use_blood_vessel_mask || config.hasV2
-        maskFile = [sessionDataDir, '/../exclusionMask.mat'];
-        if exist(maskFile,'file')
-            fprintf('Loading mask from file %s\n',maskFile)
-            maskData = load(maskFile);
-            data.mask(maskData.points) = 0;
-        end
+    % apply noise mask
+    data.origMask = data.mask; % save chamber boundaries mask as origMask
+    if take_from_struct(parms, 'exclude_noisy_regions', true);
+        data.mask = applyConfiguredMasks(data.sessionKey, 'noise', data.mask);
     else
         fprintf('NOT loading blood vessel mask from file\n')
     end
     
-    if config.hasV2
-        excludedPoints = ~data.mask;
-        data.blank(excludedPoints,:) = 1;
-        data.stims(excludedPoints,:,:) = 1;
-        data.allBlanks(excludedPoints,:,:) = 1;
-        data.signal(excludedPoints,:,:) = 0;
-    end
+    % apply non-V1 mask
+    data.mask = applyConfiguredMasks(data.sessionKey, 'nonV1', data.mask);
     
     % remove blood vessels using PCA
     data.orig_signal = data.signal;
