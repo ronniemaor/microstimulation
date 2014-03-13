@@ -3,15 +3,22 @@ function shape = createPCAWeightingShape(data, parms)
         parms = make_parms();
     end
     
-    config = getSessionConfig(data.sessionKey);
-    
     method = take_from_struct(parms, 'shape_method', 'hard');
 
-    fprintf('Shaping PCs using shape method = %s\n', method);
     if isequal(method, 'NOP')
+        fprintf('NO PC shaping\n');
         shape = ones(10000,1);
         return;
-    elseif isequal(method, 'hard')        
+    end
+    
+    [shape,foundShape] = applyConfiguredMasks(data.sessionKey, 'pcShape');
+    if foundShape
+        fprintf('Shaping PCs using session-specific mask\n');
+        return;
+    end
+
+    fprintf('Shaping PCs using shape method = %s\n', method);
+    if isequal(method, 'hard')        
         shape = zeros(10000,1);
         data = findPeak(data);
         maxD = take_from_struct(parms,'maxD',35);
@@ -22,24 +29,8 @@ function shape = createPCAWeightingShape(data, parms)
                 shape(ind) = pixel_value(x,y, C, maxD);
             end
         end
-    elseif isequal(method, 'bottomhalf')
-        shape = zeros(10000,1);
-        for x = 1:100
-            for y = 1:100
-                ind = sub2ind([100 100],x,y);
-                shape(ind) = (y>50);
-            end
-        end
-    elseif isequal(method, 'tophalf')
-        shape = zeros(10000,1);
-        for x = 1:100
-            for y = 1:100
-                ind = sub2ind([100 100],x,y);
-                shape(ind) = (y<=50);
-            end
-        end
     else
-        assert(false, 'unknown shape method: %s', method);
+        assert(false, 'Unknown shape method: %s', method);
     end
 end
 

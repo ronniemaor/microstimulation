@@ -7,6 +7,7 @@ classdef SessionConfig
         electrodeDepth
         manualPeakPosition
         noiseMaskFunction
+        pcShapeMaskFunction
     end
     
     methods
@@ -18,6 +19,7 @@ classdef SessionConfig
             obj.electrodeDepth = electrodeDepth;
             obj.manualPeakPosition = [];
             obj.noiseMaskFunction = [];
+            obj.pcShapeMaskFunction = [];
         end
         
         function obj = manualPeak(obj, cX, cY)
@@ -26,6 +28,10 @@ classdef SessionConfig
         
         function obj = noiseMask(obj, f)
             obj.noiseMaskFunction = f;
+        end
+        
+        function obj = pcShapeMask(obj, f)
+            obj.pcShapeMaskFunction = f;
         end
     end
 end

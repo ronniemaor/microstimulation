@@ -14,7 +14,7 @@ function sessionConfigs = getAllSessionConfigs()
     sessionConfigs('M18b') = SessionConfig('Leg/leg_2009_03_18/b',70,2,80,200).noiseMask(@(x,y) y>=60);
     sessionConfigs('M18c') = SessionConfig('Leg/leg_2009_03_18/c',70,2,80,400).noiseMask(@(x,y) y>=60).manualPeak(39,14);
     sessionConfigs('M18d') = SessionConfig('Leg/leg_2009_03_18/d',70,2,80,600).noiseMask(@(x,y) y>=60).manualPeak(41,15);
-    sessionConfigs('M18e') = SessionConfig('Leg/leg_2009_03_18/e',70,2,80,800).noiseMask(@(x,y) y>=60).manualPeak(40,21);
+    sessionConfigs('M18e') = SessionConfig('Leg/leg_2009_03_18/e',70,2,80,800).noiseMask(@(x,y) y>=60).manualPeak(40,21).pcShapeMask(@(x,y) y<50);
 
     sessionConfigs('M25c') = SessionConfig('Leg/leg_2009_03_25/c',70,2,80,0);
     sessionConfigs('M25d') = SessionConfig('Leg/leg_2009_03_25/d',70,2,80,200).manualPeak(34,44);
@@ -27,6 +27,6 @@ function sessionConfigs = getAllSessionConfigs()
     % Aragorn
     %%%%%%%%%%%%%%%%%%%%%
     %sessionConfigs('J26a') = SessionConfig('Arg/2008_06_26/a',50,3,240,0).manualPeak(59,74);
-    sessionConfigs('J26b') = SessionConfig('Arg/2008_06_26/b',80,3,240,0).manualPeak(56,75);
-    sessionConfigs('J26c') = SessionConfig('Arg/2008_06_26/c',80,3,240,150).manualPeak(56,77);    
+    sessionConfigs('J26b') = SessionConfig('Arg/2008_06_26/b',80,3,240,0).manualPeak(56,75).pcShapeMask(@(x,y) y>30);
+    sessionConfigs('J26c') = SessionConfig('Arg/2008_06_26/c',80,3,240,150).manualPeak(56,77).pcShapeMask(@(x,y) y>30);   
 end
