@@ -3,13 +3,16 @@ function createAllFiguresForPCAComparison(basedir, parms)
         parms = make_parms();
     end
     parms.nPCs = take_from_struct(parms,'nPCs',2);
-    bDoSummary = take_from_struct(parms,'summary',true);
+    bDoSummary = take_from_struct(parms,'doSummary',true);
+    bDoSessions = take_from_struct(parms,'doSessions',true);
     
     allSessions = getSessionsFromParms(parms);
-    for cSession = allSessions
-        sessionKey = cSession{1};
-        for bPCA = 0:1
-            saveAllSessionFigures(basedir, sessionKey, parms, bPCA);
+    if bDoSessions
+        for cSession = allSessions
+            sessionKey = cSession{1};
+            for bPCA = 0:1
+                saveAllSessionFigures(basedir, sessionKey, parms, bPCA);
+            end
         end
     end
     

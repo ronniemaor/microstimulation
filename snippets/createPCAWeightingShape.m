@@ -21,7 +21,7 @@ function shape = createPCAWeightingShape(data, parms)
     if isequal(method, 'hard')        
         shape = zeros(10000,1);
         data = findPeak(data);
-        maxD = take_from_struct(parms,'maxD',35);
+        maxD = take_from_struct(parms,'maxD',45);
         C = data.C;
         for x = 1:100
             for y = 1:100
