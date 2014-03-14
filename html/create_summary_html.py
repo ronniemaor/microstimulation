@@ -62,6 +62,7 @@ Additional Sessions (not used for summaries):</br>
 </br>
 
 <H1>Summaries over all sessions</H1>
+<a href="PCs-explained-variance-summary.png"><img src="PCs-explained-variance-summary.png" width=50%></img></a>
 <P>
 <table width=100%>
     <tr>

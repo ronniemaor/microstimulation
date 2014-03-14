@@ -78,6 +78,11 @@ function saveAllSummaryFigures(basedir, parms, bPCA)
     JanckeRatiosOverTime(parms);
     saveAndCloseFig(gcf, sprintf('%s/jancke-ratios-over-time-%s.png',basedir,variationName))
     
+    if bPCA
+        calculatePCsExplainedVariance(parms);
+        saveAndCloseFig(gcf, sprintf('%s/PCs-explained-variance-summary.png',basedir))
+    end
+    
     close all
     
     runHtmlScript('create_summary_html.py', basedir);
