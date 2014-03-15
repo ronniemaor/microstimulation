@@ -5,10 +5,15 @@ function presentationInitialProcessing(parms)
 
     data = loadData('J29c',parms);
     data = findPeak(data);
-    dynamicRange = 1e-3;
-    showFrame(data,dynamicRange,data.peakFrame,0,0)
-    showFrame(data,dynamicRange,data.peakFrame,0,0,markPeak(data))    
-    showFrame(data,dynamicRange,data.peakFrame,0,0,markSlices(data))
+    parms = add_parms(parms, ...
+        'dynamicRange', 1e-3, ...
+        'frame', data.peakFrame, ...
+        'showCenter', 0, ...
+        'showManualMask', 0 ...
+    );
+    showFrame(data,parms);
+    showFrame(data,add_parms(parms, 'extraMask', markPeak(data)));    
+    showFrame(data,add_parms(parms, 'extraMask', markSlices(data)));    
 end
 
 function region = markSlices(data)

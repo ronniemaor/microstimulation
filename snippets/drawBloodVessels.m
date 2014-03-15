@@ -1,11 +1,10 @@
-function drawBloodVessels(data, bShowSlices, showMask)
-    if ~exist('bShowSlices','var')
-        bShowSlices = 1;
+function drawBloodVessels(data, parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
-
-    if ~exist('showMask','var')
-        showMask = 0;
-    end
+    
+    bShowSlices = take_from_struct(parms, 'bShowSlices', 1);
+    showMask = take_from_struct(parms, 'showMask', 0);
 
     blVes = mean(data.rawBlank(:,2:100),2);
     blVes = mfilt2(blVes,100,100,2,'hm');

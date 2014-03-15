@@ -1,6 +1,6 @@
 function points = findBloodVessels(data)
     points = findPoints(data);
-    drawBloodVessels(data,1,0);
+    drawBloodVessels(data);
     points = choose_points(points);
 end
 

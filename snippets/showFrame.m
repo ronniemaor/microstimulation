@@ -1,20 +1,19 @@
-function showFrame(data, dynamicRange, frameToShow, showCenter, showManualMask, extraMaskedRegion)
-    if nargin < 2
-        dynamicRange = 2e-3;
+function showFrame(data, parms)
+    if ~exist('parms','var')
+        parms = make_parms();
     end
-    if nargin < 3
+    
+    dynamicRange = take_from_struct(parms,'dynamicRange',2e-3);
+    showCenter = take_from_struct(parms,'showCenter',1);
+    showManualMask = take_from_struct(parms,'showManualMask',1);
+    extraMaskedRegion = take_from_struct(parms,'extraMask',[]);
+    
+    frameToShow = take_from_struct(parms, 'frame', 0);
+    if frameToShow == 0
         data = findPeak(data);
         frameToShow = data.peakFrame;
     end
-    if nargin < 4
-        showCenter = 1;
-    end
-    if nargin < 5
-        showManualMask = 1;
-    end
-    if nargin < 6
-        extraMaskedRegion = [];
-    end
+% dynamicRange, frameToShow, showCenter, showManualMask, extraMaskedRegion
     
     signal = data.signal(:,frameToShow,:);
     signal = mean(signal,3); % mean across trials

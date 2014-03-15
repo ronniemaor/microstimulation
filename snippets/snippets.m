@@ -24,7 +24,6 @@ points = choose_points(points,[dx dy]);
 
 %% show frame (peak frame by default)
 showFrame(data)
-showFrame(loadData('M18e'), 1e-3, 59, 1, 1)
 
 %% Ways to get an impression of the data
 drawMimg(data)
