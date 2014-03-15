@@ -8,6 +8,7 @@ function drawMimg(data, parms)
     frameRange = take_from_struct(parms,'frameRange',20:50);
     bNormalizeTime = take_from_struct(parms,'bNormalizeTime',0);
     bShowGrid = take_from_struct(parms,'bShowGrid',0);
+    extraMask = take_from_struct(parms,'extraMask',[]);
     
     if isfield(data,'signal')
         signal = data.signal;
@@ -23,6 +24,8 @@ function drawMimg(data, parms)
     else
         times = frameRange;
     end
+    
+    meanSignal(extraMask,:) = -dynamicRange;
     
     if bShowGrid
         for i = 10:10:90

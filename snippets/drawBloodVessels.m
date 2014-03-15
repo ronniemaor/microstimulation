@@ -3,14 +3,15 @@ function drawBloodVessels(data, parms)
         parms = make_parms();
     end
     
-    bShowSlices = take_from_struct(parms, 'bShowSlices', 1);
+    bShowCenter= take_from_struct(parms, 'bCenter', 1);
     showMask = take_from_struct(parms, 'showMask', 0);
+    extraMask = take_from_struct(parms,'extraMask',[]);
 
     blVes = mean(data.rawBlank(:,2:100),2);
     blVes = mfilt2(blVes,100,100,2,'hm');
     
-    if bShowSlices
-        markedRegion = markSlice(data);
+    if bShowCenter
+        markedRegion = markCenter(data);
         blVes(markedRegion) = min(blVes); % will show up in black
     end
         
@@ -18,6 +19,8 @@ function drawBloodVessels(data, parms)
         markedRegion = ~data.mask;
         blVes(markedRegion) = min(blVes); % will show up in black
     end
+    
+    blVes(extraMask) = min(blVes); % will show up in black
     
     myfigure; 
     mimg(blVes,100,100,'auto',0,' '); 
@@ -27,7 +30,7 @@ function drawBloodVessels(data, parms)
     impixelinfo;
 end
 
-function markedRegion = markSlice(data)
+function markedRegion = markCenter(data)
     data = findPeak(data);
     W = 3;
     markedRegion = zeros(1,10000);

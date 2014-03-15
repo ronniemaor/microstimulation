@@ -54,6 +54,13 @@ def create_session_html(basedir, session):
 <a href="PC-weights-not-shaped.png"><img src="PC-weights-not-shaped.png" width=45%></img></a>
 <a href="PC-weights-shaped.png"><img src="PC-weights-shaped.png" width=45%></img></a>
 
+<H1>Blood Vessels</H1>
+<a href="blves.png"><img src="blves.png" width=45%></img></a>
+<a href="green.png"><img src="green.png" width=45%></img></a>
+
+<H1>Mimg with PC weight estimation region contour</H1>
+<a href="mimg-with-shape-contour.png"><img src="mimg-with-shape-contour.png" width=100%></img></a>
+
 </body>
 </html>    
 """).render(**locals())

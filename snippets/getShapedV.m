@@ -1,4 +1,4 @@
-function shapedV = getShapedV(V, data, parms)
+function [shapedV, shape] = getShapedV(V, data, parms)
     shape = createPCAWeightingShape(data, parms);
     shapedV = zeros(size(V));
     for i=1:size(V,2)

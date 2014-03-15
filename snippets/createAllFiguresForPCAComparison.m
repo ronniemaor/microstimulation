@@ -101,10 +101,10 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
 
     showFrame(data)
     saveas(gcf, sprintf('%s/peak-frame-%s.png',dirname,variationName))
-            
+
     drawMimg(data)
     saveas(gcf, sprintf('%s/mimg-%s.png',dirname,variationName))
-    
+            
     if bPCA
         drawSpconds(data, add_parms(parms, 'ttl', 'Signal before/after cleaning'))
     else
@@ -115,7 +115,17 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
     if bPCA
         nPCs = take_from_struct(parms,'nPCs');
         [V,d,C] = getFirstPCs(data, parms);
-        shapedV = getShapedV(V, data, parms);
+        [shapedV,shape] = getShapedV(V, data, parms);
+        
+        shapeContour = findContour(shape==1);
+        drawMimg(data.orig_signal, make_parms('extraMask', shapeContour))
+        saveas(gcf, sprintf('%s/mimg-with-shape-contour.png',dirname))
+
+        drawBloodVessels(data, make_parms('extraMask', shapeContour));
+        saveas(gcf, sprintf('%s/blves.png',dirname))
+        showGreen(sessionKey, make_parms('extraMask', shapeContour));
+        saveas(gcf, sprintf('%s/green.png',dirname))
+        
         drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs))
         saveas(gcf, sprintf('%s/PCs.png',dirname))
         drawMimg(V,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
@@ -133,6 +143,8 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         saveas(gcf, sprintf('%s/PC-weights-not-shaped.png',dirname))
         drawFirstPCsWeights(data, shapedV, add_parms(parms,'ttl','Weights with shaped PCs', 'ymin', ymin, 'ymax', ymax))
         saveas(gcf, sprintf('%s/PC-weights-shaped.png',dirname)) 
+    else
+        shapeContour = [];
     end
 
     paperShowFitsAtPeak(data,parms);
