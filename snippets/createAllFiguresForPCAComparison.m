@@ -139,9 +139,9 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         [ymin2,ymax2] = drawFirstPCsWeights(data, shapedV, add_parms(parms, 'justMinMax', true));
         ymin = min(ymin,ymin2);
         ymax = max(ymax,ymax2);
-        drawFirstPCsWeights(data, V, add_parms(parms,'ttl','Weights using whole chamber', 'ymin', ymin, 'ymax', ymax))
+        drawFirstPCsWeights(data, V, add_parms(parms,'ttl','Weights using whole chamber', 'ymin', ymin, 'ymax', ymax));
         saveas(gcf, sprintf('%s/PC-weights-not-shaped.png',dirname))
-        drawFirstPCsWeights(data, shapedV, add_parms(parms,'ttl','Weights with shaped PCs', 'ymin', ymin, 'ymax', ymax))
+        drawFirstPCsWeights(data, shapedV, add_parms(parms,'ttl','Weights with shaped PCs', 'ymin', ymin, 'ymax', ymax));
         saveas(gcf, sprintf('%s/PC-weights-shaped.png',dirname)) 
     else
         shapeContour = [];
