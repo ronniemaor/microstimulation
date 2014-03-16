@@ -113,3 +113,7 @@ paperCreateSampleSessionFigures(data,parms);
 paperSpeeds(data.sessionKey, parms);
 
 createAllFiguresForPCAComparison('C:\temp\ms'); % parms: sessions
+
+% examine shape corrections
+data = loadData('M18e',getPCAParms(false));
+[Vrj,Wjs,PROJrs,ORIGrs,Srs] = examineShapeCorrections(data)

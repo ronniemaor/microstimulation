@@ -115,7 +115,8 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
     if bPCA
         nPCs = take_from_struct(parms,'nPCs');
         [V,d,C] = getFirstPCs(data, parms);
-        [shapedV,shape] = getShapedV(V, data, parms);
+        shape = createPCAWeightingShape(data, parms);
+        shapedV = getShapedV(V, shape);
         
         shapeContour = findContour(shape==1);
         drawMimg(data.orig_signal, make_parms('extraMask', shapeContour))

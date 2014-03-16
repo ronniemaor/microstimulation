@@ -11,8 +11,9 @@ function [data,V,shapedV,weights] = cleanBloodVesselsUsingPCA(data, parms)
         return;
     end  
 
-    V = getFirstPCs(data, parms);    
-    shapedV = getShapedV(V, data, parms);
+    V = getFirstPCs(data, parms);   
+    shape = createPCAWeightingShape(data, parms);
+    shapedV = getShapedV(V, shape);
     [proj,weights] = applyFirstPCs(data.orig_signal, V, shapedV);
     data.signal = data.orig_signal - proj;
 end
