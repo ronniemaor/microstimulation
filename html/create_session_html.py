@@ -58,6 +58,10 @@ def create_session_html(basedir, session):
 <a href="blves.png"><img src="blves.png" width=45%></img></a>
 <a href="green.png"><img src="green.png" width=45%></img></a>
 
+<H1>SNR in weight estimation region vs. "signal" region</H1>
+<a href="SNR-of-regions.png"><img src="SNR-of-regions.png" width=45%></img></a>
+
+
 <H1>Mimg with PC weight estimation region contour</H1>
 <a href="mimg-with-shape-contour.png"><img src="mimg-with-shape-contour.png" width=100%></img></a>
 

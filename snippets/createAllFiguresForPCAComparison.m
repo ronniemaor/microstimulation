@@ -136,6 +136,9 @@ function saveAllSessionFigures(basedir, sessionKey, parms, bPCA)
         drawMimg(shapedV,make_parms('dynamicRange',5e-2,'frameRange',1:nPCs,'bShowGrid',1))
         saveas(gcf, sprintf('%s/shaped-PCs-with-grid.png',dirname))
         
+        compareSNRInAndOutOfShapes(data, make_parms('draw',true));
+        saveas(gcf, sprintf('%s/SNR-of-regions.png',dirname))
+        
         [ymin,ymax] = drawFirstPCsWeights(data, V, add_parms(parms, 'justMinMax', true));
         [ymin2,ymax2] = drawFirstPCsWeights(data, shapedV, add_parms(parms, 'justMinMax', true));
         ymin = min(ymin,ymin2);
