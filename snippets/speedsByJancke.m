@@ -29,20 +29,30 @@ function speeds = speedsByJancke(parms)
     meanSpeeds = mean(speeds,1);
     errSpeeds = std(speeds,0,1)/sqrt(nSessions);
     medianSpeeds = median(speeds,1);
-    
+
+    X = speeds(:,1);
+    Y = speeds(:,2);
+    d = X-Y;
+    pvalue = signrank(d);
+    if median(d) > 0 % convert two tailed to one tailed pvalue
+        pvalue = pvalue / 2;
+    else
+        pvalue = 1 - pvalue / 2;
+    end
+
     colors = getColors();
     
     myfigure(parms);
     maxSpeed = max(speeds(:));
-    X = speeds(:,1);
-    Y = speeds(:,2);
     for i=1:nSessions
         plot(X(i),Y(i),'o','Color',colors(i,:), 'MarkerSize', 8, 'LineWidth',2);
         hold on;
     end
     plot(meanSpeeds(1), meanSpeeds(2), 'x', 'Color','g', 'MarkerSize', 14, 'LineWidth', 3)
     plot(medianSpeeds(1), medianSpeeds(2), 'x', 'Color','b', 'MarkerSize', 14, 'LineWidth', 3)
-    title(sprintf('Speed anisotropy for \\Deltaf/f=%g*10^{-4}',threshold*1E4));
+    ttl1 = sprintf('Speed anisotropy for \\Deltaf/f=%g*10^{-4}', threshold*1E4);
+    ttl2 = sprintf('p-value for H > V = %.2g', pvalue);
+    title(sprintf('%s\n%s',ttl1,ttl2))
     legendLabels = sessionNames;
     legendLabels{nSessions+1} = 'Mean \pm sem';
     legendLabels{nSessions+2} = sprintf('Median \\pm %d pct',medianErrWidth);
