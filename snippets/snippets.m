@@ -117,3 +117,6 @@ createAllFiguresForPCAComparison('C:\temp\ms'); % parms: sessions
 % examine shape corrections
 data = loadData('M18e',getPCAParms(false));
 [Vrj,Wjs,PROJrs,ORIGrs,Srs] = examineShapeCorrections(data)
+
+% examine J26b - why does vertical frontier start to contract while horizontal is still expanding?
+examineJ26b(J26b, make_parms('frames',25:30))

@@ -59,7 +59,7 @@ function timeCourse(data, isVertical, frameRange, fit, specialFrames)
         subplot(nRows,nCols,iPlot);
         signal = data.signal(:,frame,:);
         strTitle = sprintf('Frame %d',frame);
-        drawOneFit(data.mask,signal,data.C,W,isVertical,fit,strTitle)
+        drawOneFit(data.mask,signal,data.C,W,isVertical,make_parms('fit',fit,'ttl',strTitle))
     end
     
     t = sprintf('%s - %s parameters for %s slice, frames %d:%d W=%d, C=(%d,%d)', ...
